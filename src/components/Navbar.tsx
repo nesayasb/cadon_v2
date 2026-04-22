@@ -71,7 +71,7 @@ const Navbar = () => {
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        <div className="mobile-drawer">
+        <div className="mobile-drawer bg-white shadow-sm">
           <div className="flex flex-col">
             {navLinks.map((link, i) => (
               <Link
