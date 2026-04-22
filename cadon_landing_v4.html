@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>CADON — Sell financial products through any AI channel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --ink:#0D0E09;--ink2:#1A1C14;
+  --off:#F7F8F5;--off2:#F2F3EF;
+  --gold:#C4A55A;--gold2:#E8C97A;
+  --muted:rgba(13,14,9,0.42);--muted2:rgba(13,14,9,0.20);--muted3:rgba(13,14,9,0.08);
+  /* 2026 pastel popup */
+  --pb:#F0F4FF;--ph1:#4F6EF7;--ph2:#7B5EA7;--pa:#6C7FE8;--ps:#E8EDFF;--pborder:#D8E0FF;
+  --pgreen:#D1F5E8;--pgreentxt:#0D7A55;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
+}
+body{font-family:var(--sans);background:#fff;color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.024;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;mix-blend-mode:multiply}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:2px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(255,255,255,.93);backdrop-filter:blur(18px);border-bottom:1px solid var(--muted3)}
+.nav-w{max-width:1280px;margin:0 auto;padding:0 48px;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--ink);text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.logo-mk{width:27px;height:27px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-mk svg{width:13px;height:13px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-r{display:flex;gap:9px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:500;border-radius:100px;padding:9px 20px;cursor:pointer;text-decoration:none;border:none;transition:all .2s}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--muted2)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:600}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-lg{font-size:15px;padding:13px 28px}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:#242619;transform:translateY(-1px)}
+
+/* HERO */
+#hero{
+  padding:158px 48px 96px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  background:#fff;position:relative;overflow:hidden;
+}
+#hero::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 65% 55% at 82% 18%,rgba(79,110,247,.045),transparent 65%),
+             radial-gradient(ellipse 55% 65% at 12% 82%,rgba(123,94,167,.035),transparent 65%)}
+#hero>*{position:relative;z-index:1}
+.h-kicker{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:26px;display:block}
+.h-kicker em{color:var(--gold);font-style:normal}
+h1{font-family:var(--serif);font-size:clamp(50px,8.5vw,116px);font-weight:400;line-height:.92;letter-spacing:-.04em;color:var(--ink);max-width:900px;margin-bottom:52px}
+h1 em{font-style:italic;color:#4F6EF7}
+.h-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.h-desc{font-size:16px;font-weight:300;color:var(--muted);line-height:1.75;max-width:430px}
+.h-right{display:flex;flex-direction:column;align-items:flex-end;gap:24px;flex-shrink:0}
+.h-stats{display:flex;gap:26px}
+.hst{border-left:1px solid var(--muted2);padding-left:16px}
+.hst-n{font-family:var(--serif);font-size:28px;font-weight:400;color:var(--ink);line-height:1;letter-spacing:-.03em}
+.hst-l{font-size:10.5px;color:var(--muted);margin-top:2px}
+.h-btns{display:flex;gap:10px;align-items:center}
+
+/* SCROLL-REVEAL SECTION */
+#sr-section{position:relative;height:280vh;background:#fff}
+.sr-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sr-left,.sr-right{position:absolute;top:50%;z-index:10;will-change:transform,opacity}
+.sr-left{left:52px;transform:translateY(-50%)}
+.sr-right{right:52px;transform:translateY(-50%);text-align:right}
+.sr-tag{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px}
+.sr-txt{font-family:var(--serif);font-size:clamp(15px,1.9vw,24px);font-weight:400;color:var(--ink);letter-spacing:-.02em;line-height:1.15}
+.sr-txt em{font-style:italic;color:#4F6EF7}
+.sr-seed{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:6;display:flex;align-items:center;gap:8px;will-change:opacity}
+.sr-seed-icon{width:46px;height:46px;border-radius:12px;border:1px solid var(--muted3);background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.05);flex-shrink:0}
+.sr-seed-lbl{font-family:var(--serif);font-size:14px;color:var(--ink);opacity:0;white-space:nowrap;transition:opacity .3s}
+.sr-popup-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.1);transform-origin:center;z-index:7;opacity:0;will-change:transform,opacity;width:min(440px,88vw);pointer-events:none}
+.sr-popup-wrap.live{pointer-events:all}
+.sr-bottom{position:absolute;bottom:44px;left:0;right:0;display:flex;justify-content:center;z-index:10;opacity:0;will-change:opacity,transform;transform:translateY(12px)}
+.sr-bottom p{font-size:14px;color:var(--muted)}
+.sr-bottom a{color:#4F6EF7;text-decoration:none;font-weight:500}
+.sr-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:5px;will-change:opacity}
+.sr-cue span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)}
+.sr-cue-line{width:1px;height:28px;background:var(--muted2);overflow:hidden;position:relative}
+.sr-cue-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--ink);animation:scrldown 1.7s ease-in-out infinite}
+@keyframes scrldown{0%{top:-100%}100%{top:100%}}
+
+/* PASTEL POPUP — 2026 */
+.pc{background:#fff;border-radius:22px;box-shadow:0 28px 72px rgba(79,110,247,.13),0 4px 14px rgba(0,0,0,.06);overflow:hidden;border:1px solid var(--pborder)}
+.pc-head{background:linear-gradient(135deg,var(--ph1),var(--ph2));padding:17px 20px 14px;position:relative;overflow:hidden}
+.pc-head::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 13px)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1}
+.pc-brand{display:flex;align-items:center;gap:10px}
+.pc-logo{width:31px;height:31px;border-radius:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff}
+.pc-bname{font-size:12.5px;font-weight:700;color:#fff}
+.pc-bsub{font-size:9px;color:rgba(255,255,255,.52);margin-top:1px}
+.pc-ctrls{display:flex;gap:5px}
+.pc-pause{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:3px 8px;font-size:9.5px;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.pc-x{width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.11);border:none;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.pc-steps-row{display:flex;align-items:center;position:relative;z-index:1}
+.pc-dot{width:21px;height:21px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800}
+.pc-dot.done{background:#4ADE80;color:#fff}
+.pc-dot.active{background:rgba(255,255,255,.9);color:var(--ph1);box-shadow:0 0 0 3px rgba(255,255,255,.28)}
+.pc-dot.pending{background:rgba(255,255,255,.16);color:rgba(255,255,255,.38)}
+.pc-line{flex:1;height:2px;margin:0 3px;border-radius:1px}
+.pc-line.done{background:#4ADE80}.pc-line.pending{background:rgba(255,255,255,.14)}
+.pc-slabels{display:flex;justify-content:space-between;margin-top:4px;position:relative;z-index:1}
+.pc-slbl{font-size:7.5px;color:rgba(255,255,255,.32);text-align:center}
+.pc-slbl.done{color:rgba(255,255,255,.52)}.pc-slbl.active{color:rgba(255,255,255,.88);font-weight:600}
+.pc-sess{display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.12);border-radius:7px;padding:4px 10px;margin-top:9px;position:relative;z-index:1}
+.pc-sess-t{font-size:9.5px;color:rgba(255,255,255,.48)}
+.pc-sess-ttl{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.82);font-family:var(--mono)}
+.pc-body{padding:19px;background:var(--pb)}
+.pc-title{font-size:16px;font-weight:700;color:#1E1B4B;margin-bottom:3px;letter-spacing:-.01em}
+.pc-sub{font-size:10.5px;color:#6B7280;margin-bottom:15px}
+.pc-amt{background:linear-gradient(135deg,var(--ph1),var(--ph2));border-radius:13px;padding:15px;text-align:center;margin-bottom:13px;position:relative;overflow:hidden}
+.pc-amt::before{content:'';position:absolute;top:-25%;right:-15%;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.07)}
+.pc-amt::after{content:'';position:absolute;bottom:-20%;left:-8%;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.05)}
+.pc-amt-n{font-size:27px;font-weight:800;color:#fff;font-family:var(--serif);letter-spacing:-.02em;position:relative;z-index:1}
+.pc-amt-l{font-size:9.5px;color:rgba(255,255,255,.58);position:relative;z-index:1;margin-top:1px}
+.pc-pills{display:flex;gap:5px;justify-content:center;margin-top:9px;position:relative;z-index:1}
+.pc-pill{font-size:9.5px;font-weight:600;background:rgba(255,255,255,.14);color:#fff;padding:3px 9px;border-radius:20px}
+.pc-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.pc-row{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#fff;border-radius:9px;border:1px solid var(--pborder);transition:border-color .2s}
+.pc-row:hover{border-color:var(--pa)}
+.pc-row-ico{font-size:13px;flex-shrink:0}
+.pc-row-txt{flex:1;font-size:11px;color:#374151}
+.pc-row-tag{font-size:8.5px;font-weight:700;color:var(--pa);background:var(--ps);padding:2px 7px;border-radius:20px}
+.pc-row.gr{background:var(--pgreen);border-color:rgba(13,122,85,.12)}
+.pc-row.gr .pc-row-tag{color:var(--pgreentxt);background:rgba(13,122,85,.1)}
+.pc-row-ok{font-size:9.5px;font-weight:700;color:var(--pgreentxt)}
+.pc-note{background:var(--ps);border-radius:9px;padding:9px 12px;margin-bottom:12px;font-size:10px;color:#4F6EF7;line-height:1.5;border:1px solid var(--pborder)}
+.pc-btn{width:100%;padding:12px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--ph1),var(--ph2));color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--sans)}
+.pc-btn:hover{opacity:.88}
+
+/* LOGOS */
+#logos{background:var(--ink2);padding:25px 48px;position:relative;overflow:hidden}
+.logos-inner{display:flex;align-items:center}
+.logos-lbl{font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;margin-right:44px;flex-shrink:0}
+.logos-track{display:flex;overflow:hidden;flex:1;position:relative}
+.ll,.ll2{display:flex;gap:44px;align-items:center;flex-shrink:0;animation:marquee 22s linear infinite}
+.ll2{animation-delay:-11s}
+.li{font-family:var(--serif);font-size:14.5px;color:rgba(255,255,255,.15);letter-spacing:-.02em;white-space:nowrap;transition:color .2s;cursor:default}
+.li:hover{color:rgba(255,255,255,.42)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.lfl,.lfr{position:absolute;top:0;bottom:0;width:80px;pointer-events:none;z-index:2}
+.lfl{left:0;background:linear-gradient(to right,var(--ink2),transparent)}
+.lfr{right:0;background:linear-gradient(to left,var(--ink2),transparent)}
+
+/* SECTIONS */
+section{padding:108px 48px}
+.wrap{max-width:1280px;margin:0 auto}
+.slbl{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:17px}
+.stitle{font-family:var(--serif);font-size:clamp(28px,3.8vw,50px);font-weight:400;line-height:1.06;letter-spacing:-.025em;color:var(--ink);max-width:500px}
+.stitle em{font-style:italic}
+.sbody{font-size:15px;font-weight:300;color:var(--muted);line-height:1.78;margin-top:18px;max-width:450px}
+
+/* PROBLEM */
+#problem{background:var(--ink);border-top:1px solid rgba(255,255,255,.04)}
+#problem .slbl{color:rgba(196,165,90,.52)}
+#problem .stitle{color:#f0f1ea;max-width:600px}
+#problem .stitle em{color:rgba(196,165,90,.62)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:60px;border-top:1px solid rgba(255,255,255,.06);border-left:1px solid rgba(255,255,255,.06)}
+.pcard{padding:42px 34px;border-right:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);transition:background .2s}
+.pcard:hover{background:rgba(255,255,255,.024)}
+.pn{font-family:var(--serif);font-size:70px;font-weight:400;color:rgba(255,255,255,.04);line-height:1;margin-bottom:26px;letter-spacing:-.04em}
+.pcard h3{font-family:var(--serif);font-size:18px;font-weight:400;color:#f0f1ea;margin-bottom:11px;letter-spacing:-.02em;line-height:1.2}
+.pcard p{font-size:14px;font-weight:300;color:rgba(240,241,234,.38);line-height:1.75}
+
+/* ANIM 1 */
+#anim1{background:var(--off);border-top:1px solid var(--muted3);border-bottom:1px solid var(--muted3);overflow:hidden;padding:108px 48px}
+.a1layout{display:grid;grid-template-columns:1fr 1.1fr;gap:72px;align-items:center}
+.a1left h2{font-family:var(--serif);font-size:clamp(24px,3vw,40px);font-weight:400;line-height:1.08;letter-spacing:-.025em;margin-bottom:12px}
+.a1left h2 em{font-style:italic}
+.a1left p{font-size:14px;font-weight:300;color:var(--muted);line-height:1.72;margin-bottom:24px}
+.rtabs{display:flex;flex-direction:column;gap:4px}
+.rtab{display:flex;align-items:center;gap:11px;padding:12px 15px;border-radius:9px;cursor:pointer;transition:all .2s;border:1.5px solid transparent}
+.rtab.active{background:var(--ink);border-color:var(--ink)}
+.rtab:not(.active):hover{background:#EAEAE7}
+.rtdot{width:7px;height:7px;border-radius:50%;background:var(--muted2);flex-shrink:0}
+.rtab.active .rtdot{background:var(--gold)}
+.rtnm{font-size:13.5px;font-weight:500;color:var(--muted)}
+.rtab.active .rtnm{color:#f0f1ea}
+.rtsub{font-size:10.5px;color:var(--muted2);margin-left:auto}
+.rtab.active .rtsub{color:rgba(240,241,234,.38)}
+.a1vis{position:relative;height:420px;border-radius:18px;overflow:hidden;background:var(--ink);box-shadow:0 26px 68px rgba(13,14,9,.15)}
+.rscene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:30px;opacity:0;transition:opacity .4s ease;pointer-events:none}
+.rscene.active{opacity:1;pointer-events:all}
+/* bank */
+.bsi{width:100%;max-width:340px}
+.bshdr{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.bsico{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#4F6EF7,#7B5EA7);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bst{font-size:12.5px;font-weight:600;color:#f0f1ea}
+.bss{font-size:9.5px;color:rgba(240,241,234,.32);margin-top:1px}
+.bsrows{display:flex;flex-direction:column;gap:6px}
+.bsrow{background:rgba(255,255,255,.05);border-radius:7px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;transition:background .3s}
+.bsrow.an{background:rgba(79,110,247,.17)}
+.bsrl{font-size:11px;color:rgba(240,241,234,.48)}
+.bsrv{font-size:12.5px;font-weight:600;color:#f0f1ea}
+.bsrv.gr{color:#4ADE80}.bsrv.go{color:var(--gold2)}
+.bssig{margin-top:13px;background:rgba(79,110,247,.13);border:1px solid rgba(79,110,247,.28);border-radius:7px;padding:8px 11px;font-size:10px;font-family:var(--mono);color:#93C5FD;display:flex;align-items:center;gap:6px}
+.sigdot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.6)}}
+/* dev */
+.dterm{background:#070908;border-radius:11px;overflow:hidden;width:100%;max-width:340px}
+.dtbar{background:#0C0D0C;padding:9px 13px;display:flex;gap:6px;align-items:center;border-bottom:1px solid rgba(255,255,255,.04)}
+.dtd{width:9px;height:9px;border-radius:50%}
+.dtd:nth-child(1){background:rgba(255,95,87,.45)}.dtd:nth-child(2){background:rgba(254,188,46,.45)}.dtd:nth-child(3){background:rgba(40,200,64,.45)}
+.dtfn{font-family:var(--mono);font-size:10px;color:rgba(240,241,234,.2);margin-left:7px}
+.dtbody{padding:16px;font-family:var(--mono);font-size:11.5px;line-height:1.85;min-height:170px}
+.tc{color:rgba(240,241,234,.22)}.tf{color:rgba(240,241,234,.88)}.ts{color:rgba(240,241,234,.5)}.tr{color:rgba(74,222,128,.8)}.tg{color:rgba(196,165,90,.85)}
+/* fintech */
+.ffow{width:100%;max-width:330px}
+.fflbl{font-size:9.5px;color:rgba(240,241,234,.28);font-family:var(--mono);letter-spacing:.04em;margin-bottom:10px}
+.ffnodes{display:flex;flex-direction:column;gap:7px}
+.ffnode{background:rgba(255,255,255,.05);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:9px;transition:all .3s;border:1px solid transparent}
+.ffnode.an{background:rgba(79,110,247,.14);border-color:rgba(79,110,247,.28)}
+.ffnico{font-size:15px;flex-shrink:0}
+.ffntit{font-size:11.5px;font-weight:600;color:#f0f1ea}
+.ffnsub{font-size:9.5px;color:rgba(240,241,234,.32);margin-top:1px}
+.ffarr{text-align:center;color:rgba(240,241,234,.16);font-size:10px;margin:1px 0}
+.ffbdg{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto;flex-shrink:0}
+.ffbdg.bl{background:rgba(79,110,247,.18);color:#93C5FD}
+.ffbdg.go{background:rgba(196,165,90,.14);color:var(--gold2)}
+.ffbdg.gr{background:rgba(74,222,128,.14);color:#4ADE80}
+/* user */
+.uchat{width:100%;max-width:330px}
+.uchdr{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.ucav{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4F6EF7,#7B5EA7);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ucnm{font-size:12px;font-weight:600;color:#f0f1ea}
+.ucst{font-size:9.5px;color:#4ADE80;margin-top:1px}
+.ucmsgs{display:flex;flex-direction:column;gap:7px}
+.ucmsg{max-width:78%;padding:8px 11px;border-radius:12px;font-size:11px;line-height:1.5}
+.ucmsg.u{background:rgba(255,255,255,.1);color:rgba(240,241,234,.78);align-self:flex-end;border-radius:12px 12px 3px 12px}
+.ucmsg.a{background:linear-gradient(135deg,rgba(79,110,247,.18),rgba(123,94,167,.13));color:rgba(240,241,234,.88);align-self:flex-start;border-radius:12px 12px 12px 3px}
+.minipop{background:#fff;border-radius:9px;padding:10px;max-width:88%;align-self:flex-start;border:1px solid var(--pborder);box-shadow:0 4px 12px rgba(79,110,247,.1)}
+.mptop{display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.mplogo{width:19px;height:19px;border-radius:5px;background:linear-gradient(135deg,#4F6EF7,#7B5EA7);display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;color:#fff}
+.mpnm{font-size:9.5px;font-weight:700;color:var(--ink)}
+.mpbdg{margin-left:auto;font-size:7.5px;font-weight:700;background:#D1FAE5;color:#065F46;padding:1px 5px;border-radius:20px}
+.mpprog{display:flex;gap:2px;margin-bottom:6px}
+.mps{height:2px;flex:1;border-radius:1px;background:rgba(79,110,247,.12)}
+.mps.done{background:#4F6EF7}
+.mptxt{font-size:9.5px;color:#6B7280;line-height:1.4}
+.mpbtn{width:100%;background:linear-gradient(135deg,#4F6EF7,#7B5EA7);color:#fff;border:none;border-radius:6px;padding:5px;font-size:9.5px;font-weight:700;cursor:default;margin-top:5px;font-family:var(--sans)}
+
+/* ANIM 2 */
+#anim2{background:var(--ink);border-top:1px solid rgba(255,255,255,.04);padding:108px 48px}
+#anim2 .slbl{color:rgba(196,165,90,.52)}
+.a2layout{display:grid;grid-template-columns:1.1fr 1fr;gap:68px;align-items:center}
+.cpane{background:#060707;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:0 36px 90px rgba(0,0,0,.42)}
+.cpbar{background:#0B0C0B;padding:11px 15px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.04)}
+.cpd{width:9px;height:9px;border-radius:50%}
+.cpd:nth-child(1){background:rgba(255,95,87,.42)}.cpd:nth-child(2){background:rgba(254,188,46,.42)}.cpd:nth-child(3){background:rgba(40,200,64,.42)}
+.cpfile{font-family:var(--mono);font-size:10px;color:rgba(240,241,234,.18);margin-left:7px}
+.cptabs{display:flex;gap:3px;margin:0 0 18px}
+.cptab{font-family:var(--mono);font-size:10.5px;color:rgba(240,241,234,.26);padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.cptab.active{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.07);color:rgba(240,241,234,.8)}
+.cptab:hover:not(.active){color:rgba(240,241,234,.48)}
+.cpbody{padding:22px 22px 30px;min-height:320px}
+.cline{font-family:var(--mono);font-size:12px;line-height:1.85;white-space:pre;max-height:0;opacity:0;transition:max-height .1s ease,opacity .1s ease;overflow:hidden}
+.cline.vis{max-height:38px;opacity:1}
+.a2r h2{font-family:var(--serif);font-size:clamp(24px,3vw,38px);font-weight:400;line-height:1.1;letter-spacing:-.025em;color:#f0f1ea;margin-bottom:14px}
+.a2r h2 em{font-style:italic;color:rgba(196,165,90,.68)}
+.a2r>p{font-size:14px;font-weight:300;color:rgba(240,241,234,.4);line-height:1.75;margin-bottom:28px}
+.fsteps{border-top:1px solid rgba(255,255,255,.07)}
+.fstep{display:flex;gap:13px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:opacity .2s}
+.fstep.dim{opacity:.3}
+.fsn{font-family:var(--mono);font-size:10.5px;color:rgba(240,241,234,.26);padding-top:2px;flex-shrink:0;width:18px}
+.fstep h4{font-family:var(--serif);font-size:14.5px;font-weight:400;color:#f0f1ea;margin-bottom:3px}
+.fstep p{font-size:12px;font-weight:300;color:rgba(240,241,234,.36);line-height:1.55}
+
+/* PRODUCT */
+#product{background:#fff;border-top:1px solid var(--muted3);padding:108px 48px}
+.prodlayout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.pillars{border:1px solid var(--muted3);border-radius:14px;overflow:hidden}
+.pillar{padding:24px 28px;border-bottom:1px solid var(--muted3);transition:background .18s}
+.pillar:last-child{border-bottom:none}
+.pillar:hover{background:var(--off)}
+.pillar-ico{font-size:18px;margin-bottom:8px}
+.pillar-t{font-family:var(--serif);font-size:15.5px;font-weight:400;color:var(--ink);margin-bottom:5px;letter-spacing:-.02em}
+.pillar-b{font-size:12.5px;font-weight:300;color:var(--muted);line-height:1.68}
+.mrow{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--muted3);border-radius:13px;overflow:hidden;margin-top:26px}
+.met{padding:20px 18px;border-right:1px solid var(--muted3)}
+.met:last-child{border-right:none}
+.metn{font-family:var(--serif);font-size:34px;font-weight:400;color:var(--ink);line-height:1;margin-bottom:4px;letter-spacing:-.03em}
+.metl{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* HOW */
+#how{background:var(--off);border-top:1px solid var(--muted3);padding:108px 48px}
+.srow{display:grid;grid-template-columns:repeat(5,1fr);position:relative;margin-top:56px;gap:6px}
+.sline{position:absolute;top:17px;left:7%;right:7%;height:1px;background:var(--muted3)}
+.scol{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px;position:relative;z-index:1}
+.snum{width:34px;height:34px;border-radius:50%;border:1px solid var(--muted2);background:var(--off);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:16px;transition:all .2s}
+.scol:hover .snum{background:var(--ink);border-color:var(--ink);color:#fff}
+.scol h3{font-family:var(--serif);font-size:13px;font-weight:400;color:var(--ink);margin-bottom:6px;letter-spacing:-.02em;line-height:1.2}
+.scol p{font-size:11.5px;font-weight:300;color:var(--muted);line-height:1.65}
+
+/* ANIM 3 */
+#anim3{background:var(--ink);border-top:1px solid rgba(255,255,255,.04);padding:96px 0}
+.a3wrap{max-width:1280px;margin:0 auto;padding:0 48px;margin-bottom:48px}
+#anim3 .slbl{color:rgba(196,165,90,.52)}
+#anim3 h2{font-family:var(--serif);font-size:clamp(26px,3.8vw,44px);font-weight:400;line-height:1.06;letter-spacing:-.03em;color:#f0f1ea;max-width:460px;margin-top:5px}
+#anim3 h2 em{font-style:italic;color:rgba(196,165,90,.62)}
+.ucsroll{display:flex;overflow:hidden;position:relative;padding:18px 0}
+.uct,.uct2{display:flex;gap:16px;animation:ucroll 28s linear infinite;flex-shrink:0;padding:0 8px}
+.uct2{animation-delay:-14s}
+@keyframes ucroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.uccard{flex-shrink:0;width:252px;cursor:pointer}
+.uccinner{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;height:142px;display:flex;flex-direction:column;justify-content:space-between;transition:background .2s}
+.uccard:hover .uccinner{background:rgba(255,255,255,.07)}
+.uccard.hl .uccinner{background:rgba(79,110,247,.07);border-color:rgba(79,110,247,.18)}
+.uctop{display:flex;align-items:center;justify-content:space-between}
+.uco{font-size:24px}
+.ucbdg{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:rgba(240,241,234,.26);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:20px}
+.uccard.hl .ucbdg{color:rgba(79,110,247,.82);background:rgba(79,110,247,.12)}
+.ucnm{font-family:var(--serif);font-size:17px;font-weight:400;color:#f0f1ea;letter-spacing:-.02em}
+.ucmt{font-size:10px;color:rgba(240,241,234,.28)}
+.ucfl,.ucfr{position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
+.ucfl{left:0;background:linear-gradient(to right,var(--ink),transparent)}
+.ucfr{right:0;background:linear-gradient(to left,var(--ink),transparent)}
+
+/* WHY */
+#why{background:#fff;border-top:1px solid var(--muted3);padding:108px 48px}
+.whead{max-width:460px;margin-bottom:60px}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--muted3);border-radius:15px;overflow:hidden;border-right:none;border-bottom:none}
+.dcell{padding:32px 26px;border-right:1px solid var(--muted3);border-bottom:1px solid var(--muted3);transition:background .15s}
+.dcell:hover{background:var(--off)}
+.dcell-ico{font-size:19px;margin-bottom:11px}
+.dcell h3{font-family:var(--serif);font-size:16.5px;font-weight:400;color:var(--ink);margin-bottom:8px;letter-spacing:-.02em}
+.dcell p{font-size:12.5px;font-weight:300;color:var(--muted);line-height:1.68}
+.dcell-tag{margin-top:11px;font-family:var(--mono);font-size:9px;color:var(--muted2);letter-spacing:.04em}
+
+/* VALUES */
+#values{background:var(--off);border-top:1px solid var(--muted3);padding:108px 48px}
+.vlayout{display:grid;grid-template-columns:1fr 1.7fr;gap:88px;align-items:start}
+.vrows{border-top:1px solid var(--muted3)}
+.vrow{display:grid;grid-template-columns:130px 1fr;gap:28px;padding:24px 0;border-bottom:1px solid var(--muted3);transition:background .15s}
+.vrow:hover{background:#EEEEEB}
+.vrow h3{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);letter-spacing:-.02em}
+.vtag{font-size:13.5px;font-weight:500;color:var(--ink);margin-bottom:5px}
+.vdesc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7}
+
+/* CTA */
+#cta{background:var(--ink);text-align:center;padding:136px 48px;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(79,110,247,.055),transparent 55%),radial-gradient(ellipse at 20% 100%,rgba(123,94,167,.07),transparent 50%);pointer-events:none}
+#cta h2{font-family:var(--serif);font-size:clamp(44px,8vw,102px);font-weight:400;line-height:.92;letter-spacing:-.04em;color:#f0f1ea;margin-bottom:32px;position:relative;z-index:1}
+#cta h2 em{font-style:italic;color:rgba(79,110,247,.68)}
+#cta>p{font-size:15px;font-weight:300;color:rgba(240,241,234,.36);max-width:390px;margin:0 auto 40px;line-height:1.72;position:relative;z-index:1}
+.ctaform{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.ctain{font-family:var(--sans);font-size:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);color:#f0f1ea;border-radius:100px;padding:12px 22px;outline:none;width:248px;transition:border-color .15s}
+.ctain::placeholder{color:rgba(240,241,234,.26)}
+.ctain:focus{border-color:rgba(79,110,247,.5)}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:32px 48px}
+.ftw{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.ftlogo{font-family:var(--serif);font-size:17px;color:#f0f1ea;display:flex;align-items:center;gap:7px}
+.ftdot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.ftlinks{display:flex;gap:20px;flex-wrap:wrap}
+.ftlinks a{font-size:13px;color:rgba(240,241,234,.26);text-decoration:none;transition:color .15s}
+.ftlinks a:hover{color:#f0f1ea}
+.ftcopy{font-size:11.5px;color:rgba(240,241,234,.16)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(13px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .a1layout,.a2layout,.prodlayout,.vlayout{grid-template-columns:1fr;gap:44px}
+  .a1vis{height:360px}
+  .srow{grid-template-columns:1fr 1fr;gap:22px}
+  .sline{display:none}
+  .dgrid{grid-template-columns:1fr 1fr}
+  .pgrid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  section,#hero,#anim1,#anim2,#product,#how,#why,#values,#cta{padding:72px 22px}
+  #anim3{padding:72px 0}
+  .a3wrap{padding:0 22px}
+  nav .nav-w{padding:0 18px;height:54px}
+  .nav-links{display:none}
+  h1{font-size:clamp(42px,10vw,62px);margin-bottom:32px}
+  .h-foot{flex-direction:column;gap:24px}
+  .h-right{align-items:flex-start}
+  .h-stats{display:none}
+  .h-btns{flex-direction:column;align-items:flex-start;gap:9px}
+  .h-btns .btn-lg{width:100%;justify-content:center}
+  #logos{padding:20px 22px}
+  .logos-lbl{display:none}
+  .dgrid{grid-template-columns:1fr;border-radius:11px}
+  .vlayout{gap:40px}
+  .vrow{grid-template-columns:1fr;gap:8px}
+  .ftw{flex-direction:column;gap:12px}
+  .pgrid{grid-template-columns:1fr}
+  /* sr-section: static layout on mobile */
+  #sr-section{height:auto}
+  .sr-sticky{position:relative;top:auto;height:auto;padding:72px 22px;display:flex;flex-direction:column;align-items:center;gap:28px}
+  .sr-left,.sr-right{position:relative;top:auto;left:auto;right:auto;transform:none;text-align:center}
+  .sr-right{text-align:center}
+  .sr-seed{position:relative;top:auto;left:auto;transform:none}
+  .sr-popup-wrap{position:relative;top:auto;left:auto;transform:none;opacity:1;width:100%;max-width:400px}
+  .sr-popup-wrap.live{pointer-events:all}
+  .sr-cue{display:none}
+  .sr-bottom{position:relative;bottom:auto;flex-direction:column;text-align:center;opacity:1;transform:none;padding:16px 0 0}
+}
+@media(max-width:460px){
+  h1{font-size:clamp(36px,10vw,52px)}
+  .btn-lg{font-size:14px;padding:12px 22px}
+  .mrow{grid-template-columns:1fr 1fr}
+  .srow{grid-template-columns:1fr}
+  .dgrid{grid-template-columns:1fr}
+  .ctaform{flex-direction:column;align-items:center}
+  .ctain{width:100%;max-width:300px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  nav{padding-top:env(safe-area-inset-top)}
+  footer{padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-w">
+    <a href="#" class="logo">
+      <div class="logo-mk"><svg viewBox="0 0 13 13" fill="none"><rect x="1" y="1" width="4.5" height="4.5" rx="1" fill="white" opacity=".9"/><rect x="7.5" y="1" width="4.5" height="4.5" rx="1" fill="white" opacity=".35"/><rect x="1" y="7.5" width="4.5" height="4.5" rx="1" fill="white" opacity=".35"/><rect x="7.5" y="7.5" width="4.5" height="4.5" rx="1" fill="#C4A55A" opacity=".95"/></svg></div>
+      CADON
+    </a>
+    <div class="nav-links">
+      <a href="#product">Product</a><a href="#anim2">Integration</a><a href="#why">Why CADON</a><a href="#anim3">Use cases</a>
+    </div>
+    <div class="nav-r">
+      <a href="#" class="btn btn-ghost" style="font-size:13px">Docs</a>
+      <a href="#cta" class="btn btn-gold">Request access</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO — static big headline at top -->
+<section id="hero">
+  <span class="h-kicker"><em>●</em> Compliance infrastructure for LLM banking</span>
+  <h1>Your products,<br>inside every<br><em>AI conversation.</em></h1>
+  <div class="h-foot">
+    <p class="h-desc">CADON is the secure execution layer that lets banks sell financial products through LLMs — compliantly. One integration. Every channel. Full regulatory coverage from day one.</p>
+    <div class="h-right">
+      <div class="h-stats">
+        <div class="hst"><div class="hst-n">30s</div><div class="hst-l">Avg. completion</div></div>
+        <div class="hst"><div class="hst-n">0</div><div class="hst-l">Data to LLM</div></div>
+        <div class="hst"><div class="hst-n">30+</div><div class="hst-l">Regs mapped</div></div>
+      </div>
+      <div class="h-btns">
+        <a href="#cta" class="btn btn-gold btn-lg">Request access</a>
+        <a href="#sr-section" class="btn btn-ghost btn-lg">See the product</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL-REVEAL — Natural.co style: left/right text, popup expands from center -->
+<section id="sr-section">
+  <div class="sr-sticky" id="srSticky">
+    <div class="sr-left" id="srL"><span class="sr-tag">Compliance infrastructure</span><div class="sr-txt">Banking products<br>made <em>compliant</em></div></div>
+    <div class="sr-right" id="srR"><span class="sr-tag">For every LLM channel</span><div class="sr-txt"><em>CADON</em></div></div>
+    <div class="sr-seed" id="srSeed">
+      <div class="sr-seed-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="#0D0E09" opacity=".85"/><rect x="12" y="2" width="6" height="6" rx="1.5" fill="#0D0E09" opacity=".3"/><rect x="2" y="12" width="6" height="6" rx="1.5" fill="#0D0E09" opacity=".3"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="#4F6EF7" opacity=".9"/></svg>
+      </div>
+      <div class="sr-seed-lbl" id="srSeedLbl">exec.cadon.io</div>
+    </div>
+    <div class="sr-popup-wrap" id="srPopup">
+      <div class="pc">
+        <div class="pc-head">
+          <div class="pc-top">
+            <div class="pc-brand">
+              <div class="pc-logo">B</div>
+              <div><div class="pc-bname">Bank AI × CADON</div><div class="pc-bsub">exec.cadon.io · TLS 1.3 · PSD2/GDPR/DORA</div></div>
+            </div>
+            <div class="pc-ctrls"><div class="pc-pause">⏸ Pause</div><div class="pc-x">✕</div></div>
+          </div>
+          <div class="pc-steps-row">
+            <div class="pc-dot done">✓</div><div class="pc-line done"></div>
+            <div class="pc-dot done">✓</div><div class="pc-line done"></div>
+            <div class="pc-dot active">3</div><div class="pc-line pending"></div>
+            <div class="pc-dot pending">4</div>
+          </div>
+          <div class="pc-slabels">
+            <span class="pc-slbl done">Intent</span><span class="pc-slbl done">Identity</span>
+            <span class="pc-slbl active">Details</span><span class="pc-slbl">Consent</span>
+          </div>
+          <div class="pc-sess">
+            <span class="pc-sess-t">🔒 Secure session</span>
+            <span class="pc-sess-ttl" id="srTtl">19:47</span>
+          </div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-title">Your loan details</div>
+          <div class="pc-sub">Shared only with the bank — the AI never sees this data.</div>
+          <div class="pc-amt">
+            <div class="pc-amt-n" id="srAmt">€8,000</div>
+            <div class="pc-amt-l">Requested loan amount</div>
+            <div class="pc-pills"><span class="pc-pill">24 months</span><span class="pc-pill">~€365/mo</span><span class="pc-pill">4.9% APR</span></div>
+          </div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="pc-row-ico">🪪</span><span class="pc-row-txt">Full name &amp; date of birth</span><span class="pc-row-tag">Mandatory</span></div>
+            <div class="pc-row"><span class="pc-row-ico">💼</span><span class="pc-row-txt">Employment status &amp; income range</span><span class="pc-row-tag">Mandatory</span></div>
+            <div class="pc-row gr"><span class="pc-row-ico">🛡️</span><span class="pc-row-txt">CADON security &amp; fraud check</span><span class="pc-row-ok">✅ Passed</span></div>
+          </div>
+          <div class="pc-note">🔒 The AI only receives a pass/fail signal. Your data stays entirely inside this secure CADON session.</div>
+          <button class="pc-btn">Review &amp; give consent →</button>
+        </div>
+      </div>
+    </div>
+    <div class="sr-bottom" id="srBot"><p>CADON is live. <a href="#cta">Request access →</a></p></div>
+    <div class="sr-cue" id="srCue"><span>Scroll</span><div class="sr-cue-line"></div></div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div id="logos">
+  <div class="logos-inner">
+    <span class="logos-lbl">Designed for</span>
+    <div class="logos-track">
+      <div class="ll"><span class="li">BNP Paribas</span><span class="li">ING</span><span class="li">KBC</span><span class="li">Crédit Agricole</span><span class="li">Lloyds</span><span class="li">ABN AMRO</span><span class="li">NatWest</span><span class="li">Belfius</span><span class="li">Santander</span><span class="li">HSBC</span><span class="li">Rabobank</span><span class="li">Revolut</span></div>
+      <div class="ll2"><span class="li">BNP Paribas</span><span class="li">ING</span><span class="li">KBC</span><span class="li">Crédit Agricole</span><span class="li">Lloyds</span><span class="li">ABN AMRO</span><span class="li">NatWest</span><span class="li">Belfius</span><span class="li">Santander</span><span class="li">HSBC</span><span class="li">Rabobank</span><span class="li">Revolut</span></div>
+    </div>
+  </div>
+  <div class="lfl"></div><div class="lfr"></div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <span class="slbl">The problem</span>
+    <h2 class="stitle" style="max-width:600px;color:#f0f1ea">LLMs are already inside your customers' financial <em>conversations.</em></h2>
+    <div class="pgrid">
+      <div class="pcard reveal"><div class="pn">01</div><h3>You can't close a product inside a chatbot</h3><p>Millions of users ask LLMs about loans, mortgages, and insurance every day. When they're ready to apply, they're redirected elsewhere. Intent dies. Conversion is lost.</p></div>
+      <div class="pcard reveal" style="transition-delay:.1s"><div class="pn">02</div><h3>Compliance makes it nearly impossible</h3><p>GDPR, PSD2, DORA, the AI Act, FCA Consumer Duty — none were designed for LLM channels. Building a compliant execution layer takes 18 months and a team of lawyers.</p></div>
+      <div class="pcard reveal" style="transition-delay:.2s"><div class="pn">03</div><h3>Personal data must never reach the LLM</h3><p>No bank can allow an LLM to handle KYC data, consent records, or application data. The architecture to prevent this must come first. CADON already has it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANIM 1 -->
+<section id="anim1">
+  <div class="wrap">
+    <div class="a1layout">
+      <div class="a1left">
+        <span class="slbl">Who it's for</span>
+        <h2>One layer.<br>Every <em>party</em><br>in the chain.</h2>
+        <p>CADON connects banks, developers, fintechs, and end users into a single compliant execution flow.</p>
+        <div class="rtabs" id="roleTabs">
+          <div class="rtab active" data-role="bank" onclick="setRole('bank',this)"><span class="rtdot"></span><span class="rtnm">Banks &amp; Lenders</span><span class="rtsub">Sell via any AI channel</span></div>
+          <div class="rtab" data-role="dev" onclick="setRole('dev',this)"><span class="rtdot"></span><span class="rtnm">Developers &amp; Platforms</span><span class="rtsub">One API call</span></div>
+          <div class="rtab" data-role="fintech" onclick="setRole('fintech',this)"><span class="rtdot"></span><span class="rtnm">Fintechs &amp; Embedded Finance</span><span class="rtsub">Stay non-regulated</span></div>
+          <div class="rtab" data-role="user" onclick="setRole('user',this)"><span class="rtdot"></span><span class="rtnm">End Users</span><span class="rtsub">30s application</span></div>
+        </div>
+      </div>
+      <div class="a1vis">
+        <div class="rscene active" id="scene-bank">
+          <div class="bsi">
+            <div class="bshdr"><div class="bsico">🏦</div><div><div class="bst">Bank AI × CADON</div><div class="bss">Live execution dashboard</div></div></div>
+            <div class="bsrows">
+              <div class="bsrow" id="bsr1"><span class="bsrl">Applications today</span><span class="bsrv gr" id="bsv1">0</span></div>
+              <div class="bsrow" id="bsr2"><span class="bsrl">Conversion rate</span><span class="bsrv go" id="bsv2">–</span></div>
+              <div class="bsrow" id="bsr3"><span class="bsrl">Data to LLM</span><span class="bsrv" id="bsv3">Scanning…</span></div>
+              <div class="bsrow" id="bsr4"><span class="bsrl">Compliance status</span><span class="bsrv" id="bsv4">Checking…</span></div>
+            </div>
+            <div class="bssig"><span class="sigdot"></span><span id="bsig">Secure session · exec.cadon.io</span></div>
+          </div>
+        </div>
+        <div class="rscene" id="scene-dev">
+          <div class="dterm">
+            <div class="dtbar"><span class="dtd"></span><span class="dtd"></span><span class="dtd"></span><span class="dtfn">cadon_integration.py</span></div>
+            <div class="dtbody" id="devbody"><span class="tc"># Trigger CADON on intent</span><br></div>
+          </div>
+        </div>
+        <div class="rscene" id="scene-fintech">
+          <div class="ffow">
+            <div class="fflbl">EMBEDDED FINANCE FLOW</div>
+            <div class="ffnodes">
+              <div class="ffnode" id="fn1"><span class="ffnico">💬</span><div><div class="ffntit">User expresses intent</div><div class="ffnsub">Inside your AI product</div></div><span class="ffbdg bl">Your platform</span></div>
+              <div class="ffarr">↓</div>
+              <div class="ffnode" id="fn2"><span class="ffnico">📡</span><div><div class="ffntit">CADON API call</div><div class="ffnsub">Zero personal data sent</div></div><span class="ffbdg go">CADON</span></div>
+              <div class="ffarr">↓</div>
+              <div class="ffnode" id="fn3"><span class="ffnico">🔒</span><div><div class="ffntit">Secure pop-up opens</div><div class="ffnsub">Bank-branded, isolated</div></div><span class="ffbdg go">CADON</span></div>
+              <div class="ffarr">↓</div>
+              <div class="ffnode" id="fn4"><span class="ffnico">✅</span><div><div class="ffntit">Status returned</div><div class="ffnsub">{"status":"success"} only</div></div><span class="ffbdg gr">Clean</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="rscene" id="scene-user">
+          <div class="uchat">
+            <div class="uchdr"><div class="ucav">🤖</div><div><div class="ucnm">Bank AI Assistant</div><div class="ucst">● Powered by CADON</div></div></div>
+            <div class="ucmsgs" id="ucmsgs">
+              <div class="ucmsg u">I'd like a personal loan of €8,000</div>
+              <div class="ucmsg a">I found 4 banks. Opening a secure session — your data stays private from me.</div>
+              <div class="minipop" id="ucpop">
+                <div class="mptop"><div class="mplogo">C</div><div class="mpnm">Bank AI × CADON</div><div class="mpbdg">SECURED</div></div>
+                <div class="mpprog"><div class="mps done"></div><div class="mps done"></div><div class="mps done"></div><div class="mps" id="mps4"></div></div>
+                <div class="mptxt" id="mptxt">Identity verified · Reviewing consent…</div>
+                <button class="mpbtn" id="mpbtn">Submit application →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANIM 2 -->
+<section id="anim2">
+  <div class="wrap">
+    <div class="a2layout">
+      <div>
+        <span class="slbl" style="color:rgba(196,165,90,.52)">Integration</span>
+        <div class="cptabs" style="margin:13px 0 20px">
+          <div class="cptab active" onclick="setCT('trigger',this)">Trigger session</div>
+          <div class="cptab" onclick="setCT('bank',this)">Bank receives KYC</div>
+          <div class="cptab" onclick="setCT('result',this)">Receive result</div>
+        </div>
+        <div class="cpane">
+          <div class="cpbar"><span class="cpd"></span><span class="cpd"></span><span class="cpd"></span><span class="cpfile" id="cpfile">cadon_trigger.py</span></div>
+          <div class="cpbody" id="cpbody"></div>
+        </div>
+      </div>
+      <div class="a2r">
+        <h2>One API call.<br><em>Everything</em><br>handled.</h2>
+        <p>Banks integrate CADON as a DORA Art. 30-compliant ICT third-party service provider. GDPR Art. 28 DPA template included from day one.</p>
+        <div class="fsteps">
+          <div class="fstep" id="fs0"><span class="fsn">01</span><div><h4>Trigger the session</h4><p>One API call with session token and product intent. Zero personal data. Ever.</p></div></div>
+          <div class="fstep dim" id="fs1"><span class="fsn">02</span><div><h4>Bank performs KYC &amp; consent</h4><p>CADON pop-up handles identity, consent, and application capture in isolation.</p></div></div>
+          <div class="fstep dim" id="fs2"><span class="fsn">03</span><div><h4>Receive clean result</h4><p>Status signal returned. Audit log written. Personal data never crosses back.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product">
+  <div class="wrap">
+    <div class="prodlayout">
+      <div>
+        <span class="slbl">The product</span>
+        <h2 class="stitle">The execution layer banking <em>needed.</em></h2>
+        <p class="sbody">When a user expresses financial intent in any AI conversation, CADON triggers a secure, bank-branded pop-up. Identity verification, consent capture, and application submission happen in a fully isolated environment. The LLM receives only a status signal.</p>
+        <p class="sbody" style="margin-top:11px">Think of it as Stripe Checkout for bank products in AI conversations. The bank controls everything inside it. CADON is the container. The bank is the controller.</p>
+        <div class="mrow" style="margin-top:24px">
+          <div class="met"><div class="metn">30<span style="font-size:16px;vertical-align:super">s</span></div><div class="metl">Average user<br>completion</div></div>
+          <div class="met"><div class="metn">0</div><div class="metl">Personal data fields<br>reaching the LLM</div></div>
+          <div class="met"><div class="metn">30+</div><div class="metl">EU &amp; UK regulations<br>mapped</div></div>
+        </div>
+      </div>
+      <div class="pillars reveal">
+        <div class="pillar"><div class="pillar-ico">🪪</div><div class="pillar-t">Identity &amp; consent capture</div><div class="pillar-b">Bank-directed pop-up handles KYC, biometric auth, and GDPR Art. 7-compliant consent — isolated from the LLM.</div></div>
+        <div class="pillar"><div class="pillar-ico">⚖️</div><div class="pillar-t">Compliance by architecture</div><div class="pillar-b">GDPR, DORA, PSD2, AI Act, FCA Consumer Duty — enforced at protocol level. Not by policy. By how the system is built.</div></div>
+        <div class="pillar"><div class="pillar-ico">🔌</div><div class="pillar-t">Any product, any bank system</div><div class="pillar-b">Consumer credit, mortgages, insurance, investments — CADON adapts to any product schema without rearchitecting.</div></div>
+        <div class="pillar"><div class="pillar-ico">📋</div><div class="pillar-t">Full audit infrastructure</div><div class="pillar-b">Immutable consent records and session logs. Structured for DORA Art. 30, GDPR Art. 30, and FCA supervisory inspection.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <span class="slbl">How it works</span>
+    <h2 class="stitle">Five steps.<br>One compliant <em>execution.</em></h2>
+    <div class="srow">
+      <div class="sline"></div>
+      <div class="scol reveal"><div class="snum">01</div><h3>User expresses intent</h3><p>Natural language, any AI interface. Loan, mortgage, insurance.</p></div>
+      <div class="scol reveal" style="transition-delay:.08s"><div class="snum">02</div><h3>CADON is called</h3><p>Single API call. Session token + intent only. Zero personal data.</p></div>
+      <div class="scol reveal" style="transition-delay:.16s"><div class="snum">03</div><h3>Secure pop-up opens</h3><p>Bank-branded, isolated. Identity, consent, and application captured.</p></div>
+      <div class="scol reveal" style="transition-delay:.24s"><div class="snum">04</div><h3>Bank receives data</h3><p>Verified application transmitted directly. CADON does not retain it.</p></div>
+      <div class="scol reveal" style="transition-delay:.32s"><div class="snum">05</div><h3>Status returned</h3><p><code style="font-family:var(--mono);font-size:10.5px;background:#EBEBEB;padding:2px 5px;border-radius:3px">{"status":"success"}</code></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANIM 3 -->
+<section id="anim3">
+  <div class="a3wrap">
+    <span class="slbl">Use cases</span>
+    <h2>Every financial product,<br><em>every</em> conversation.</h2>
+  </div>
+  <div class="ucsroll" style="position:relative">
+    <div class="ucfl"></div>
+    <div class="uct" id="uct1"></div>
+    <div class="uct2" id="uct2"></div>
+    <div class="ucfr"></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <div class="whead">
+      <span class="slbl">Why CADON</span>
+      <h2 class="stitle">Compliance isn't a feature.<br>It's the <em>foundation.</em></h2>
+      <p class="sbody" style="max-width:400px">Every other approach treats compliance as something to navigate around. CADON treats it as the architecture itself.</p>
+    </div>
+    <div class="dgrid">
+      <div class="dcell reveal"><div class="dcell-ico">🚫</div><h3>Zero-data LLM boundary</h3><p>The LLM never receives a name, income, ID, or outcome. Enforced cryptographically — not by policy.</p><div class="dcell-tag">GDPR · Schrems II · AI Act</div></div>
+      <div class="dcell reveal" style="transition-delay:.06s"><div class="dcell-ico">🏛️</div><h3>Bank-directed by design</h3><p>The bank controls the data schema, consent language, product content, and retention period. CADON is the container.</p><div class="dcell-tag">GDPR Art. 28 · PSD2 · FCA</div></div>
+      <div class="dcell reveal" style="transition-delay:.12s"><div class="dcell-ico">🧬</div><h3>Regulation-native</h3><p>30 frameworks mapped. Architecturally addressed. CADON was designed around the full EU &amp; UK stack from commit one.</p><div class="dcell-tag">DORA · NIS2 · CRA · ePrivacy</div></div>
+      <div class="dcell reveal" style="transition-delay:.18s"><div class="dcell-ico">🔗</div><h3>One integration, every product</h3><p>Consumer credit, mortgages, investments, insurance — same integration, different schemas. No new compliance work.</p><div class="dcell-tag">CCD2 · MCD · MiFID II · IDD</div></div>
+      <div class="dcell reveal" style="transition-delay:.24s"><div class="dcell-ico">📁</div><h3>Full audit infrastructure</h3><p>Every session logged: timestamp, intent, consent evidence, outcome. Structured for DORA Art. 30 and FCA inspection.</p><div class="dcell-tag">DORA Art. 30 · GDPR Art. 30</div></div>
+      <div class="dcell reveal" style="transition-delay:.3s"><div class="dcell-ico">⚖️</div><h3>Non-regulated positioning</h3><p>CADON is a technical service provider. Not a credit broker. Not a payment initiator. The architecture enforces this.</p><div class="dcell-tag">PSD2 Art. 3(j) · FSMA · FCA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section id="values">
+  <div class="wrap">
+    <div class="vlayout">
+      <div><span class="slbl">Principles</span><h2 class="stitle">Designed for banks.<br>Built for <em>regulators.</em></h2></div>
+      <div class="vrows">
+        <div class="vrow reveal"><h3>Controlled</h3><div><div class="vtag">The bank is in charge. Always.</div><div class="vdesc">Every element of the execution pop-up is set by the bank. CADON executes the instruction. The bank gives it.</div></div></div>
+        <div class="vrow reveal" style="transition-delay:.08s"><h3>Isolated</h3><div><div class="vtag">Personal data never crosses the boundary.</div><div class="vdesc">The LLM environment is a zero-data zone. This is a cryptographic constraint. Identity and application data live only in CADON's secure layer and the bank's systems.</div></div></div>
+        <div class="vrow reveal" style="transition-delay:.16s"><h3>Evidenced</h3><div><div class="vtag">Every transaction is provable.</div><div class="vdesc">Immutable audit trails for every execution. When a regulator asks, the evidence is already structured, timestamped, and exportable.</div></div></div>
+        <div class="vrow reveal" style="transition-delay:.24s"><h3>Scalable</h3><div><div class="vtag">One integration, infinite channels.</div><div class="vdesc">Banks integrate once. The same execution layer works across every AI channel, every product type, and every jurisdiction CADON supports.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2>Financial products,<br>inside every<br><em>conversation.</em></h2>
+  <p>Request early access for your bank, LLM platform, or fintech. Onboarding partners now across France, Belgium, Netherlands, and the UK.</p>
+  <div class="ctaform">
+    <input type="email" class="ctain" placeholder="you@bank.com">
+    <button class="btn btn-gold btn-lg">Request access →</button>
+  </div>
+</section>
+
+<footer>
+  <div class="ftw">
+    <span class="ftlogo"><span class="ftdot"></span>CADON</span>
+    <div class="ftlinks"><a href="#">Product</a><a href="#">Docs</a><a href="#">Security</a><a href="#">Privacy</a><a href="#">Contact</a></div>
+    <span class="ftcopy">© 2026 CADON. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+/* REVEAL */
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* HERO FADE */
+['.h-kicker','h1','.h-foot'].forEach((s,i)=>{
+  const el=document.querySelector(s);if(!el)return;
+  Object.assign(el.style,{opacity:'0',transform:'translateY(11px)',transition:`opacity .6s ease ${i*.12}s,transform .6s ease ${i*.12}s`});
+  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateY(0)'});
+});
+
+/* SCROLL-REVEAL — popup expands from center on scroll */
+(function(){
+  const sec=document.getElementById('sr-section');
+  const L=document.getElementById('srL'),R=document.getElementById('srR');
+  const seed=document.getElementById('srSeed'),seedLbl=document.getElementById('srSeedLbl');
+  const popup=document.getElementById('srPopup');
+  const bot=document.getElementById('srBot'),cue=document.getElementById('srCue');
+  if(!sec||window.matchMedia('(max-width:768px)').matches)return;
+
+  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const lp=(a,b,t)=>a+(b-a)*t;
+  const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
+
+  // set initial states
+  L.style.cssText='opacity:1;transform:translateY(-50%) translateX(0)';
+  R.style.cssText='opacity:1;transform:translateY(-50%) translateX(0)';
+  seed.style.opacity='1';
+  popup.style.opacity='0';popup.style.transform='translate(-50%,-50%) scale(0.1)';
+  bot.style.cssText='opacity:0;transform:translateY(12px)';
+
+  window.addEventListener('scroll',()=>{
+    const secTop=sec.getBoundingClientRect().top+window.scrollY;
+    const p=cl((window.scrollY-secTop)/(sec.offsetHeight-window.innerHeight),0,1);
+
+    const pSide=cl(1-p*2.8,0,1);
+    const pSeed=cl(1-p*6,0,1);
+    const pLbl=cl(p*6-.5,0,1)*cl(1-p*5,0,1);
+    const pPopup=ease(cl((p-.12)/.65,0,1));
+    const pBot=cl((p-.82)/.18,0,1);
+    const pCue=cl(1-p*6,0,1);
+    const slide=ease(cl((p-.04)/.55,0,1))*65;
+
+    L.style.opacity=pSide;L.style.transform=`translateY(-50%) translateX(${-slide}px)`;
+    R.style.opacity=pSide;R.style.transform=`translateY(-50%) translateX(${slide}px)`;
+    seed.style.opacity=pSeed;
+    if(seedLbl)seedLbl.style.opacity=pLbl;
+    popup.style.transform=`translate(-50%,-50%) scale(${lp(.1,1,pPopup)})`;
+    popup.style.opacity=Math.min(pPopup*1.8,1);
+    if(pPopup>.1)popup.classList.add('live');else popup.classList.remove('live');
+    bot.style.opacity=pBot;bot.style.transform=`translateY(${lp(12,0,pBot)}px)`;
+    if(cue)cue.style.opacity=pCue;
+  },{passive:true});
+
+  // TTL
+  let ttl=1187;
+  const ttlEl=document.getElementById('srTtl');
+  setInterval(()=>{ttl=Math.max(0,ttl-1);if(ttlEl)ttlEl.textContent=Math.floor(ttl/60)+':'+(ttl%60<10?'0':'')+(ttl%60)},1000);
+
+  // amount cycle
+  const amts=['€5,000','€8,000','€12,500','€20,000','€8,000'];
+  let ai=0;const amtEl=document.getElementById('srAmt');
+  setInterval(()=>{
+    ai=(ai+1)%amts.length;if(!amtEl)return;
+    amtEl.style.cssText='opacity:0;transform:translateY(5px);transition:opacity .22s,transform .22s';
+    setTimeout(()=>{amtEl.textContent=amts[ai];amtEl.style.cssText='opacity:1;transform:translateY(0);transition:opacity .22s,transform .22s'},200);
+  },2800);
+})();
+
+/* ROLE SWITCHER */
+const rOrder=['bank','dev','fintech','user'];let ri=0;
+function setRole(role,tab){
+  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('active'));
+  if(tab)tab.classList.add('active');
+  document.querySelectorAll('.rscene').forEach(s=>s.classList.remove('active'));
+  const sc=document.getElementById('scene-'+role);if(sc)sc.classList.add('active');
+  if(role==='bank')sBankAnim();
+  if(role==='dev')sDevAnim();
+  if(role==='fintech')sFintechAnim();
+  if(role==='user')sUserAnim();
+}
+setInterval(()=>{ri=(ri+1)%rOrder.length;const r=rOrder[ri];setRole(r,document.querySelector(`.rtab[data-role="${r}"]`))},5500);
+
+function sBankAnim(){
+  const d=[['bsv1',0,312,'gr'],['bsv2',null,'73.4%','go'],['bsv3',null,'0 fields','gr'],['bsv4',null,'✅ All regs active','gr']];
+  const rows=['bsr1','bsr2','bsr3','bsr4'];
+  rows.forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('an')});
+  d.forEach(([vid,from,to,cls],i)=>setTimeout(()=>{
+    const el=document.getElementById(vid);const row=document.getElementById(rows[i]);
+    if(!el||!row)return;row.classList.add('an');
+    if(from!==null){let n=from;const t=parseInt(to),st=Math.ceil(t/28);const c=setInterval(()=>{n=Math.min(n+st,t);el.textContent=n;el.className='bsrv '+cls;if(n>=t)clearInterval(c)},45)}
+    else{el.textContent=to;el.className='bsrv '+cls}
+  },i*500+200));
+}
+
+const devLines=[
+  `<span class="tc"># Trigger CADON when LLM detects financial intent</span>\n`,
+  `<span class="tf">result</span> = cadon.<span class="tf">execute</span>({<br>`,
+  `&nbsp;&nbsp;<span class="ts">"product"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ts">"personal_loan"</span>,<br>`,
+  `&nbsp;&nbsp;<span class="ts">"bank_id"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ts">"bnp_fr_prod"</span>,<br>`,
+  `&nbsp;&nbsp;<span class="ts">"session_token"</span>: session.opaque_id,<br>`,
+  `&nbsp;&nbsp;<span class="tc"># No personal data. Ever.</span><br>`,
+  `})<br>`,`<br>`,
+  `<span class="tc"># CADON returns only a status signal</span><br>`,
+  `<span class="tf">result</span> == { <span class="ts">"status"</span>: <span class="tr">"success"</span> }<br>`,
+];
+function sDevAnim(){
+  const b=document.getElementById('devbody');if(!b)return;b.innerHTML='';
+  devLines.forEach((l,i)=>setTimeout(()=>{b.innerHTML+=l},i*155));
+}
+function sFintechAnim(){
+  ['fn1','fn2','fn3','fn4'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('an')});
+  ['fn1','fn2','fn3','fn4'].forEach((id,i)=>setTimeout(()=>{const e=document.getElementById(id);if(e)e.classList.add('an')},i*700+200));
+}
+function sUserAnim(){
+  const txt=document.getElementById('mptxt'),btn=document.getElementById('mpbtn'),s4=document.getElementById('mps4');
+  if(!txt||!btn)return;
+  txt.textContent='Identity verified · Reviewing consent…';btn.textContent='Submit application →';btn.style.background='';if(s4)s4.classList.remove('done');
+  setTimeout(()=>{if(txt)txt.textContent='GDPR consent confirmed ✓';if(s4)s4.classList.add('done')},1500);
+  setTimeout(()=>{if(btn){btn.textContent='✅ Submitted!';btn.style.background='linear-gradient(135deg,#059669,#047857)'}},2800);
+  setTimeout(()=>{if(txt)txt.textContent='Identity verified · Reviewing consent…';if(btn){btn.textContent='Submit application →';btn.style.background=''}if(s4)s4.classList.remove('done')},6200);
+}
+sBankAnim();
+
+/* CODE TYPEWRITER */
+const CD={
+  trigger:{f:'cadon_trigger.py',a:[0],l:[
+    `<span class="tc"># Trigger CADON when LLM detects financial intent</span>`,
+    `<span class="tc">from</span> <span class="tf">cadon</span> <span class="tc">import</span> <span class="tf">Client</span>`,``,
+    `<span class="tf">client</span> = Client(<span class="tr">api_key</span>=<span class="ts">"bank_prod_key"</span>)`,``,
+    `<span class="tc"># Zero personal data in this call. Ever.</span>`,
+    `<span class="tf">session</span> = client.<span class="tf">execute</span>({`,
+    `&nbsp;&nbsp;<span class="ts">"product"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ts">"personal_loan"</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"bank_id"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ts">"bnp_fr_prod"</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"session_token"</span>: session.opaque_id,`,
+    `})`,`<span class="tc"># Returns session_id — nothing personal</span>`,
+  ]},
+  bank:{f:'cadon_kyc_hook.py',a:[1],l:[
+    `<span class="tc"># CADON calls your bank's KYC webhook</span>`,
+    `<span class="tc">@app.route</span>(<span class="ts">"/cadon/kyc-result"</span>, methods=[<span class="ts">"POST"</span>])`,
+    `<span class="tc">def</span> <span class="tf">receive_kyc</span>(request):`,
+    `&nbsp;&nbsp;payload = request.json`,
+    `&nbsp;&nbsp;<span class="tc"># Contains: verified identity signal,</span>`,
+    `&nbsp;&nbsp;<span class="tc"># GDPR consent record, application data</span>`,
+    `&nbsp;&nbsp;<span class="tc"># Never touched the LLM.</span>`,
+    `&nbsp;&nbsp;process_application(payload)`,
+    `&nbsp;&nbsp;<span class="tr">return</span> {<span class="ts">"status"</span>: <span class="ts">"received"</span>}`,
+  ]},
+  result:{f:'cadon_result.py',a:[2],l:[
+    `<span class="tc"># What the LLM/calling system receives</span>`,
+    `<span class="tc"># This is ALL the AI ever sees:</span>`,``,
+    `result = {`,
+    `&nbsp;&nbsp;<span class="ts">"status"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tr">"success"</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"session_id"</span>:&nbsp;&nbsp;<span class="tr">"CDON-4X9A-F22B"</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"intent_type"</span>: <span class="tr">"personal_loan"</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"psd2_compliant"</span>: <span class="tg">True</span>,`,
+    `&nbsp;&nbsp;<span class="ts">"gdpr_consent"</span>:&nbsp;<span class="tg">True</span>,`,
+    `&nbsp;&nbsp;<span class="tc"># No name. No amount. No ID. Nothing.</span>`,
+    `}`,
+  ]},
+};
+let ct='trigger';
+function setCT(tab,btn){
+  ct=tab;document.querySelectorAll('.cptab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+  const d=CD[tab];document.getElementById('cpfile').textContent=d.f;
+  const body=document.getElementById('cpbody');body.innerHTML='';
+  d.l.forEach((l,i)=>{const dv=document.createElement('div');dv.className='cline';dv.innerHTML=l||'&nbsp;';body.appendChild(dv);setTimeout(()=>dv.classList.add('vis'),i*55+55)});
+  document.querySelectorAll('.fstep').forEach((fs,i)=>fs.classList.toggle('dim',!d.a.includes(i)));
+}
+let cti=0;
+setInterval(function(){cti=(cti+1)%3;const tabs=['trigger','bank','result'];setCT(tabs[cti],document.querySelector('.cptab:nth-child('+(cti+1)+')'))},4600);
+setCT('trigger');
+
+/* USE CASE SCROLLER */
+const ucD=[
+  {i:'🏠',n:'Mortgage',s:'Home purchase & remortgage',h:true},
+  {i:'💳',n:'Personal Loan',s:'€1k–€75k instant decision'},
+  {i:'🚘',n:'Car Loan',s:'Finance new & used vehicles',h:true},
+  {i:'📈',n:'Investments',s:'MiFID II compliant portfolios'},
+  {i:'🌅',n:'Pension Plan',s:'Tax-deductible savings',h:true},
+  {i:'🏦',n:'Savings Account',s:'3.4% AER, instant opening'},
+  {i:'🚗',n:'Car Insurance',s:'Comprehensive, instant cover'},
+  {i:'🏡',n:'Home Insurance',s:'Buildings & contents'},
+  {i:'↗️',n:'Money Transfer',s:'SEPA Instant & international',h:true},
+  {i:'🛡️',n:'Fraud Report',s:'PSD2 chargeback initiated'},
+  {i:'🚫',n:'Card Block',s:'Instant block & replacement'},
+  {i:'🏢',n:'Business Banking',s:'SME & freelance accounts',h:true},
+  {i:'👤',n:'Account Opening',s:'KYC onboarding, 5 minutes'},
+  {i:'💡',n:'Renovation Loan',s:'Up to €75k, same-day'},
+];
+function mkUC(u){return`<div class="uccard${u.h?' hl':''}"><div class="uccinner"><div class="uctop"><span class="uco">${u.i}</span><span class="ucbdg">${u.h?'Popular':'Available'}</span></div><div><div class="ucnm">${u.n}</div><div class="ucmt">${u.s}</div></div></div></div>`}
+const t1=document.getElementById('uct1'),t2=document.getElementById('uct2');
+if(t1&&t2){const all=[...ucD,...ucD,...ucD];all.forEach(u=>{t1.innerHTML+=mkUC(u);t2.innerHTML+=mkUC(u)})}
+</script>
+</body>
+</html>

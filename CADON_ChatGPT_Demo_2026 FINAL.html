@@ -334,36 +334,6 @@ body{font-family:'Inter',ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe U
 .btn-g{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
 .btn-g:hover{opacity:.9;transform:translateY(-1px)}
 .popup-ftr{padding:10px 18px 14px;border-top:1px solid #f3f4f6;text-align:center;font-size:10px;color:#aaa;flex-shrink:0}
-/* MOBILE UX PATCH */
-.mob-menu-btn { display: none; background: transparent; border: none; font-size: 20px; cursor: pointer; color: var(--gpt-text); margin-right: 8px; }
-.mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; opacity: 0; transition: opacity 0.3s; }
-.mobile-overlay.show { opacity: 1; pointer-events: all; }
-.back-to-cadon {
-  display: flex; align-items: center; gap: 8px; padding: 10px; margin: 8px;
-  border-radius: 8px; background: rgba(255,255,255,0.08); color: var(--gpt-text);
-  font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--gpt-border);
-  transition: background 0.15s;
-}
-[data-theme="light"] .back-to-cadon { background: rgba(0,0,0,0.04); }
-.back-to-cadon:hover { background: var(--gpt-hover); }
-
-@media (max-width: 768px) {
-  body { overflow-x: hidden; width: 100vw; }
-  .layout { overflow-x: hidden; width: 100vw; }
-  .mob-menu-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; }
-  .sidebar { 
-    position: fixed; top: 0; bottom: 0; left: -280px; z-index: 100;
-    width: 260px; transition: transform 0.3s ease; box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  }
-  .sidebar.open { transform: translateX(280px); }
-  .mobile-overlay { display: block; pointer-events: none; }
-  .chat-hdr { padding: 8px; }
-  .model-sel { padding: 4px 6px; font-size: 14px; }
-  .share-btn { display: none; }
-  .input-area { padding: 10px; }
-  .msg-block { padding: 4px 12px; }
-  .banks-grid { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
@@ -391,11 +361,9 @@ body{font-family:'Inter',ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe U
 </div>
 
 <div class="layout">
-  <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
 
   <!-- SIDEBAR -->
   <nav class="sidebar">
-    <a href="/" class="back-to-cadon" onclick="if(window.parent) { window.parent.location.href = '/'; return false; }">← Back to CADON</a>
     <div class="sb-top">
       <div class="sb-logo-area">
         <div class="gpt-logo-icon">
@@ -442,13 +410,10 @@ body{font-family:'Inter',ui-sans-serif,-apple-system,BlinkMacSystemFont,'Segoe U
   <!-- CHAT AREA -->
   <div class="chat-area">
     <div class="chat-hdr">
-      <div style="display:flex; align-items:center;">
-        <button class="mob-menu-btn" onclick="toggleMobileMenu()">☰</button>
-        <button class="model-sel">
-          <span>GPT-4o</span>
-          <svg viewBox="0 0 24 24"><path d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-        </button>
-      </div>
+      <button class="model-sel">
+        <span>GPT-4o</span>
+        <svg viewBox="0 0 24 24"><path d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+      </button>
       <div class="hdr-r">
         <button class="theme-btn" onclick="toggleTheme()">☀</button>
         <button class="share-btn">
@@ -1232,22 +1197,6 @@ function resumeSession(){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePopup();document.getElementById('ck-ov').classList.remove('open')}});
-/* Mobile Menu */
-function toggleMobileMenu() {
-  const sb = document.querySelector('.sidebar');
-  const ov = document.querySelector('.mobile-overlay');
-  if(sb.classList.contains('open')) {
-    sb.classList.remove('open');
-    ov.classList.remove('show');
-  } else {
-    sb.classList.add('open');
-    ov.classList.add('show');
-  }
-}
-function closeMobileMenu() {
-  document.querySelector('.sidebar').classList.remove('open');
-  document.querySelector('.mobile-overlay').classList.remove('show');
-}
 </script>
 </body>
 </html>

@@ -7,109 +7,102 @@ import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   const navLinks = [
-    { name: "Integration", href: "#integration" },
+    { name: "Integration", href: "#anim2" },
     { name: "Product", href: "#product" },
+    { name: "Use cases", href: "#anim3" },
     { name: "Why CADON", href: "#why" },
-    { name: "Use cases", href: "#use-cases" },
     { name: "Demo", href: "/demo" },
   ];
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-[200] transition-all duration-300",
-        scrolled
-          ? "bg-white/80 backdrop-blur-xl border-b border-muted3 py-3"
-          : "bg-transparent py-5"
-      )}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-2 h-2 rounded-full bg-gold transition-transform group-hover:scale-125" />
-          <span className="font-serif text-xl font-medium tracking-tight text-ink">
-            CADON
-          </span>
+    <nav>
+      <div className="nav-w">
+        <Link href="/" className="logo">
+          <div className="logo-mk">
+            <svg viewBox="0 0 13 13" fill="none">
+              <rect x="1" y="1" width="4.5" height="4.5" rx="1" fill="white" opacity=".9" />
+              <rect x="7.5" y="1" width="4.5" height="4.5" rx="1" fill="white" opacity=".35" />
+              <rect x="1" y="7.5" width="4.5" height="4.5" rx="1" fill="white" opacity=".35" />
+              <rect x="7.5" y="7.5" width="4.5" height="4.5" rx="1" fill="#C4A55A" opacity=".95" />
+            </svg>
+          </div>
+          CADON
         </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="nav-links">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-[13px] font-medium text-muted hover:text-ink transition-colors"
-            >
+            <Link key={link.name} href={link.href}>
               {link.name}
             </Link>
           ))}
         </div>
-
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/docs"
-            className="text-[13px] font-medium text-ink px-4 py-2 rounded-full border border-muted2 hover:border-ink transition-all"
-          >
+        <div className="nav-r">
+          <Link href="#" className="btn btn-ghost" style={{ fontSize: "13px" }}>
             Docs
           </Link>
-          <a
-            href="#cta"
-            className="bg-gold hover:bg-gold2 text-ink text-[13px] font-semibold px-6 py-2 rounded-full transition-all hover:-translate-y-px"
-          >
+          <a href="#cta" className="btn btn-gold">
             Request access
           </a>
         </div>
-
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-ink p-1"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        
+        {/* Mobile Toggle Button */}
+        <div className="flex md:hidden ml-auto">
+          <button
+            onClick={() => setIsOpen((v) => !v)}
+            className="flex items-center justify-center w-[36px] h-[36px] rounded-lg transition-colors hover:bg-black/[0.05] text-[#0D0E09]"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE DRAWER OVERLAY */}
       <div
         className={cn(
-          "fixed inset-0 top-[60px] bg-white z-[190] md:hidden transition-transform duration-300",
-          isOpen ? "translate-x-0" : "translate-x-full"
+          "fixed inset-0 top-[54px] md:hidden transition-all duration-300 ease-out z-[490]",
+          "bg-white/[0.97] backdrop-blur-xl",
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        <div className="flex flex-col p-8 gap-6 bg-white shadow-sm">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-xl font-serif text-ink border-b border-muted3 pb-4"
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <div className="flex flex-col gap-4 mt-8">
-            <a
-              href="#cta"
-              className="bg-gold text-ink text-center py-4 rounded-xl font-bold"
-              onClick={() => setIsOpen(false)}
-            >
+        <div className="mobile-drawer">
+          <div className="flex flex-col">
+            {navLinks.map((link, i) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="mobile-drawer-link transition-all duration-300"
+                style={{
+                  opacity: isOpen ? 1 : 0,
+                  transform: isOpen ? "translateY(0)" : "translateY(10px)",
+                  transitionDelay: isOpen ? `${55 + i * 38}ms` : "0ms",
+                }}
+              >
+                {link.name}
+                <span className="text-black/20 font-sans text-[14px]">→</span>
+              </Link>
+            ))}
+          </div>
+          <div
+            className="mt-auto flex flex-col gap-3 pt-8 px-2 transition-all duration-300"
+            style={{
+              opacity: isOpen ? 1 : 0,
+              transform: isOpen ? "translateY(0)" : "translateY(10px)",
+              transitionDelay: isOpen ? `${50 + navLinks.length * 38 + 38}ms` : "0ms",
+            }}
+          >
+            <a href="#cta" onClick={() => setIsOpen(false)} className="btn btn-gold w-full justify-center py-4 text-[15px]">
               Request access
             </a>
-            <Link
-              href="/docs"
-              className="border border-muted2 text-ink text-center py-4 rounded-xl font-bold"
-              onClick={() => setIsOpen(false)}
-            >
-              Docs
+            <Link href="#" onClick={() => setIsOpen(false)} className="btn btn-ghost w-full justify-center py-4 text-[15px]">
+              Documentation
             </Link>
           </div>
         </div>

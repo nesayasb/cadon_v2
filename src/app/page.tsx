@@ -1,14 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import ProblemSection from "@/components/ProblemSection";
-import RoleSelector from "@/components/RoleSelector";
-import CodeIntegration from "@/components/CodeIntegration";
-import Product from "@/components/Product";
-import HowItWorks from "@/components/HowItWorks";
-import UseCases from "@/components/UseCases";
-import WhySection from "@/components/WhySection";
-import PrinciplesSection from "@/components/PrinciplesSection";
-import CTA from "@/components/CTA";
+import LandingV4Body from "@/components/LandingV4Body";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -16,16 +7,7 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar />
       <main>
-        <Hero />
-        <ProblemSection />
-        <RoleSelector />
-        <CodeIntegration />
-        <Product />
-        <HowItWorks />
-        <UseCases />
-        <WhySection />
-        <PrinciplesSection />
-        <CTA />
+        <LandingV4Body />
       </main>
       <Footer />
     </div>
