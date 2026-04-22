@@ -21,6 +21,7 @@ const Navbar = () => {
     { name: "Product", href: "#product" },
     { name: "Why CADON", href: "#why" },
     { name: "Use cases", href: "#use-cases" },
+    { name: "Demo", href: "/demo" },
   ];
 
   return (
@@ -84,7 +85,7 @@ const Navbar = () => {
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
-        <div className="flex flex-col p-8 gap-6">
+        <div className="flex flex-col p-8 gap-6 bg-white shadow-sm">
           {navLinks.map((link) => (
             <Link
               key={link.name}

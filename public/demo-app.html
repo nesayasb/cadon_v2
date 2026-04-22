@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT × MADON — Secure Banking Execution</title>
+<link href="https://fonts.googleapis.com/css2?family=Söhne:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   DESIGN TOKENS
+   ChatGPT UI: dark sidebar, clean white chat
+   MADON popup: KBC blue branding
+════════════════════════════════════════════ */
+:root{
+  /* ChatGPT palette */
+  --gpt-bg:      #212121;
+  --gpt-sidebar: #171717;
+  --gpt-hover:   #2A2A2A;
+  --gpt-border:  #383838;
+  --gpt-text:    #ECECEC;
+  --gpt-muted:   #8E8EA0;
+  --gpt-green:   #10A37F;
+  --gpt-green-l: #1A7F64;
+  --gpt-input:   #2F2F2F;
+  --gpt-user-bubble:#2F2F2F;
+  --gpt-ai-bg:   #212121;
+  /* Main chat area (light) */
+  --chat-bg:     #FFFFFF;
+  --chat-border: #E5E5E5;
+  --msg-user:    #F4F4F4;
+  /* KBC / MADON popup palette */
+  --kbc-dark:    #003768;
+  --kbc-mid:     #004d99;
+  --kbc-blue:    #00AEEF;
+  --kbc-pale:    #E8F6FD;
+  --kbc-ice:     #DAEEFA;
+  /* Utility */
+  --white:#FFFFFF; --g50:#F9FAFB; --g100:#F3F4F6; --g200:#E5E7EB;
+  --g300:#D1D5DB; --g400:#9CA3AF; --g500:#6B7280; --g700:#374151; --g900:#111827;
+  --green:#059669; --gl:#D1FAE5; --amber:#D97706; --al:#FEF3C7;
+  --red:#DC2626;   --rl:#FEE2E2; --purple:#7C3AED; --pl:#EDE9FE;
+  --font:'Inter',sans-serif;
+  --r:12px; --rl:18px; --rx:24px;
+  --sh:0 4px 16px rgba(0,0,0,.08);
+  --shx:0 24px 80px rgba(0,0,0,.22);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--gpt-bg);color:var(--gpt-text)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#444;border-radius:3px}
+
+/* ════ LAYOUT ════ */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ════ SIDEBAR (ChatGPT style) ════ */
+.sidebar{
+  width:260px;flex-shrink:0;background:var(--gpt-sidebar);
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--gpt-border);
+  overflow-y:auto;
+}
+.sb-top{padding:12px;border-bottom:1px solid var(--gpt-border)}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer;transition:background .15s}
+.sb-brand:hover{background:var(--gpt-hover)}
+.sb-brand-ico{width:32px;height:32px;background:var(--gpt-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-brand-name{font-size:14px;font-weight:600;color:var(--gpt-text)}
+.sb-brand-sub{font-size:10px;color:var(--gpt-muted)}
+.new-chat-btn{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;border:none;background:transparent;color:var(--gpt-muted);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .15s;margin-top:6px}
+.new-chat-btn:hover{background:var(--gpt-hover);color:var(--gpt-text)}
+.new-chat-btn .pencil{margin-left:auto;font-size:15px}
+.sb-section{padding:8px 12px 4px;font-size:11px;color:var(--gpt-muted);font-weight:500;letter-spacing:.03em;text-transform:uppercase}
+.uc-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;border:none;background:transparent;color:var(--gpt-muted);font-family:var(--font);font-size:12.5px;width:100%;text-align:left;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.uc-btn:hover{background:var(--gpt-hover);color:var(--gpt-text)}
+.uc-btn.active{background:var(--gpt-hover);color:var(--gpt-text)}
+.uc-btn .ui{font-size:14px;flex-shrink:0}
+.sb-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--gpt-border)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:8px;border-radius:8px;cursor:pointer;transition:background .15s}
+.sb-user:hover{background:var(--gpt-hover)}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--gpt-green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user-name{font-size:13px;color:var(--gpt-text);font-weight:500}
+
+/* ════ CHAT AREA ════ */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--chat-bg)}
+
+/* Chat header — ChatGPT style */
+.chat-header{
+  padding:12px 20px;border-bottom:1px solid var(--chat-border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--chat-bg);flex-shrink:0;
+}
+.ch-model{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 10px;border-radius:8px;transition:background .15s}
+.ch-model:hover{background:var(--g100)}
+.ch-model-name{font-size:15px;font-weight:700;color:var(--g900)}
+.ch-model-badge{font-size:10px;font-weight:700;background:var(--gpt-green);color:#fff;padding:2px 7px;border-radius:20px;margin-left:4px}
+.ch-model-arrow{font-size:12px;color:var(--g400);margin-left:4px}
+.ch-right{display:flex;align-items:center;gap:8px}
+.comp-pill{font-size:11px;font-weight:700;background:var(--gl);color:var(--green);padding:4px 10px;border-radius:20px;cursor:pointer;transition:all .15s;border:none}
+.comp-pill:hover{background:#A7F3D0}
+.share-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--g200);background:var(--white);font-size:12px;font-weight:600;color:var(--g700);cursor:pointer;transition:all .15s}
+.share-btn:hover{background:var(--g100)}
+
+/* Messages */
+.msgs-wrap{flex:1;overflow-y:auto;padding:20px 0}
+.msg-row{padding:8px 0;display:flex;justify-content:center}
+.msg-inner{width:100%;max-width:740px;padding:0 24px;display:flex;gap:14px;align-items:flex-start}
+.msg-inner.user{flex-direction:row-reverse}
+.msg-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:2px}
+.msg-av.gpt{background:var(--gpt-green);color:#fff}
+.msg-av.user{background:var(--g700);color:#fff}
+.msg-content{flex:1;min-width:0}
+.msg-content.user{display:flex;justify-content:flex-end}
+.user-bubble{background:var(--msg-user);border-radius:18px 18px 4px 18px;padding:11px 16px;font-size:14px;line-height:1.6;color:var(--g900);max-width:85%;display:inline-block}
+.ai-text{font-size:14px;line-height:1.7;color:var(--g700);padding-top:4px}
+.ai-text strong{color:var(--g900)}
+.tdots{display:flex;gap:4px;align-items:center;padding:8px 0}
+.tdots span{width:7px;height:7px;border-radius:50%;background:var(--g400);animation:bounce .9s infinite}
+.tdots span:nth-child(2){animation-delay:.15s}.tdots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* Action card (in chat) */
+.ac-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--rl);padding:16px;margin-top:10px;box-shadow:var(--sh);max-width:520px}
+.ac-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ac-ico{width:40px;height:40px;border-radius:10px;background:var(--kbc-pale);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.ac-title{font-size:15px;font-weight:700;color:var(--g900)}
+.ac-sub{font-size:12px;color:var(--g500);margin-top:1px}
+.ac-desc{font-size:13px;color:var(--g700);margin-bottom:12px;line-height:1.5}
+.ac-btns{display:flex;gap:8px}
+.ac-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);transition:all .15s}
+.ac-btn.p{background:var(--g900);color:#fff}
+.ac-btn.p:hover{background:var(--g700)}
+.ac-btn.s{background:var(--g100);color:var(--g700)}
+.ac-btn.s:hover{background:var(--g200)}
+
+/* Bank compare grid */
+.bk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;max-width:520px}
+.bk-card{background:var(--white);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+.bk-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.bk-hdr{padding:10px 12px;display:flex;align-items:center;gap:8px}
+.bk-logo{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.bk-name{font-size:12px;font-weight:700;color:#fff}
+.bk-tag-sm{font-size:9px;color:rgba(255,255,255,.7)}
+.bk-body{padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.bk-row{display:flex;justify-content:space-between;align-items:center}
+.bk-lbl{font-size:10px;color:var(--g500);font-weight:500}
+.bk-val{font-size:11px;font-weight:700;color:var(--g900)}
+.bk-val.best{color:var(--green)}
+.bk-foot{padding:8px 12px;border-top:1px solid var(--g100)}
+.bk-sel-btn{width:100%;padding:7px;border:none;border-radius:8px;font-family:var(--font);font-weight:700;font-size:11px;cursor:pointer;transition:all .15s;color:#fff}
+
+/* Input area */
+.input-area{padding:16px 24px 20px;background:var(--chat-bg);flex-shrink:0;display:flex;justify-content:center;border-top:1px solid var(--chat-border)}
+.input-box{width:100%;max-width:740px;background:var(--white);border:1.5px solid var(--g200);border-radius:16px;padding:12px 14px;display:flex;align-items:flex-end;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:border-color .15s}
+.input-box:focus-within{border-color:var(--g400)}
+.chat-in{flex:1;border:none;background:transparent;font-family:var(--font);font-size:14px;color:var(--g900);outline:none;resize:none;max-height:200px;line-height:1.5}
+.chat-in::placeholder{color:var(--g400)}
+.send-btn{width:36px;height:36px;border-radius:10px;background:var(--g900);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;transition:all .18s}
+.send-btn:hover{background:var(--g700);transform:scale(1.05)}
+.send-btn:disabled{background:var(--g300);cursor:not-allowed;transform:none}
+.input-hint{text-align:center;font-size:11px;color:var(--g400);margin-top:8px}
+
+/* Quick chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center;max-width:740px;margin-left:auto;margin-right:auto;padding:0 24px}
+.chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:500;background:var(--white);color:var(--g700);border:1px solid var(--g200);cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--g100);border-color:var(--g300)}
+
+/* LLM signal */
+.llm-wrap{padding:0 24px 12px;display:flex;justify-content:center}
+.llm-sig{display:none;background:#1A1A2E;border-radius:var(--rl);padding:14px 18px;max-width:740px;width:100%}
+.llm-sig.show{display:block}
+.llm-lbl{font-size:10px;font-weight:700;color:#6EE7B7;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.llm-code{font-family:'Courier New',monospace;font-size:12px;color:#93C5FD;background:rgba(255,255,255,.04);border-radius:7px;padding:11px;white-space:pre;overflow-x:auto}
+.llm-note{font-size:11px;color:#6B7280;margin-top:7px}
+
+/* Pause banner */
+.pause-banner{display:none;background:linear-gradient(135deg,#92400E,var(--amber));border-radius:var(--rl);padding:12px 18px;align-items:center;gap:12px;margin:8px 24px;max-width:740px;margin-left:auto;margin-right:auto}
+.pause-banner.show{display:flex}
+.pb-ico{font-size:20px}
+.pb-txt{flex:1}
+.pb-title{font-size:13px;font-weight:700;color:#fff}
+.pb-sub{font-size:11px;color:rgba(255,255,255,.8);margin-top:1px}
+.res-btn{background:#fff;color:var(--amber);border:none;border-radius:8px;padding:7px 13px;font-family:var(--font);font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+
+/* ════ POPUP ════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:all}
+.popup{width:100%;max-width:460px;background:#fff;border-radius:var(--rx);box-shadow:var(--shx);overflow:hidden;transform:scale(.94) translateY(18px);transition:transform .3s cubic-bezier(.22,1,.36,1);max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+.overlay.open .popup{transform:scale(1) translateY(0)}
+
+/* Popup header */
+.ph{padding:16px 18px 13px;position:sticky;top:0;z-index:10;flex-shrink:0}
+.ph-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.ph-brand{display:flex;align-items:center;gap:9px}
+.ph-logo{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:800;font-size:13px;color:#fff}
+.ph-name{font-size:13px;font-weight:700;color:#fff}
+.ph-sub{font-size:9.5px;color:rgba(255,255,255,.55)}
+.ph-right{display:flex;align-items:center;gap:7px}
+.pause-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:7px;padding:4px 9px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:4px}
+.pause-btn:hover{background:rgba(255,255,255,.25)}
+.x-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.x-btn:hover{background:rgba(255,255,255,.25)}
+.steps-wrap{display:flex;flex-direction:column;gap:4px}
+.steps-track{display:flex;align-items:center}
+.sn{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;transition:all .25s}
+.sn.done{background:#4ADE80;color:#fff}
+.sn.active{background:var(--kbc-blue);color:#fff;box-shadow:0 0 0 3px rgba(0,174,239,.3)}
+.sn.pending{background:rgba(255,255,255,.15);color:rgba(255,255,255,.35)}
+.ss{flex:1;height:2px;margin:0 2px;background:rgba(255,255,255,.12);transition:background .3s}
+.ss.done{background:#4ADE80}
+.snms{display:flex;justify-content:space-between;padding:0 1px}
+.snm{font-size:8.5px;text-align:center;color:rgba(255,255,255,.4)}
+.snm.active{color:rgba(0,174,239,.9);font-weight:700}
+.snm.done{color:rgba(255,255,255,.6)}
+.ttl-strip{display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.15);border-radius:7px;padding:4px 10px;margin-top:9px}
+.ttl-t{font-size:10px;color:rgba(255,255,255,.5)}
+.ttl-n{font-size:11px;font-weight:700;color:rgba(0,174,239,.9);font-family:'Courier New',monospace}
+.ttl-n.warn{color:#FCD34D}
+
+/* Popup body */
+.pb{padding:20px;flex:1}
+.scr{display:none}
+.scr.active{display:block;animation:fup .22s ease}
+@keyframes fup{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.st{font-size:18px;font-weight:700;color:var(--kbc-dark);margin-bottom:4px;line-height:1.25}
+.ss2{font-size:12.5px;color:var(--g500);margin-bottom:18px;line-height:1.5}
+
+/* Fields */
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:10.5px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.fi{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--g200);background:var(--g50);font-family:var(--font);font-size:13px;color:var(--g900);outline:none;transition:all .15s}
+.fi:focus{border-color:var(--kbc-blue);background:#fff;box-shadow:0 0 0 3px rgba(0,174,239,.1)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+/* Intent quote */
+.iq{background:var(--kbc-pale);border-left:3px solid var(--kbc-blue);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.iq-lbl{font-size:10px;font-weight:700;color:var(--kbc-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.iq-txt{font-size:13px;color:var(--kbc-dark);font-style:italic;line-height:1.5}
+
+/* Selected bank */
+.sbk{display:flex;align-items:center;gap:11px;border-radius:12px;padding:12px;margin-bottom:12px}
+.sbk-logo{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff}
+.sbk-name{font-size:13px;font-weight:700}
+.sbk-sub{font-size:10.5px;color:var(--g500);margin-top:1px}
+.sbk-badge{margin-left:auto;font-size:9.5px;font-weight:700;background:var(--gl);color:var(--green);padding:3px 8px;border-radius:20px}
+.priv-trust{background:var(--gl);border-radius:9px;padding:9px 13px;display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--green);font-weight:500;margin-bottom:14px}
+
+/* Auth */
+.auth-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.auth-opt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:12px;cursor:pointer;border:2px solid var(--g200);background:var(--g50);transition:all .18s}
+.auth-opt:hover,.auth-opt.sel{border-color:var(--kbc-blue);background:var(--kbc-pale)}
+.auth-ico{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.auth-ico.bank{background:linear-gradient(135deg,var(--kbc-dark),var(--kbc-mid))}
+.auth-ico.itsme{background:linear-gradient(135deg,#E41E26,#B5121B)}
+.auth-ico.kyc{background:linear-gradient(135deg,#7C3AED,#5B21B6)}
+.auth-lbl{font-size:13px;font-weight:700;color:var(--kbc-dark)}
+.auth-sub{font-size:11px;color:var(--g500);margin-top:1px;line-height:1.4}
+.auth-badge{margin-left:auto;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0}
+.auth-badge.rec{background:var(--kbc-pale);color:var(--kbc-dark)}
+.auth-badge.new{background:var(--al);color:var(--amber)}
+.auth-badge.fast{background:var(--gl);color:var(--green)}
+.otp-row{display:flex;gap:7px;justify-content:center;margin-bottom:12px}
+.otp-i{width:42px;height:50px;border:2px solid var(--g200);border-radius:10px;text-align:center;font-weight:800;font-size:20px;color:var(--kbc-dark);background:var(--g50);outline:none;transition:all .15s}
+.otp-i:focus{border-color:var(--kbc-blue);background:#fff}
+.otp-i.filled{border-color:var(--green);background:var(--gl);color:var(--green)}
+
+/* MADON check */
+.mc-box{background:var(--kbc-dark);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px;overflow:hidden;position:relative}
+.mc-box::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,174,239,.03) 0,rgba(0,174,239,.03) 1px,transparent 1px,transparent 14px)}
+.mc-ring-wrap{width:64px;height:64px;position:relative;margin:0 auto 12px}
+.mc-ring{width:64px;height:64px;border-radius:50%;border:4px solid rgba(255,255,255,.1);border-top-color:var(--kbc-blue);animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mc-ico{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:22px}
+.mc-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
+.mc-sub{font-size:10.5px;color:rgba(255,255,255,.6);margin-bottom:10px}
+.mc-items{display:flex;flex-direction:column;gap:5px}
+.mc-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.06);text-align:left}
+.mc-item.ok{background:rgba(74,222,128,.12)}
+.mc-item.chk{background:rgba(0,174,239,.12)}
+.mc-item .mci{font-size:13px;flex-shrink:0}
+.mc-item .mcl{font-size:11px;color:rgba(255,255,255,.8)}
+.mc-item.ok .mcl{color:#4ADE80}
+.mc-done{display:none;background:var(--gl);color:var(--green);border-radius:9px;padding:9px;font-size:12px;font-weight:600;text-align:center;margin-top:9px;align-items:center;justify-content:center;gap:6px}
+.mc-done.show{display:flex}
+
+/* itsme */
+.itsme-w{background:linear-gradient(135deg,#E41E26,#B5121B);border-radius:12px;padding:17px;text-align:center;margin-bottom:14px}
+.itsme-logo{font-size:22px;font-weight:900;color:#fff;margin-bottom:5px}
+.itsme-steps{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:11px}
+.itsme-step{background:rgba(255,255,255,.15);color:#fff;font-size:10.5px;font-weight:600;padding:5px 9px;border-radius:7px}
+.itsme-btn{display:block;width:100%;padding:10px;background:#fff;color:#B5121B;border:none;border-radius:9px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer}
+
+/* KYC */
+.kyc-vid{background:var(--kbc-dark);border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+.kyc-vid::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,174,239,.04) 0,rgba(0,174,239,.04) 1px,transparent 1px,transparent 12px)}
+.kyc-vid-ico{font-size:34px;margin-bottom:6px}
+.kyc-vid-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.kyc-vid-sub{font-size:10.5px;color:rgba(255,255,255,.6)}
+.kyc-rec{margin-top:11px;padding:9px 18px;background:var(--kbc-blue);color:#fff;border:none;border-radius:9px;font-family:var(--font);font-weight:700;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.ks{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100)}
+.ks:last-child{border:none}
+.kn{width:25px;height:25px;border-radius:50%;flex-shrink:0;background:var(--kbc-pale);color:var(--kbc-dark);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px}
+.ks.done .kn{background:var(--gl);color:var(--green)}
+.kl{font-size:12.5px;font-weight:600;color:var(--kbc-dark)}
+.km{font-size:10.5px;color:var(--g500)}
+
+/* Preferences */
+.pref-hl{background:linear-gradient(135deg,var(--kbc-dark),var(--kbc-mid));border-radius:12px;padding:13px;text-align:center;margin-bottom:15px}
+.pref-val{font-size:28px;font-weight:800;color:#fff}
+.pref-lbl{font-size:10.5px;color:rgba(255,255,255,.65);margin-top:1px}
+.mrow{background:var(--kbc-pale);border-radius:9px;padding:10px 13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mr-l{font-size:11.5px;color:var(--kbc-dark);font-weight:500}
+.mr-v{font-size:15px;font-weight:800;color:var(--kbc-dark)}
+
+/* ════ DOCUMENT UPLOAD — NEW ════ */
+.doc-upload-section{background:var(--g50);border:1.5px dashed var(--g300);border-radius:12px;padding:14px;margin-bottom:14px}
+.doc-upload-title{font-size:12px;font-weight:700;color:var(--g700);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.doc-upload-sub{font-size:11px;color:var(--g500);margin-bottom:12px;line-height:1.4}
+.doc-items{display:flex;flex-direction:column;gap:8px}
+.doc-item{background:#fff;border:1.5px solid var(--g200);border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:all .18s}
+.doc-item:hover{border-color:var(--kbc-blue)}
+.doc-item.uploaded{border-color:var(--green);background:var(--gl)}
+.doc-item.frauded{border-color:var(--red);background:var(--rl)}
+.doc-ico{font-size:18px;flex-shrink:0}
+.doc-name{font-size:12.5px;font-weight:700;color:var(--g900);flex:1}
+.doc-req{font-size:10px;font-weight:600;color:var(--kbc-blue)}
+.doc-why{font-size:10.5px;color:var(--g500);margin-top:1px;line-height:1.3}
+.doc-upload-btn{margin-left:auto;flex-shrink:0;padding:5px 11px;border-radius:7px;border:1.5px solid var(--g300);background:#fff;font-size:11px;font-weight:700;color:var(--g700);cursor:pointer;font-family:var(--font);transition:all .15s;display:flex;align-items:center;gap:5px}
+.doc-upload-btn:hover{border-color:var(--kbc-blue);color:var(--kbc-dark)}
+.doc-upload-btn.uploading{background:var(--kbc-pale);border-color:var(--kbc-blue);color:var(--kbc-dark)}
+.doc-status{font-size:11px;font-weight:700;flex-shrink:0}
+.doc-status.ok{color:var(--green)}
+.doc-status.bad{color:var(--red)}
+.doc-status.checking{color:var(--kbc-blue)}
+
+/* Document analysis widget */
+.doc-analysis{background:var(--kbc-dark);border-radius:12px;padding:14px;margin-top:10px;display:none}
+.doc-analysis.show{display:block}
+.da-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.da-items{display:flex;flex-direction:column;gap:5px}
+.da-item{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:7px;background:rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.8)}
+.da-item.ok{background:rgba(74,222,128,.12);color:#4ADE80}
+.da-item.warn{background:rgba(245,158,11,.12);color:#FCD34D}
+.da-item.bad{background:rgba(220,38,38,.12);color:#FCA5A5}
+.da-item.chk{background:rgba(0,174,239,.12);color:rgba(0,174,239,.9)}
+.da-icon{font-size:12px;flex-shrink:0}
+.da-badge{display:none;margin-top:9px;border-radius:9px;padding:9px 12px;font-size:12px;font-weight:700;text-align:center}
+.da-badge.show{display:block}
+.da-badge.pass{background:var(--gl);color:var(--green)}
+.da-badge.fail{background:var(--rl);color:var(--red)}
+.da-badge.warn-badge{background:var(--al);color:var(--amber)}
+
+/* Instant validation banner */
+.instant-val{display:none;border-radius:12px;padding:14px 16px;margin-top:12px;text-align:center}
+.instant-val.show{display:block;animation:fup .3s ease}
+.instant-val.approved{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid var(--green)}
+.instant-val.pending{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border:2px solid var(--amber)}
+.iv-ico{font-size:32px;margin-bottom:8px}
+.iv-title{font-size:16px;font-weight:800;color:var(--g900);margin-bottom:4px}
+.iv-sub{font-size:12.5px;color:var(--g700);line-height:1.5}
+.iv-meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.iv-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,.06)}
+
+/* Compliance shield block */
+.reg-block{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px;margin-bottom:14px}
+.reg-block-title{font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.reg-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.reg-pill{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.03em}
+.reg-pill.blue{background:var(--kbc-dark);color:#fff}
+.reg-pill.green{background:var(--green);color:#fff}
+.reg-pill.amber{background:var(--amber);color:#fff}
+.reg-pill.gray{background:var(--g700);color:#fff}
+.reg-check-list{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.reg-check{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--g700);line-height:1.4}
+.reg-check-ico{flex-shrink:0;margin-top:1px;font-size:12px}
+
+/* Consent */
+.c-list{margin-bottom:14px}
+.c-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100)}
+.c-row:last-child{border:none}
+.c-ico{font-size:15px;flex-shrink:0;margin-top:2px}
+.c-name{font-size:12.5px;font-weight:700;color:var(--kbc-dark)}
+.c-why{font-size:10.5px;color:var(--g500);margin-top:1px;line-height:1.4}
+.c-req{font-size:9.5px;font-weight:700;color:var(--kbc-blue);margin-top:2px}
+.ccb-wrap{background:var(--kbc-pale);border:2px solid var(--kbc-blue);border-radius:10px;padding:12px;margin-bottom:11px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
+.ccb-wrap input{width:16px;height:16px;accent-color:var(--kbc-dark);flex-shrink:0;margin-top:2px;cursor:pointer}
+.ccb-txt{font-size:12px;color:var(--kbc-dark);line-height:1.5}
+.priv-link{text-align:center;font-size:11.5px;color:var(--kbc-blue);text-decoration:underline;cursor:pointer;margin-bottom:12px;display:block}
+
+/* SCA badge */
+.sca-badge{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:#1D4ED8;margin-bottom:12px}
+
+/* Processing */
+.proc-ctr{text-align:center;padding:10px 0 8px}
+.proc-sp{width:52px;height:52px;border-radius:50%;border:4px solid var(--kbc-pale);border-top-color:var(--kbc-blue);animation:spin 1s linear infinite;margin:0 auto 15px}
+.proc-steps{margin-top:14px;display:flex;flex-direction:column;gap:7px}
+.proc-step{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;font-size:12.5px;transition:all .3s;background:var(--g50);color:var(--g500)}
+.proc-step.done{background:var(--gl);color:var(--green);font-weight:600}
+.proc-step.active{background:var(--kbc-pale);color:var(--kbc-dark);font-weight:600}
+.psi{font-size:13px;flex-shrink:0}
+
+/* Result */
+.r-ico{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 13px}
+.r-ico.ok{background:var(--gl)}
+.r-ico.fail{background:var(--rl)}
+.ref-card{background:var(--g50);border-radius:9px;padding:10px 13px;text-align:center;margin-bottom:12px}
+.ref-lbl{font-size:9.5px;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ref-code{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:var(--kbc-dark)}
+.ns-item{display:flex;align-items:flex-start;gap:9px;padding:7px 0;font-size:12.5px;color:var(--g700)}
+.ns-dot{width:5px;height:5px;border-radius:50%;background:var(--kbc-blue);margin-top:5px;flex-shrink:0}
+.data-shield{background:var(--gl);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--green);margin-bottom:12px}
+
+/* Upsell */
+.ups-box{background:linear-gradient(135deg,#FFFBEB,#FFF7ED);border:1.5px solid #FDE68A;border-radius:12px;padding:13px;margin-bottom:13px}
+.ups-title{font-size:12.5px;font-weight:700;color:#92400E;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ups-items{display:flex;flex-direction:column;gap:7px}
+.ups-item{background:#fff;border-radius:9px;padding:9px 11px;display:flex;align-items:center;gap:9px;cursor:pointer;border:1px solid #FDE68A;transition:all .15s}
+.ups-item:hover{border-color:var(--amber);box-shadow:0 2px 8px rgba(217,119,6,.15)}
+.ui-ico{font-size:17px;flex-shrink:0}
+.ui-nm{font-size:12px;font-weight:700;color:var(--g900)}
+.ui-sb{font-size:10.5px;color:var(--g500)}
+.ui-cta{margin-left:auto;font-size:11px;font-weight:700;color:var(--kbc-blue);white-space:nowrap}
+
+/* Buttons */
+.btn{width:100%;padding:13px;border-radius:10px;border:none;font-family:var(--font);font-size:13.5px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-p{background:var(--kbc-dark);color:#fff}
+.btn-p:hover{background:var(--kbc-mid);transform:translateY(-1px)}
+.btn-p:disabled{background:var(--g300);cursor:not-allowed;transform:none}
+.btn-o{background:transparent;color:var(--kbc-dark);border:2px solid var(--g200);margin-top:9px}
+.btn-o:hover{border-color:var(--kbc-blue);background:var(--kbc-pale)}
+.btn-g{background:var(--green);color:#fff}
+.btn-g:hover{background:#047857;transform:translateY(-1px)}
+
+/* Popup footer */
+.p-ftr{padding:10px 18px 14px;border-top:1px solid var(--g100);text-align:center;font-size:10px;color:var(--g400);flex-shrink:0}
+
+/* Cookie */
+.cookie-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9000;display:flex;align-items:flex-end;justify-content:center;padding:20px}
+.cookie-box{background:#fff;border-radius:var(--rx);max-width:680px;width:100%;padding:22px;box-shadow:var(--shx);animation:fup .4s ease}
+.cookie-box h2{font-size:17px;font-weight:800;color:var(--g900);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.cookie-box p{font-size:12.5px;color:var(--g600);line-height:1.6;margin-bottom:15px}
+.ck-cats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.ck-cat{padding:11px 13px;border-radius:10px;border:1.5px solid var(--g200);background:var(--g50)}
+.ck-cat-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.ck-cat-nm{font-size:12px;font-weight:700;color:var(--g900)}
+.ck-desc{font-size:10.5px;color:var(--g500);line-height:1.4}
+.tgl{width:36px;height:20px;border-radius:10px;background:var(--g300);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tgl.on{background:var(--gpt-green)}
+.tgl::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl.on::after{left:19px}
+.tgl.locked{opacity:.5;cursor:not-allowed}
+.ck-btns{display:flex;gap:9px}
+.ck-btn{flex:1;padding:11px;border-radius:10px;border:none;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
+.ck-btn.acc{background:var(--g900);color:#fff}
+.ck-btn.acc:hover{background:var(--g700)}
+.ck-btn.cus{background:var(--g100);color:var(--g700)}
+.ck-btn.cus:hover{background:var(--g200)}
+
+/* Privacy modal */
+.pm{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.pm.open{display:flex}
+.pm-box{background:#fff;border-radius:var(--rx);max-width:520px;width:100%;max-height:82vh;overflow-y:auto;padding:22px;box-shadow:var(--shx)}
+.pm-box h2{font-size:16px;font-weight:800;color:var(--g900);margin-bottom:12px}
+.pm-box h3{font-size:13px;font-weight:700;color:var(--g900);margin:13px 0 5px}
+.pm-box p{font-size:12px;color:var(--g600);line-height:1.6;margin-bottom:7px}
+.pm-rbs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.pm-rb{font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;background:var(--g900);color:#fff;letter-spacing:.03em}
+.pm-close{display:block;width:100%;margin-top:14px;padding:11px;background:var(--g900);color:#fff;border:none;border-radius:9px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer}
+
+@media(max-width:768px){
+  .app{flex-direction:column}
+  .sidebar{
+    display:flex !important; position:fixed; top:0; left:0; bottom:0; z-index:8500;
+    transform:translateX(-100%); transition:transform 0.3s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .chat-area{height:100%}
+  .mob-menu-btn{display:block !important}
+  .ch-model-badge{display:none !important} /* save space on mobile */
+}
+.mob-menu-btn{display:none; background:transparent; border:none; font-size:20px; cursor:pointer; color:var(--g700); margin-right:4px;}
+.sidebar-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:8499; backdrop-filter:blur(2px); opacity:0; transition:opacity 0.3s;}
+.sidebar-overlay.open{display:block; opacity:1;}
+
+</style>
+</head>
+<body>
+
+<!-- ══ COOKIE CONSENT ══ -->
+<div class="cookie-ov" id="ck-ov">
+  <div class="cookie-box">
+    <h2>🍪 Cookie & Privacy Preferences</h2>
+    <p>ChatGPT and Bank AI's MADON execution layer use cookies and similar technologies to operate securely and — with your consent — to personalise your experience and support relevant communications from bank partners.</p>
+    <div class="ck-cats">
+      <div class="ck-cat"><div class="ck-cat-hdr"><div class="ck-cat-nm">🔒 Strictly necessary</div><div class="tgl on locked"></div></div><div class="ck-desc">Session tokens, CSRF, MADON fraud checks. Cannot be disabled.</div></div>
+      <div class="ck-cat"><div class="ck-cat-hdr"><div class="ck-cat-nm">⚙️ Functional</div><div class="tgl on" id="tg-fn" onclick="this.classList.toggle('on')"></div></div><div class="ck-desc">Remember preferences, language, paused sessions.</div></div>
+      <div class="ck-cat"><div class="ck-cat-hdr"><div class="ck-cat-nm">📊 Analytics</div><div class="tgl on" id="tg-an" onclick="this.classList.toggle('on')"></div></div><div class="ck-desc">Anonymised usage data to improve the product.</div></div>
+      <div class="ck-cat"><div class="ck-cat-hdr"><div class="ck-cat-nm">🎯 Personalisation</div><div class="tgl on" id="tg-ps" onclick="this.classList.toggle('on')"></div></div><div class="ck-desc">Tailor product offers and email campaigns based on your anonymised profile. Data stays within the EEA (Schrems II compliant).</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--g500);margin-bottom:14px;background:var(--g50);padding:10px;border-radius:9px;line-height:1.5">Personalisation data is processed under GDPR Art. 6(1)(a) and never linked to your AI conversation. All data remains within the EEA (GDPR / Schrems II compliant). Manage preferences anytime in Settings → Privacy.</div>
+    <div class="ck-btns">
+      <button class="ck-btn cus" onclick="closeCookies()">Necessary only</button>
+      <button class="ck-btn cus" onclick="closeCookies()">Save my choices</button>
+      <button class="ck-btn acc" onclick="closeCookies()">Accept all</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="sb-overlay" onclick="toggleMobileMenu()"></div>
+
+  <!-- ══ SIDEBAR (ChatGPT dark) ══ -->
+  <nav class="sidebar" id="sidebar">
+    <div style="padding:12px; border-bottom: 1px solid var(--gpt-border);">
+      <a href="/" style="display:flex; align-items:center; gap:6px; color:var(--white); text-decoration:none; font-size:13px; font-weight:600; padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.1); transition:all 0.15s; cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+        <span style="font-size:15px">←</span> Back to CADON
+      </a>
+    </div>
+    <div class="sb-top">
+      <div class="sb-brand">
+        <div class="sb-brand-ico">G</div>
+        <div>
+          <div class="sb-brand-name">ChatGPT</div>
+          <div class="sb-brand-sub">with MADON execution</div>
+        </div>
+      </div>
+      <button class="new-chat-btn" onclick="newChat()">New chat<span class="pencil">✏️</span></button>
+    </div>
+    <div class="sb-section">Banking services</div>
+    <button class="uc-btn" onclick="loadUC('personal_loan',event)"><span class="ui">💳</span>Quick personal loan</button>
+    <button class="uc-btn" onclick="loadUC('buy_house',event)"><span class="ui">🏠</span>Buy a home</button>
+    <button class="uc-btn" onclick="loadUC('renovate',event)"><span class="ui">🔨</span>Renovate my home</button>
+    <button class="uc-btn" onclick="loadUC('car_loan',event)"><span class="ui">🚘</span>Finance a car</button>
+    <button class="uc-btn" onclick="loadUC('savings_account',event)"><span class="ui">🏦</span>Savings account</button>
+    <button class="uc-btn active" onclick="loadUC('invest_start',event)"><span class="ui">📈</span>Start investing</button>
+    <button class="uc-btn" onclick="loadUC('pension',event)"><span class="ui">🌅</span>Pension planning</button>
+    <button class="uc-btn" onclick="loadUC('transfer',event)"><span class="ui">↗️</span>Send money</button>
+    <div class="sb-section">Cards & security</div>
+    <button class="uc-btn" onclick="loadUC('lost_card',event)"><span class="ui">🚫</span>Block stolen card</button>
+    <button class="uc-btn" onclick="loadUC('card_limits',event)"><span class="ui">⬆️</span>Increase card limits</button>
+    <button class="uc-btn" onclick="loadUC('fraud',event)"><span class="ui">🛡️</span>Report fraud</button>
+    <div class="sb-section">Protection</div>
+    <button class="uc-btn" onclick="loadUC('car_insurance',event)"><span class="ui">🚗</span>Car insurance</button>
+    <button class="uc-btn" onclick="loadUC('home_insurance',event)"><span class="ui">🏡</span>Home insurance</button>
+    <button class="uc-btn" onclick="loadUC('pro_activity',event)"><span class="ui">🏢</span>Business banking</button>
+    <button class="uc-btn" onclick="loadUC('become_client',event)"><span class="ui">👤</span>Open new account</button>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">JD</div>
+        <div class="sb-user-name">Jean Dupont</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ CHAT AREA ══ -->
+  <div class="chat-area">
+    <div class="chat-header">
+      <div style="display:flex; align-items:center; gap:4px">
+        <button class="mob-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <div class="ch-model">
+          <div class="ch-model-name">GPT-4o</div>
+          <div class="ch-model-badge">+ MADON</div>
+          <div class="ch-model-arrow">▾</div>
+        </div>
+      </div>
+      <div class="ch-right">
+        <button class="comp-pill" onclick="openPrivacy()">✅ PSD2 · GDPR · DORA · FCA · MiFID II</button>
+        <button class="share-btn">Share</button>
+      </div>
+    </div>
+
+    <div class="msgs-wrap" id="msgs">
+      <div class="msg-row">
+        <div class="msg-inner">
+          <div class="msg-av gpt">G</div>
+          <div class="msg-content">
+            <div class="ai-text">Hello! I'm ChatGPT with MADON secure banking execution. I can help you with any financial need — loans, mortgages, investments, insurance, transfers, and more.<br><br>
+            When you're ready to apply, I'll compare options from <strong>4 partner banks</strong>, then connect you to a <strong>secure MADON pop-up</strong> where your identity and consent are handled privately — I never see your personal or financial data.<br><br>
+            What can I help you with today?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause banner -->
+    <div class="pause-banner" id="pb">
+      <div class="pb-ico">⏸️</div>
+      <div class="pb-txt">
+        <div class="pb-title">Session paused — progress saved</div>
+        <div class="pb-sub" id="pb-sub">Expires in <span id="pause-ttl">20:00</span></div>
+      </div>
+      <button class="res-btn" onclick="resumeSession()">Resume →</button>
+    </div>
+
+    <div class="chips" id="chips">
+      <div class="chip" onclick="sendMsg('I need a personal loan of €10,000')">💳 Personal loan</div>
+      <div class="chip" onclick="sendMsg('I want to buy a house')">🏠 Mortgage</div>
+      <div class="chip" onclick="sendMsg('I want to invest €5,000')">📈 Invest</div>
+      <div class="chip" onclick="sendMsg('I need a loan to buy a car')">🚗 Car loan</div>
+      <div class="chip" onclick="sendMsg('Open a savings account')">🏦 Savings</div>
+      <div class="chip" onclick="sendMsg('I was the victim of fraud')">🛡️ Fraud</div>
+    </div>
+
+    <div class="input-area">
+      <div style="width:100%;max-width:740px;display:flex;flex-direction:column">
+        <div class="input-box">
+          <input class="chat-in" id="cin" type="text" placeholder="Message ChatGPT…" onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="send-btn" id="send-btn" onclick="sendMsg()">↑</button>
+        </div>
+        <div class="input-hint">ChatGPT can make mistakes. MADON ensures your financial execution is always compliant & secure.</div>
+      </div>
+    </div>
+
+    <!-- LLM signal -->
+    <div class="llm-wrap">
+      <div class="llm-sig" id="llm-sig">
+        <div class="llm-lbl">📡 Signal returned to ChatGPT — this is ALL the AI receives</div>
+        <div class="llm-code" id="llm-code"></div>
+        <div class="llm-note">🔒 Zero personal data · Zero financial details · Zero bank data — technically guaranteed by MADON</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POPUP ══ -->
+<div class="overlay" id="overlay" onclick="bgClick(event)">
+  <div class="popup">
+    <div class="ph" id="ph">
+      <div class="ph-top">
+        <div class="ph-brand">
+          <div class="ph-logo" id="ph-logo">B</div>
+          <div>
+            <div class="ph-name" id="ph-name">Bank × MADON</div>
+            <div class="ph-sub">exec.madon.io · TLS 1.3 · PSD2/GDPR/DORA secured</div>
+          </div>
+        </div>
+        <div class="ph-right">
+          <button class="pause-btn" onclick="pauseSession()">⏸ Pause</button>
+          <button class="x-btn" onclick="closePopup()">✕</button>
+        </div>
+      </div>
+      <div class="steps-wrap" id="sw"></div>
+      <div class="ttl-strip"><div class="ttl-t">🔒 Secure session</div><div class="ttl-n" id="ttl">20:00</div></div>
+    </div>
+
+    <div class="pb">
+      <!-- S0: Intent -->
+      <div class="scr active" id="s0">
+        <div class="st" id="s0t">Loading…</div>
+        <div class="ss2" id="s0s"></div>
+        <div class="iq"><div class="iq-lbl">Your request to ChatGPT</div><div class="iq-txt" id="s0i"></div></div>
+        <div class="sbk" id="sbk">
+          <div class="sbk-logo" id="sbl">B</div>
+          <div><div class="sbk-name" id="sbn"></div><div class="sbk-sub" id="sbs"></div></div>
+          <div class="sbk-badge">✓ Selected</div>
+        </div>
+        <div class="priv-trust">🔒 ChatGPT only receives a pass/fail signal — your data stays entirely private.</div>
+        <button class="btn btn-p" onclick="goTo(1)">Continue securely →</button>
+        <div style="text-align:center;padding:8px 0 2px;font-size:12px;color:var(--kbc-blue);cursor:pointer;text-decoration:underline" onclick="showS('s0b')">Changed your mind? Reformulate here</div>
+        <button class="btn btn-o" onclick="closePopup()">Cancel</button>
+      </div>
+
+      <!-- S0b: Reformulate -->
+      <div class="scr" id="s0b">
+        <div class="st">What would you prefer?</div>
+        <div class="ss2">Describe what you'd like instead — I'll find the right bank products for you.</div>
+        <div class="fg"><textarea class="fi" id="rtxt" rows="3" placeholder="e.g. 'Actually I want a savings account' or 'I'd prefer a credit card'"></textarea></div>
+        <button class="btn btn-p" onclick="doReform()">Find the right option →</button>
+        <button class="btn btn-o" onclick="showS('s0')">← Back</button>
+      </div>
+
+      <!-- S1: Auth -->
+      <div class="scr" id="s1">
+        <div class="st">Verify your identity</div>
+        <div class="ss2">Choose your authentication method. Your identity stays inside this secure MADON session — ChatGPT never receives it.</div>
+        <div id="s1c">
+          <div class="auth-opts">
+            <div class="auth-opt sel" id="opt-bank" onclick="selAuth('bank')">
+              <div class="auth-ico bank">🏦</div>
+              <div><div class="auth-lbl" id="auth-bank-lbl">Log in with Bank AI</div><div class="auth-sub">Use your existing account — fastest & most secure</div></div>
+              <div class="auth-badge rec">Recommended</div>
+            </div>
+            <div class="auth-opt" id="opt-itsme" onclick="selAuth('itsme')">
+              <div class="auth-ico itsme">🇧🇪</div>
+              <div><div class="auth-lbl">Verify with itsme®</div><div class="auth-sub">Government-certified Belgian digital identity (eIDAS High LoA)</div></div>
+              <div class="auth-badge fast">⚡ Instant</div>
+            </div>
+            <div class="auth-opt" id="opt-kyc" onclick="selAuth('kyc')">
+              <div class="auth-ico kyc">🆕</div>
+              <div><div class="auth-lbl">Create a new account</div><div class="auth-sub">Full KYC onboarding with document scan & live video verification</div></div>
+              <div class="auth-badge new">New customer</div>
+            </div>
+          </div>
+          <button class="btn btn-p" onclick="procAuth()">Continue →</button>
+          <button class="btn btn-o" onclick="goTo(0)">← Back</button>
+        </div>
+        <!-- Bank OAuth -->
+        <div id="s1-bank" style="display:none">
+          <div class="fg"><label class="fl">Email or account number</label><input class="fi" type="email" placeholder="your@email.com"></div>
+          <div class="fg"><label class="fl">One-time security code (SCA)</label>
+            <div class="otp-row"><input class="otp-i" maxlength="1" oninput="oIn(this,0)" id="o0"><input class="otp-i" maxlength="1" oninput="oIn(this,1)" id="o1"><input class="otp-i" maxlength="1" oninput="oIn(this,2)" id="o2"><input class="otp-i" maxlength="1" oninput="oIn(this,3)" id="o3"><input class="otp-i" maxlength="1" oninput="oIn(this,4)" id="o4"><input class="otp-i" maxlength="1" oninput="oIn(this,5)" id="o5"></div>
+            <div style="text-align:center;font-size:11px;color:var(--g400);margin-top:7px">Demo: enter any 6 digits · Try <strong>123456</strong></div>
+          </div>
+          <div class="sca-badge">🔐 <span><strong>PSD2 Strong Customer Authentication (SCA)</strong> — Two-factor verified. Compliant with PSD2 RTS Art. 97 & DORA operational resilience requirements.</span></div>
+          <div class="mc-box" id="mc" style="display:none">
+            <div class="mc-ring-wrap"><div class="mc-ring"></div><div class="mc-ico">🛡️</div></div>
+            <div class="mc-title">MADON Security Verification</div>
+            <div class="mc-sub">Running behavioural & fraud checks…</div>
+            <div class="mc-items">
+              <div class="mc-item" id="mc1"><span class="mci">○</span><span class="mcl">Detecting social engineering patterns…</span></div>
+              <div class="mc-item" id="mc2"><span class="mci">○</span><span class="mcl">Verifying device fingerprint & IP reputation…</span></div>
+              <div class="mc-item" id="mc3"><span class="mci">○</span><span class="mcl">Validating session binding & token integrity…</span></div>
+              <div class="mc-item" id="mc4"><span class="mci">○</span><span class="mcl">Cross-checking MADON fraud pattern database…</span></div>
+            </div>
+            <div class="mc-done" id="mc-done">✅ All security checks passed — access granted</div>
+          </div>
+          <button class="btn btn-p" id="bvbtn" disabled onclick="startMadonCheck()">Verify & continue →</button>
+          <button class="btn btn-o" onclick="backToChoice()">← Change method</button>
+        </div>
+        <!-- itsme -->
+        <div id="s1-itsme" style="display:none">
+          <div class="itsme-w">
+            <div class="itsme-logo">itsme®</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.75);margin-bottom:10px">Belgian government-certified · eIDAS High Level of Assurance</div>
+            <div class="itsme-steps"><div class="itsme-step">📱 Open itsme®</div><div class="itsme-step">🔢 Enter PIN</div><div class="itsme-step">✅ Confirm</div></div>
+            <button class="itsme-btn" onclick="itsmeDemo()">Open itsme® app (demo)</button>
+          </div>
+          <div class="mc-box" id="mc-itsme" style="display:none">
+            <div class="mc-ring-wrap"><div class="mc-ring"></div><div class="mc-ico">🛡️</div></div>
+            <div class="mc-title">MADON Security Verification</div>
+            <div class="mc-sub">Validating itsme® eIDAS authentication…</div>
+            <div class="mc-items">
+              <div class="mc-item" id="mi1"><span class="mci">○</span><span class="mcl">Verifying eIDAS Level of Assurance (High)…</span></div>
+              <div class="mc-item" id="mi2"><span class="mci">○</span><span class="mcl">Checking session replay & CSRF attack vectors…</span></div>
+            </div>
+            <div class="mc-done" id="mi-done">✅ itsme® verified — High LoA eIDAS confirmed</div>
+          </div>
+          <button class="btn btn-o" onclick="backToChoice()">← Change method</button>
+        </div>
+        <!-- KYC -->
+        <div id="s1-kyc" style="display:none">
+          <div class="kyc-vid">
+            <div class="kyc-vid-ico">📹</div>
+            <div class="kyc-vid-title">Live video identity verification</div>
+            <div class="kyc-vid-sub">3–5 minutes · AMLD6 compliant · Like Revolut or N26</div>
+            <button class="kyc-rec" onclick="kycDemo()">▶ Start verification (demo)</button>
+          </div>
+          <div>
+            <div class="ks done"><div class="kn">✓</div><div><div class="kl">Email confirmed</div><div class="km">Email address verified</div></div></div>
+            <div class="ks" id="kd"><div class="kn">2</div><div><div class="kl">Identity document scan</div><div class="km">National ID, passport, or driving licence</div></div></div>
+            <div class="ks" id="ks2"><div class="kn">3</div><div><div class="kl">Selfie & liveness check</div><div class="km">Quick live video — confirms it's really you</div></div></div>
+            <div class="ks" id="kr"><div class="kn">4</div><div><div class="kl">AMLD6 automated review</div><div class="km">Usually instant — up to 2 hours max</div></div></div>
+          </div>
+          <button class="btn btn-p" id="kycbtn" disabled onclick="goTo(2)" style="margin-top:14px">Verification complete — continue →</button>
+          <button class="btn btn-o" onclick="backToChoice()">← Change method</button>
+        </div>
+      </div>
+
+      <!-- S2: Preferences + Documents -->
+      <div class="scr" id="s2">
+        <div class="st" id="s2t">Your details</div>
+        <div class="ss2">This information is shared only with the bank — ChatGPT never sees it.</div>
+        <div id="s2c"></div>
+        <!-- Document upload section (dynamic) -->
+        <div id="doc-section" style="display:none">
+          <div class="doc-upload-section">
+            <div class="doc-upload-title">📎 Required documents <span id="doc-req-count" style="font-size:10px;color:var(--g400);font-weight:500"></span></div>
+            <div class="doc-upload-sub" id="doc-upload-sub"></div>
+            <div class="doc-items" id="doc-items"></div>
+          </div>
+          <!-- Document analysis widget -->
+          <div class="doc-analysis" id="doc-analysis">
+            <div class="da-title">🤖 MADON Document Intelligence <span style="font-size:10px;font-weight:400;color:rgba(255,255,255,.5)">ML fraud & validity analysis</span></div>
+            <div class="da-items" id="da-items"></div>
+            <div class="da-badge" id="da-badge"></div>
+          </div>
+          <!-- Instant validation result -->
+          <div class="instant-val" id="instant-val">
+            <div class="iv-ico" id="iv-ico">⏳</div>
+            <div class="iv-title" id="iv-title">Checking eligibility…</div>
+            <div class="iv-sub" id="iv-sub"></div>
+            <div class="iv-meta" id="iv-meta"></div>
+          </div>
+        </div>
+        <!-- Upsell -->
+        <div class="ups-box" id="ups-prefs" style="display:none">
+          <div class="ups-title">💡 Clients like you also added</div>
+          <div class="ups-items" id="ups-prefs-items"></div>
+        </div>
+        <button class="btn btn-p" onclick="goTo(3)">Review & give consent →</button>
+        <button class="btn btn-o" onclick="goTo(1)">← Back</button>
+      </div>
+
+      <!-- S3: Consent -->
+      <div class="scr" id="s3">
+        <div class="st">Your consent — full control</div>
+        <div class="ss2">The following data will be shared with the bank. You remain in full control.</div>
+        <div class="c-list" id="c-list"></div>
+
+        <!-- Comprehensive compliance block -->
+        <div class="reg-block">
+          <div class="reg-block-title">Regulatory protections active for this session</div>
+          <div class="reg-pills">
+            <div class="reg-pill blue">PSD2 Art.94 · SCA RTS</div>
+            <div class="reg-pill blue">PSD3 (transition)</div>
+            <div class="reg-pill blue">GDPR Art.7 · Consent</div>
+            <div class="reg-pill green">DORA Art.30 · ICT</div>
+            <div class="reg-pill amber">MiFID II Suitability</div>
+            <div class="reg-pill gray">AMLD6 · KYC/AML</div>
+            <div class="reg-pill blue">eIDAS 2.0 · LoA High</div>
+            <div class="reg-pill green">FCA CASS/SYSC 8</div>
+            <div class="reg-pill gray">UK GDPR</div>
+            <div class="reg-pill blue">Schrems II · EEA only</div>
+          </div>
+          <div class="reg-check-list">
+            <div class="reg-check"><span class="reg-check-ico">✅</span><span><strong>Data sovereignty:</strong> All processing occurs within the EEA (AWS eu-west-1). No transfers to third countries — Schrems II compliant.</span></div>
+            <div class="reg-check" id="mifid-check" style="display:none"><span class="reg-check-ico">✅</span><span><strong>MiFID II suitability:</strong> Investment suitability assessment completed. Recommended products match your declared risk profile and financial objectives.</span></div>
+            <div class="reg-check"><span class="reg-check-ico">✅</span><span><strong>DORA resilience:</strong> MADON is registered as a DORA-compliant ICT provider in this bank's vendor register. 4-hour incident SLA active.</span></div>
+            <div class="reg-check"><span class="reg-check-ico">✅</span><span><strong>PSD2/PSD3 SCA:</strong> Strong Customer Authentication verified above. Compliant with RTS Art. 97 and forthcoming PSD3 technical standards.</span></div>
+            <div class="reg-check"><span class="reg-check-ico">✅</span><span><strong>GDPR Art. 7:</strong> Consent is specific, informed, freely given, and unambiguous. Withdrawable at any time via privacy.bankai.io.</span></div>
+          </div>
+        </div>
+
+        <label class="ccb-wrap" for="ccb">
+          <input type="checkbox" id="ccb" onchange="toggleCb()">
+          <div class="ccb-txt">I consent to share the above data with <strong id="cb-bank">Bank AI</strong> for <strong id="cb-pur">processing my request</strong>. Session-specific · Withdrawable · Not shared with ChatGPT.</div>
+        </label>
+        <div class="priv-link" onclick="openPrivacy()">📋 Full Privacy Notice · Data Retention · Regulatory Compliance →</div>
+        <button class="btn btn-p" id="cbtn" disabled onclick="goTo(4)">🔒 Submit securely to bank →</button>
+        <button class="btn btn-o" onclick="goTo(2)">← Back</button>
+      </div>
+
+      <!-- S4: Processing -->
+      <div class="scr" id="s4">
+        <div class="proc-ctr">
+          <div class="proc-sp" id="pspin"></div>
+          <div class="st" id="proc-t" style="margin-bottom:4px">Processing…</div>
+          <div class="ss2">Your consented data is being transmitted securely.</div>
+        </div>
+        <div class="proc-steps">
+          <div class="proc-step done" id="pp0"><span class="psi">✅</span> Consent record written to audit log (DORA Art.25)</div>
+          <div class="proc-step active" id="pp1"><span class="psi">⏳</span> Transmitting to bank API (PSD2 / Open Banking)…</div>
+          <div class="proc-step" id="pp2"><span class="psi">○</span> Running eligibility & MiFID II suitability check…</div>
+          <div class="proc-step" id="pp3"><span class="psi">○</span> Final fraud & AML screening (AMLD6)…</div>
+          <div class="proc-step" id="pp4"><span class="psi">○</span> Finalising secure session</div>
+        </div>
+      </div>
+
+      <!-- S5: Success -->
+      <div class="scr" id="s5">
+        <div style="text-align:center">
+          <div class="r-ico ok" id="r-ico">✅</div>
+          <div class="st" id="s5t">Request submitted!</div>
+          <div class="ss2" id="s5s"></div>
+        </div>
+        <!-- Instant approval badge if applicable -->
+        <div class="instant-val" id="s5-instant">
+          <div class="iv-ico" id="s5-iv-ico">🎉</div>
+          <div class="iv-title" id="s5-iv-title">Instant Decision</div>
+          <div class="iv-sub" id="s5-iv-sub"></div>
+          <div class="iv-meta" id="s5-iv-meta"></div>
+        </div>
+        <div class="ref-card" style="margin-top:12px"><div class="ref-lbl">Reference number</div><div class="ref-code" id="refcode">-</div></div>
+        <div id="next-steps"></div>
+        <div class="data-shield">🔒 <span>Your personal data was <strong>not shared with ChatGPT</strong>. Only a success signal was returned.</span></div>
+        <div class="ups-box" id="ups-success">
+          <div class="ups-title">✨ Complete your financial picture</div>
+          <div class="ups-items" id="ups-success-items"></div>
+        </div>
+        <button class="btn btn-g" onclick="closeAndSignal('success')">Close & return to ChatGPT ✓</button>
+      </div>
+
+      <!-- S6: Failure -->
+      <div class="scr" id="s6">
+        <div style="text-align:center"><div class="r-ico fail">⚠️</div><div class="st">Something went wrong</div><div class="ss2">Bank systems temporarily unavailable. No data was transmitted.</div></div>
+        <div style="background:var(--rl);border-radius:9px;padding:12px;margin-bottom:14px;font-size:12.5px;color:var(--red)"><strong>No data was shared.</strong> Your consent was captured but the API could not be reached.</div>
+        <button class="btn btn-p" onclick="goTo(4);runProc()">Try again →</button>
+        <button class="btn btn-o" onclick="closeAndSignal('failed')">Close — I'll try later</button>
+      </div>
+    </div>
+    <div class="p-ftr">🔒 MADON · exec.madon.io · PSD2/PSD3 · GDPR · DORA · MiFID II · Schrems II · Session: <span id="sid">—</span></div>
+  </div>
+</div>
+
+<!-- ══ PRIVACY MODAL ══ -->
+<div class="pm" id="pm">
+  <div class="pm-box">
+    <h2>🔒 Privacy Notice & Regulatory Compliance</h2>
+    <div class="pm-rbs"><div class="pm-rb">PSD2/PSD3</div><div class="pm-rb">GDPR Art.7</div><div class="pm-rb">DORA 2022/2554</div><div class="pm-rb">AMLD6</div><div class="pm-rb">MiFID II</div><div class="pm-rb">FCA SYSC8</div><div class="pm-rb">eIDAS 2.0</div><div class="pm-rb">UK GDPR</div><div class="pm-rb">Schrems II</div><div class="pm-rb">PCI-DSS</div></div>
+    <h3>Data roles</h3><p><strong>Controller:</strong> Selected bank (financial decisions). <strong>Processor:</strong> MADON (identity & consent). <strong>Sub-processors:</strong> AWS eu-west-1, Yapily (Open Banking connectivity), Onfido (KYC video verification). ChatGPT receives <em>zero personal data</em> — only a pass/fail status signal.</p>
+    <h3>PSD2 / PSD3 & Strong Customer Authentication</h3><p>MADON is a technical service provider under PSD2 Art. 3(j) exclusion. SCA is applied per RTS Art. 97 (two-factor: knowledge + possession). PSD3 transition standards are monitored and will be adopted upon entry into force.</p>
+    <h3>MiFID II — Investment Protection</h3><p>For investment and pension products, MADON facilitates MiFID II suitability assessment data collection. The bank remains responsible for the suitability determination. No investment advice is provided by MADON or by ChatGPT.</p>
+    <h3>GDPR · Consent & Data Sovereignty</h3><p>Consent is specific, informed, freely given, and unambiguous (GDPR Art. 4(11) / Art. 7). All processing occurs within the EEA. No transfers to third countries — fully Schrems II compliant. Data subject rights exercisable at privacy.bankai.io. DPO: dpo@bankai.io.</p>
+    <h3>DORA — Digital Operational Resilience Act</h3><p>MADON is a registered DORA-compliant ICT third-party service provider. All Art. 30 mandatory contractual clauses in place: 4-hour incident notification SLA, annual penetration testing, audit rights, and data portability on contract termination.</p>
+    <h3>AMLD6 — AML & KYC</h3><p>The bank is the AMLD6-obliged entity and is responsible for all KYC/AML Customer Due Diligence. MADON facilitates identity signal passing only. Video KYC is handled by Onfido (FCA-registered, GDPR-compliant sub-processor).</p>
+    <h3>Document Analysis & Fraud Prevention</h3><p>Uploaded documents are processed using MADON's ML-based document intelligence system (OCR + anomaly detection + fraud pattern matching). Processing occurs within the EEA. Documents are deleted immediately after analysis — only the outcome signal is retained in the audit log.</p>
+    <h3>Data Retention</h3><p>Identity data: 30 days post-session then deleted. Consent audit log: 7 years (anonymised after 30 days) as required by financial regulation. Document analysis result: audit log only. Raw documents: deleted immediately after processing.</p>
+    <h3>Schrems II & Data Sovereignty</h3><p>All personal data remains within the EEA at all times. MADON uses AWS eu-west-1 (Ireland) exclusively. No Standard Contractual Clauses are required as no third-country transfers occur. ChatGPT's conversation data is governed separately under OpenAI's privacy policy.</p>
+    <button class="pm-close" onclick="closePM()">Close</button>
+  </div>
+</div>
+
+<script>
+function toggleMobileMenu() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('open');
+}
+
+/* ════════════════════════════════════════════════════
+   BANKS
+════════════════════════════════════════════════════ */
+const BANKS={
+  bankAI:  {id:'bankAI',  name:'Bank AI',    logo:'B',hdr:'linear-gradient(135deg,#003768,#004d99)',logoBg:'#00AEEF',bdr:'#003768',bg:'#E8F6FD',tag:'#003768',btn:'#003768'},
+  bankBeta:{id:'bankBeta',name:'Bank Beta',   logo:'β',hdr:'linear-gradient(135deg,#7B0000,#A00000)',logoBg:'#E53E3E',bdr:'#7B0000',bg:'#FFF5F5',tag:'#7B0000',btn:'#7B0000'},
+  bankGama:{id:'bankGama',name:'Bank Gama',   logo:'Γ',hdr:'linear-gradient(135deg,#14532D,#166534)',logoBg:'#22C55E',bdr:'#14532D',bg:'#F0FDF4',tag:'#14532D',btn:'#14532D'},
+  bankSigma:{id:'bankSigma',name:'Bank Sigma',logo:'Σ',hdr:'linear-gradient(135deg,#111827,#1F2937)',logoBg:'#4B5563',bdr:'#111827',bg:'#F9FAFB',tag:'#111827',btn:'#111827'},
+};
+
+/* ════ DOCUMENT DEFINITIONS per use case ════ */
+const DOCS={
+  personal_loan:[
+    {id:'payslip',   icon:'📄', name:'Last 3 months payslips', req:'Mandatory', why:'Proof of income for credit assessment — AMLD6 requirement', instant:true},
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport', req:'Mandatory', why:'Identity verification for KYC', instant:true},
+  ],
+  buy_house:[
+    {id:'sales_agr', icon:'🏠', name:'Sales agreement (compromis)', req:'Mandatory', why:'Confirms property details, price, and purchase conditions for mortgage valuation'},
+    {id:'payslip',   icon:'📄', name:'Last 3 months payslips',       req:'Mandatory', why:'Proof of income for affordability assessment'},
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport',       req:'Mandatory', why:'KYC / AML identity verification'},
+    {id:'tax_return',icon:'📊', name:'Last 2 years tax returns',      req:'Mandatory', why:'Income verification for mortgage underwriting'},
+    {id:'bank_stmt', icon:'🏦', name:'3 months bank statements',      req:'Mandatory', why:'Proof of deposit funds and financial behaviour (AMLD6 source of funds)'},
+  ],
+  renovate:[
+    {id:'quote',     icon:'🔨', name:'Contractor quote or invoice',   req:'Mandatory', why:'Confirms renovation scope and cost for loan amount validation'},
+    {id:'payslip',   icon:'📄', name:'Last 3 months payslips',        req:'Mandatory', why:'Income proof for loan assessment'},
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport',        req:'Mandatory', why:'KYC verification', instant:true},
+    {id:'property',  icon:'🏡', name:'Proof of property ownership',   req:'Mandatory', why:'Confirms you own the property being renovated'},
+  ],
+  car_loan:[
+    {id:'car_quote', icon:'🚗', name:'Vehicle purchase invoice or dealer quote', req:'Mandatory', why:'Confirms vehicle price and type for loan-to-value calculation'},
+    {id:'payslip',   icon:'📄', name:'Last 3 months payslips', req:'Mandatory', why:'Income proof for loan assessment', instant:true},
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport', req:'Mandatory', why:'KYC identity verification', instant:true},
+  ],
+  invest_start:[
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport', req:'Mandatory', why:'MiFID II KYC requirement for investment services'},
+    {id:'mifid_q',   icon:'📊', name:'MiFID II Investor Questionnaire',   req:'Mandatory', why:'Legally required suitability assessment before any investment product can be offered. Must be completed prior to account opening.'},
+  ],
+  pension:[
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport',            req:'Mandatory', why:'Tax-advantaged product registration with fiscal authorities'},
+    {id:'tax_id',    icon:'📋', name:'Tax identification certificate',      req:'Mandatory', why:'Required for tax deduction registration with fiscal authority'},
+    {id:'payslip',   icon:'📄', name:'Recent payslip (income proof)',        req:'Mandatory', why:'To calculate your maximum annual tax-deductible contribution (GDPR: data minimisation)'},
+  ],
+  pro_activity:[
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport', req:'Mandatory', why:'KYC identity verification (AMLD6)'},
+    {id:'biz_plan',  icon:'📝', name:'Business plan or activity description', req:'Mandatory', why:'Required for professional account opening and credit assessment'},
+    {id:'reg_doc',   icon:'📜', name:'Company registration or VAT certificate', req:'Conditional', why:'Required if registered company. Freelancers: self-employment proof'},
+    {id:'biz_account',icon:'🏦',name:'6 months business bank statements', req:'Conditional', why:'AML source of funds verification for business accounts'},
+  ],
+  become_client:[
+    {id:'id_doc',    icon:'🪪', name:'National ID or passport', req:'Mandatory', why:'Primary KYC document — mandatory under AMLD6'},
+    {id:'proof_addr',icon:'📍', name:'Proof of address (utility bill / bank letter)', req:'Mandatory', why:'Address verification — regulatory requirement for account opening'},
+    {id:'income',    icon:'💼', name:'Proof of income or source of funds', req:'Mandatory', why:'AMLD6 customer due diligence — source of wealth declaration'},
+  ],
+  fraud:[
+    {id:'screenshot',icon:'📱', name:'Screenshots of suspicious messages/transactions', req:'Recommended', why:'Evidence for fraud investigation and police report'},
+    {id:'bank_stmt', icon:'🏦', name:'Relevant bank statements showing fraudulent transactions', req:'Recommended', why:'Required for PSD2 chargeback claim processing'},
+  ],
+  transfer:[],
+  savings_account:[],
+  lost_card:[],
+  card_limits:[],
+  car_insurance:[],
+  home_insurance:[],
+  appointment:[],
+  mortgage:[
+    {id:'curr_mortgage',icon:'📄', name:'Current mortgage statement', req:'Mandatory', why:'Needed to assess outstanding balance and restructuring options'},
+    {id:'payslip',      icon:'💼', name:'Last 3 months payslips',      req:'Mandatory', why:'Income verification for refinancing assessment'},
+    {id:'id_doc',       icon:'🪪', name:'National ID or passport',      req:'Mandatory', why:'KYC verification'},
+  ],
+  family_insurance:[
+    {id:'id_doc',  icon:'🪪', name:'National ID for all family members to be insured', req:'Mandatory', why:'Required for policy underwriting'},
+    {id:'birth_c', icon:'👶', name:'Birth certificates for children to be covered', req:'Conditional', why:'Required for any policy covering minor dependants'},
+  ],
+  travel_insurance:[
+    {id:'id_doc',  icon:'🪪', name:'Passport copy', req:'Mandatory', why:'Required for international travel insurance validation'},
+    {id:'booking', icon:'✈️', name:'Flight/travel booking confirmation', req:'Mandatory', why:'Confirms travel dates and destination for coverage period'},
+  ],
+};
+
+/* ════ OFFERS ════ */
+function genOffers(uc,params){
+  const base={
+    personal_loan:[{bank:'bankAI',rate:'4.9%',max:'€50k',minRev:'€1,500/mo',appr:'Same day',fee:'None',hi:'rate'},{bank:'bankBeta',rate:'5.2%',max:'€40k',minRev:'€1,200/mo',appr:'2h',fee:'€29',hi:''},{bank:'bankGama',rate:'4.7%',max:'€35k',minRev:'€1,800/mo',appr:'24h',fee:'None',hi:'rate'},{bank:'bankSigma',rate:'5.5%',max:'€75k',minRev:'€3,000/mo',appr:'Same day',fee:'None',hi:'max'}],
+    buy_house:[{bank:'bankAI',rate:'3.85%',max:'€600k',minRev:'€2,500/mo',appr:'24h DIP',fee:'Free valuation',hi:'rate'},{bank:'bankBeta',rate:'3.99%',max:'€500k',minRev:'€2,200/mo',appr:'48h',fee:'1% setup',hi:''},{bank:'bankGama',rate:'3.75%',max:'€450k',minRev:'€2,800/mo',appr:'72h',fee:'None',hi:'rate'},{bank:'bankSigma',rate:'4.10%',max:'€900k',minRev:'€5,000/mo',appr:'24h DIP',fee:'None',hi:'max'}],
+    car_loan:[{bank:'bankAI',rate:'3.9%',max:'€80k',minRev:'€1,200/mo',appr:'Same day',fee:'None',hi:'rate'},{bank:'bankBeta',rate:'4.2%',max:'€50k',minRev:'€1,000/mo',appr:'2h',fee:'€19',hi:''},{bank:'bankGama',rate:'3.7%',max:'€60k',minRev:'€1,500/mo',appr:'24h',fee:'None',hi:'rate'},{bank:'bankSigma',rate:'4.5%',max:'€120k',minRev:'€4,000/mo',appr:'Same day',fee:'None',hi:'max'}],
+    savings_account:[{bank:'bankAI',rate:'3.4% AER',max:'€100k',minRev:'None',appr:'Instant',fee:'None',hi:'rate'},{bank:'bankBeta',rate:'3.2% AER',max:'€50k',minRev:'None',appr:'Instant',fee:'None',hi:''},{bank:'bankGama',rate:'3.6% AER',max:'€75k',minRev:'None',appr:'2h',fee:'None',hi:'rate'},{bank:'bankSigma',rate:'3.0% AER',max:'€500k',minRev:'€10k min',appr:'Same day',fee:'None',hi:'max'}],
+    invest_start:[{bank:'bankAI',rate:'0.50% fee',max:'€500k',minRev:'From €25/mo',appr:'Same day',fee:'None',hi:'rate'},{bank:'bankBeta',rate:'0.70% fee',max:'€200k',minRev:'From €50/mo',appr:'Same day',fee:'None',hi:''},{bank:'bankGama',rate:'0.40% fee',max:'€300k',minRev:'From €10/mo',appr:'24h',fee:'None',hi:'rate'},{bank:'bankSigma',rate:'0.30% fee',max:'€1M+',minRev:'€10k min',appr:'24h',fee:'None',hi:'max'}],
+    car_insurance:[{bank:'bankAI',rate:'€29/mo',max:'Comprehensive',minRev:'0 claims',appr:'Instant',fee:'None',hi:'rate'},{bank:'bankBeta',rate:'€24/mo',max:'3rd party+',minRev:'1yr licence',appr:'Instant',fee:'€15',hi:'rate'},{bank:'bankGama',rate:'€32/mo',max:'Comprehensive',minRev:'0 claims',appr:'2h',fee:'None',hi:''},{bank:'bankSigma',rate:'€45/mo',max:'Premium',minRev:'0 claims',appr:'Instant',fee:'None',hi:'max'}],
+    pension:[{bank:'bankAI',rate:'Branch 23',max:'€990/yr tax',minRev:'From €25/mo',appr:'Same day',fee:'1.5% mgmt',hi:''},{bank:'bankBeta',rate:'Branch 21',max:'€990/yr tax',minRev:'From €50/mo',appr:'48h',fee:'1.2% mgmt',hi:''},{bank:'bankGama',rate:'Branch 23',max:'€990/yr tax',minRev:'From €10/mo',appr:'Same day',fee:'1.0% mgmt',hi:'rate'},{bank:'bankSigma',rate:'Both',max:'€1,270/yr tax',minRev:'€100/mo',appr:'Same day',fee:'0.8% mgmt',hi:'max'}],
+    transfer:[{bank:'bankAI',rate:'Free SEPA',max:'€100k/day',minRev:'None',appr:'Instant',fee:'SWIFT 0.3%',hi:'rate'},{bank:'bankBeta',rate:'Free SEPA',max:'€50k/day',minRev:'None',appr:'Instant',fee:'Free SWIFT',hi:'rate'},{bank:'bankGama',rate:'€0.50/tx',max:'€75k/day',minRev:'None',appr:'Instant',fee:'SWIFT 0.2%',hi:''},{bank:'bankSigma',rate:'Free all',max:'Unlimited',minRev:'€5k/mo',appr:'Instant',fee:'Free all',hi:'max'}],
+  };
+  return (base[uc]||base.personal_loan).map(o=>({...o}));
+}
+
+/* ════ USE CASES ════ */
+const UC={
+  personal_loan:{icon:'💳',name:'Quick Personal Loan',sub:'Eligibility check & instant decision for amounts up to €30k.',clarifyQ:"To find you the best loan offers, two quick questions:\n\n**How much would you like to borrow?** (e.g. €5,000 or €15,000)\n**What will you use it for?** (home improvement, car, medical, holiday, other)\n\nAnswer both in one message!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'personal loan eligibility check & application',consentData:[{icon:'🪪',name:'Full name & date of birth',why:'Identity verification for credit assessment',req:'Mandatory'},{icon:'💼',name:'Employment status & income range',why:'Repayment capacity assessment (AMLD6)',req:'Mandatory'},{icon:'📊',name:'Soft credit check signal',why:'Risk assessment — does not affect credit score',req:'Mandatory'},{icon:'🏦',name:'IBAN for fund disbursement',why:'Required to pay funds to your account if approved',req:'Mandatory'}],prefs:`<div class="pref-hl"><div class="pref-val" id="la">€8,000</div><div class="pref-lbl">Loan amount</div></div><input type="range" min="1000" max="75000" step="500" value="8000" oninput="updLoan()" id="lslider" style="width:100%;accent-color:#003768;margin-bottom:4px"><div style="display:flex;justify-content:space-between;font-size:10.5px;color:#94A3B8;margin-bottom:14px"><span>€1,000</span><span>€75,000</span></div><div class="frow"><div class="fg"><label class="fl">Duration</label><select class="fi" id="ldur" onchange="updLoan()"><option value="12">12 months</option><option value="24" selected>24 months</option><option value="36">36 months</option><option value="48">48 months</option><option value="60">60 months</option></select></div><div class="fg"><label class="fl">Purpose</label><select class="fi"><option>Home improvement</option><option>Car</option><option>Medical</option><option>Education</option><option>Holiday</option><option>Other</option></select></div></div><div class="mrow"><div class="mr-l">Estimated monthly payment</div><div class="mr-v" id="mpay">~€365/mo</div></div><div class="fg"><label class="fl">Approximate annual income</label><select class="fi"><option>Under €20k</option><option selected>€20k–€40k</option><option>€40k–€60k</option><option>€60k–€100k</option><option>Over €100k</option></select></div>`,instantThreshold:30000,upsellPrefs:[{icon:'🛡️',name:'Payment Protection Insurance',sub:'Cover repayments if you can\'t work'},{icon:'💳',name:'Upgrade to Visa Platinum',sub:'Free for the first year with your loan'}],upsellSuccess:[{icon:'🏠',name:'Home renovation insurance',sub:'Protect your project from day one'},{icon:'📈',name:'Start investing your savings',sub:'From €25/mo — make idle money work'}],successTitle:'✅ Loan application submitted!',successSub:'Your application is being processed.',nextSteps:['Decision email within 2 hours','Funds in your account within 1 business day if approved','Track at app.bankai.io/loans'],instantApproved:{title:'🎉 Instant Pre-Approval!',sub:'Based on your profile, you are pre-approved. Final confirmation within 2 hours.',tags:['Pre-approved','Rate locked 30 days','Funds in 24h if confirmed']},instantPending:{title:'⏳ Under Review',sub:'Your application requires a short manual review. The bank will respond within 4 hours.',tags:['Review in progress','No credit score impact','Outcome by email']}},
+
+  buy_house:{icon:'🏠',name:'Your Dream Home Awaits',sub:'Mortgage decision in principle — usually within 24 hours.',clarifyQ:"Let's find your best mortgage! Two questions:\n\n**Property price and your deposit?** (e.g. €320k property, €60k deposit)\n**Is this purchase, self-build, or renovation?**\n\nAnswer both and I'll compare 4 banks!",steps:['Intent','Identity','Property','Consent','Processing','Result'],purpose:'mortgage application & property purchase',consentData:[{icon:'🪪',name:'Full name, DOB & address',why:'Mortgage application identity requirements',req:'Mandatory'},{icon:'💼',name:'Employment & income details',why:'Affordability assessment (FCA / NBB guidelines)',req:'Mandatory'},{icon:'🏠',name:'Property details & purchase price',why:'LTV calculation and risk assessment',req:'Mandatory'},{icon:'💰',name:'Deposit amount & source of funds',why:'AMLD6 anti-money laundering requirement',req:'Mandatory'},{icon:'📊',name:'Full credit check',why:'Mandatory for mortgage applications',req:'Mandatory'}],prefs:`<div class="frow"><div class="fg"><label class="fl">Property price</label><input class="fi" type="number" placeholder="e.g. 320000"></div><div class="fg"><label class="fl">Your deposit</label><input class="fi" type="number" placeholder="e.g. 60000"></div></div><div class="frow"><div class="fg"><label class="fl">Mortgage term</label><select class="fi"><option>15yr</option><option>20yr</option><option selected>25yr</option><option>30yr</option></select></div><div class="fg"><label class="fl">Rate type</label><select class="fi"><option>Fixed 5yr</option><option>Fixed 10yr</option><option>Variable</option></select></div></div><div class="mrow"><div class="mr-l">Estimated monthly repayment</div><div class="mr-v">~€1,390/mo</div></div>`,instantThreshold:0,upsellPrefs:[{icon:'🏡',name:'Home insurance — cover from exchange',sub:'Lock in rate before purchase completes'},{icon:'🔨',name:'Renovation loan top-up',sub:'Finance improvements on top of your mortgage'}],upsellSuccess:[{icon:'🏡',name:'Buildings insurance',sub:'Required before completion — get it now'},{icon:'🔑',name:'Legal services',sub:'Trusted conveyancing partner — 10% off'}],successTitle:'Mortgage enquiry submitted!',successSub:'A mortgage advisor will call within 24 hours with your decision in principle.',nextSteps:['Advisor calls within 24 hours','Prepare: 3 months payslips, 2 years tax returns','DIP valid for 90 days'],instantApproved:{title:'Decision in Principle Issued',sub:'Congratulations — your DIP has been issued. Subject to full underwriting and valuation.',tags:['DIP issued','Valid 90 days','Full application next']},instantPending:{title:'⏳ Full Assessment Required',sub:'Complex applications require a dedicated mortgage advisor. You\'ll be contacted within 24 hours.',tags:['Advisor assigned','Full underwriting required','24h response']}},
+
+  car_loan:{icon:'🚘',name:'Finance Your Dream Car',sub:'Car loans from 3.9% APR — instant decision for new vehicles.',clarifyQ:"To find you the best car loan:\n\n**How much and which car?** (make, model, new or used — e.g. €18k, Toyota Corolla 2022, new)\n**Preferred monthly repayment?** (rough figure is fine)\n\nAnswer both at once!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'car loan application',consentData:[{icon:'🪪',name:'Identity verification',why:'KYC and credit check',req:'Mandatory'},{icon:'🚗',name:'Vehicle details & invoice',why:'Loan-to-value calculation',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Loan amount</label><input class="fi" type="number" placeholder="e.g. 18000"></div><div class="fg"><label class="fl">Vehicle details</label><input class="fi" placeholder="e.g. Toyota Corolla 2022, new, from dealer"></div><div class="fg"><label class="fl">Loan duration</label><select class="fi"><option>24 months</option><option selected>36 months</option><option>48 months</option><option>60 months</option></select></div><div class="mrow"><div class="mr-l">Estimated monthly payment</div><div class="mr-v">~€520/mo</div></div>`,instantThreshold:50000,upsellPrefs:[{icon:'🚗',name:'Car insurance',sub:'Bundle with your loan — save 10%'}],upsellSuccess:[{icon:'🛡️',name:'Payment protection',sub:'Cover repayments if you lose your job'},{icon:'🔧',name:'Extended warranty',sub:'5-year mechanical cover from €15/mo'}],successTitle:'Car loan application submitted!',successSub:'Decision expected within 2 hours.',nextSteps:['Decision email within 2 hours','Funds released to dealer on approval'],instantApproved:{title:'🎉 Instant Car Loan Approval!',sub:'You\'re approved! Funds will be released to the dealer within 1 business day.',tags:['Approved','3.9% rate locked','Dealer payment in 1 day']},instantPending:{title:'⏳ Short Review Needed',sub:'Your application is being reviewed. Decision within 4 hours.',tags:['Review in progress','4h decision','Rate held for 48h']}},
+
+  savings_account:{icon:'🏦',name:'Open Your Savings Account',sub:'Start earning from day one — no lock-in.',clarifyQ:"Let's find you the best savings rate!\n\n**How much are you planning to save?** (initial deposit + monthly)\n**Instant access or fixed term?** (fixed terms earn higher rates)\n\nAnswer both!",steps:['Intent','Identity','Preferences','Consent','Processing','Result'],purpose:'savings account opening',consentData:[{icon:'🪪',name:'Full name & date of birth',why:'KYC requirement for account opening (AMLD6)',req:'Mandatory'},{icon:'📍',name:'Home address',why:'Account registration and correspondence',req:'Mandatory'},{icon:'🏦',name:'Linked IBAN',why:'For deposits and withdrawals',req:'Mandatory'}],prefs:`<div class="pref-hl"><div class="pref-val">3.4%</div><div class="pref-lbl">Current best AER</div></div><div class="fg"><label class="fl">Initial deposit</label><input class="fi" type="number" placeholder="e.g. €500 (optional)"></div><div class="fg"><label class="fl">Monthly saving goal</label><input class="fi" type="number" placeholder="e.g. €200/month"></div><div class="fg"><label class="fl">Access</label><select class="fi"><option>Instant access (flexible)</option><option>Fixed 6 months (+0.2%)</option><option>Fixed 12 months (+0.4%)</option></select></div>`,instantThreshold:999999,upsellPrefs:[{icon:'📈',name:'Invest the excess',sub:'Anything over €5k growing at market rate'},{icon:'💳',name:'Premium debit card',sub:'Cashback on every purchase — free with savings'}],upsellSuccess:[{icon:'🌅',name:'Start your pension plan',sub:'Tax-deductible from just €25/mo'},{icon:'🏠',name:'Home deposit planner',sub:'See when you\'ll be ready to buy'}],successTitle:'Savings account opened!',successSub:'Your account is active — start earning from your first deposit.',nextSteps:['Confirmation email in 10 minutes','Transfer deposit to activate interest','Manage in the bank app'],instantApproved:{title:'✅ Account Open — You\'re Live!',sub:'Your savings account is open and earning interest immediately.',tags:['Account active','3.4% AER live','No lock-in']},instantPending:{title:'Account Opening in Progress',sub:'Your account will be fully active within 2 hours.',tags:['Processing','Active within 2h','Earning from first deposit']}},
+
+  invest_start:{icon:'📈',name:'Start Your Investment Journey',sub:'From €25/month — MiFID II compliant, transparent fees.',clarifyQ:"Great choice! To recommend the right portfolio:\n\n**How much do you want to invest?** (monthly and/or one-off)\n**What\'s your main goal?** (retirement, house, kids, income, wealth)\n\nAnswer both at once!",steps:['Intent','Identity','Profile','Consent','Processing','Result'],purpose:'investment account opening & MiFID II suitability assessment',consentData:[{icon:'🪪',name:'Full identity (MiFID II KYC)',why:'Required by law for all investment services',req:'Mandatory'},{icon:'📊',name:'Investment experience & knowledge',why:'MiFID II suitability — mandatory before investing',req:'Mandatory'},{icon:'🎯',name:'Risk tolerance & investment goals',why:'To recommend suitable products',req:'Mandatory'},{icon:'💰',name:'Investment amount & frequency',why:'To set up account and direct debit',req:'Mandatory'}],prefs:`<div class="frow"><div class="fg"><label class="fl">Monthly investment</label><input class="fi" type="number" placeholder="e.g. €100"></div><div class="fg"><label class="fl">One-off amount</label><input class="fi" type="number" placeholder="e.g. €1,000"></div></div><div class="fg"><label class="fl">Investment horizon</label><select class="fi"><option>1–3 years</option><option>3–5 years</option><option selected>5–10 years</option><option>10+ years</option></select></div><div class="fg"><label class="fl">Risk appetite (MiFID II)</label><select class="fi"><option>Conservative</option><option selected>Balanced</option><option>Growth</option><option>Aggressive</option></select></div><div class="fg"><label class="fl">Investment goal</label><select class="fi"><option>Retirement</option><option>Home purchase</option><option>Children\'s education</option><option>General wealth</option></select></div>`,instantThreshold:0,upsellPrefs:[{icon:'🌅',name:'Add a pension plan',sub:'Tax-deductible — from €25/mo more'},{icon:'🛡️',name:'Portfolio protection',sub:'Insure against major market downturns'}],upsellSuccess:[{icon:'🌅',name:'Pension savings — add now',sub:'Maximise your tax deduction this year'},{icon:'📰',name:'Weekly market briefing',sub:'Free with your portfolio'}],successTitle:'Investment account opened!',successSub:'Your portfolio will be live within 24 hours.',nextSteps:['Portfolio set up matching your MiFID II risk profile','First investment executed within 24 hours','Track at app.bankai.io/invest'],instantApproved:{title:'✅ Account Opened & Portfolio Activated',sub:'Your investment account is live. First investment will execute at market open.',tags:['Account active','Portfolio balanced','MiFID II verified']},instantPending:{title:'⏳ Suitability Review Needed',sub:'Your MiFID II suitability assessment requires a brief advisor review. You\'ll receive confirmation within 24 hours.',tags:['Advisor review','24h confirmation','Portfolio held pending']}},
+
+  pension:{icon:'🌅',name:'Secure Your Future',sub:'Tax-efficient pension — deduct up to €990/year.',clarifyQ:"Planning ahead is smart!\n\n**How old are you and when do you want to retire?** (e.g. 38, retire at 65)\n**How much can you set aside monthly?** (min €25 for tax benefit)\n\nAnswer both!",steps:['Intent','Identity','Planning','Consent','Processing','Result'],purpose:'pension savings account opening',consentData:[{icon:'🪪',name:'Full identity & tax ID',why:'Tax-advantaged product registration',req:'Mandatory'},{icon:'🎂',name:'Date of birth & retirement target',why:'Pension trajectory calculation',req:'Mandatory'},{icon:'💰',name:'Annual income',why:'Maximum tax-deductible contribution calculation',req:'Mandatory'}],prefs:`<div class="pref-hl"><div class="pref-val">€990</div><div class="pref-lbl">Max annual tax-deductible contribution</div></div><div class="fg"><label class="fl">Monthly contribution</label><input class="fi" type="number" placeholder="e.g. €82 (= €990/year)"></div><div class="frow"><div class="fg"><label class="fl">Current age</label><input class="fi" type="number" placeholder="e.g. 38"></div><div class="fg"><label class="fl">Target retirement age</label><input class="fi" type="number" placeholder="e.g. 65"></div></div><div class="fg"><label class="fl">Product type</label><select class="fi"><option selected>Pension savings fund (Branch 23)</option><option>Pension savings insurance (Branch 21)</option></select></div>`,instantThreshold:999999,upsellPrefs:[{icon:'📈',name:'Supplement with investment account',sub:'For savings beyond the tax-deductible limit'},{icon:'🛡️',name:'Life insurance add-on',sub:'Protect your family — from €8/mo'}],upsellSuccess:[{icon:'💎',name:'Private wealth planning session',sub:'Free 1-hour session with a senior advisor'},{icon:'📊',name:'Pension tracker app',sub:'See projected retirement income in real-time'}],successTitle:'Pension plan activated!',successSub:'Your pension savings plan is active.',nextSteps:['Account confirmation by email','First contribution on your chosen date','Annual tax certificate every January'],instantApproved:{title:'✅ Pension Plan Active!',sub:'Your first contribution will be invested at the start of next month. Tax certificate issued in January.',tags:['Plan active','Tax deductible','First certificate: Jan']},instantPending:{title:'Activation in Progress',sub:'Your pension account will be confirmed within 2 hours.',tags:['Processing','2h activation','Tax deduction registered']}},
+
+  car_insurance:{icon:'🚗',name:'Protect Your Car',sub:'Comprehensive cover — instant quote, instant activation.',clarifyQ:"Let me find you the best car insurance!\n\n**Your car?** (make, model, year — e.g. VW Golf 2020)\n**Cover level?** (third party, fire & theft, or fully comprehensive)\n\nAnswer both!",steps:['Intent','Identity','Vehicle','Consent','Processing','Result'],purpose:'car insurance quote & application',consentData:[{icon:'🪪',name:'Driver identity & licence',why:'Insurance underwriting and regulatory compliance',req:'Mandatory'},{icon:'🚗',name:'Vehicle registration & details',why:'Accurate policy pricing',req:'Mandatory'},{icon:'📍',name:'Home address (garaging)',why:'Coverage area and premium calculation',req:'Mandatory'},{icon:'📊',name:'Driving history & claims',why:'Underwriting via MID database check',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Vehicle registration</label><input class="fi" placeholder="e.g. 1-ABC-123 or AA-1234-BB"></div><div class="frow"><div class="fg"><label class="fl">Make & model</label><input class="fi" placeholder="e.g. VW Golf"></div><div class="fg"><label class="fl">Year</label><input class="fi" type="number" placeholder="2020"></div></div><div class="fg"><label class="fl">Cover type</label><select class="fi"><option>Third party only</option><option>Third party, fire & theft</option><option selected>Fully comprehensive</option></select></div>`,instantThreshold:999999,upsellPrefs:[{icon:'🔧',name:'Breakdown cover add-on',sub:'Roadside assistance from €3/mo extra'},{icon:'🏠',name:'Bundle with home insurance',sub:'Save 15% on both policies combined'}],upsellSuccess:[{icon:'🏥',name:'Driver health insurance',sub:'Cover yourself as well as your car'},{icon:'🔦',name:'Black box telematics',sub:'Save up to €120/yr with safe driving'}],successTitle:'Insurance quote ready!',successSub:'Your cover can start today.',nextSteps:['Quote valid 30 days','Cover starts from your chosen date','Policy documents emailed in 10 minutes'],instantApproved:{title:'✅ Instant Cover Activated!',sub:'Your car insurance is now active. Policy documents will be emailed in 10 minutes.',tags:['Cover active now','Policy email: 10 min','Certificate of insurance issued']},instantPending:{title:'Quote Ready — Activation Next',sub:'Your quote is confirmed. Activate cover by accepting the full policy terms.',tags:['Quote confirmed','Click to activate','Cover from chosen date']}},
+
+  fraud:{icon:'🛡️',name:'Fraud Report — Act Now',sub:'PSD2 protects you — report within 13 months for chargeback rights.',clarifyQ:"I'm so sorry this happened. Let me help quickly.\n\n**What type of fraud?** (unauthorized transaction, phishing, account takeover, scam...)\n**Approximately how much and when?** (e.g. €450 yesterday)\n\nThe faster we act, the better your recovery chances!",steps:['Intent','Identity','Incident','Consent','Processing','Result'],purpose:'fraud reporting & PSD2 chargeback initiation',consentData:[{icon:'🪪',name:'Identity verification',why:'Mandatory before accessing fraud details — prevents false reports',req:'Mandatory'},{icon:'💸',name:'Transaction details & amounts',why:'Required for investigation and PSD2 chargeback',req:'Mandatory'},{icon:'📅',name:'Incident date & timeline',why:'PSD2 chargeback eligibility — must be within 13 months',req:'Mandatory'}],prefs:`<div style="background:#FEE2E2;border-radius:10px;padding:12px;margin-bottom:13px;border-left:3px solid #DC2626"><strong style="color:#DC2626">🚨 Under PSD2, you may be entitled to a full refund</strong><div style="font-size:11px;color:#DC2626;margin-top:3px">Reporting within 13 months of the transaction protects your chargeback rights.</div></div><div class="fg"><label class="fl">Type of fraud</label><select class="fi"><option>Unauthorized card transaction</option><option>Phishing / social engineering</option><option>Account takeover</option><option>Impersonation scam</option><option>Other</option></select></div><div class="frow"><div class="fg"><label class="fl">Amount (approx.)</label><input class="fi" type="number" placeholder="€"></div><div class="fg"><label class="fl">When?</label><input class="fi" type="date"></div></div><div class="fg"><label class="fl">Brief description</label><textarea class="fi" rows="2" placeholder="What happened?"></textarea></div>`,instantThreshold:0,upsellPrefs:[{icon:'🔔',name:'Instant transaction alerts',sub:'Real-time notification for every transaction'}],upsellSuccess:[{icon:'🔐',name:'Enable Advanced Security',sub:'Biometric + behavioural authentication'},{icon:'📞',name:'Dedicated fraud line',sub:'Priority access to fraud team — always'}],successTitle:'Fraud report filed!',successSub:'Our fraud team will call within 30 minutes.',nextSteps:['Fraud specialist calls within 30 minutes','Affected accounts temporarily secured','Police report needed for claims over €500','PSD2 chargeback process initiated'],instantApproved:{title:'Report Filed — Response in 30 min',sub:'A specialist is assigned and will call shortly. Your accounts are being monitored.',tags:['Specialist assigned','30 min response','Accounts monitored']},instantPending:{title:'Report Received',sub:'Under review.',tags:[]}},
+
+  transfer:{icon:'↗️',name:'Send Money Securely',sub:'SEPA instant · International wires · Fully compliant.',clarifyQ:"Happy to help with a transfer!\n\n**How much and to which country?** (e.g. €500 to France, £1,200 to UK)\n**One-off or recurring payment?**\n\nAnswer both at once!",steps:['Intent','Identity','Transfer','Consent','Processing','Result'],purpose:'money transfer initiation',consentData:[{icon:'🪪',name:'Sender identity (PSD2 SCA)',why:'Mandatory Strong Customer Authentication for payment initiation',req:'Mandatory'},{icon:'💸',name:'Transfer amount & currency',why:'Required to execute the transfer instruction',req:'Mandatory'},{icon:'🏦',name:'Recipient IBAN & BIC',why:'Required to route the payment correctly',req:'Mandatory'},{icon:'📝',name:'Payment reference',why:'Travel Rule compliance (FATF Rec.16) for transfers >€1,000',req:'Conditional'}],prefs:`<div class="frow"><div class="fg"><label class="fl">Amount</label><input class="fi" type="number" placeholder="e.g. 500"></div><div class="fg"><label class="fl">Currency</label><select class="fi"><option>EUR</option><option>GBP</option><option>USD</option><option>CHF</option></select></div></div><div class="fg"><label class="fl">Recipient IBAN</label><input class="fi" placeholder="BE68 5390 0754 7034"></div><div class="fg"><label class="fl">Recipient name</label><input class="fi" placeholder="Full name or company name"></div><div class="fg"><label class="fl">Payment reference</label><input class="fi" placeholder="e.g. Rent June / Invoice #1234"></div><div class="mrow"><div class="mr-l">Transfer type</div><div class="mr-v">⚡ SEPA Instant</div></div>`,instantThreshold:999999,upsellPrefs:[{icon:'🔄',name:'Set up a standing order',sub:'Automate this payment every month'},{icon:'💱',name:'FX rate alert',sub:'Notify me when rate hits my target'}],upsellSuccess:[{icon:'📊',name:'Track your spending',sub:'See where your money goes — free analytics'}],successTitle:'Transfer initiated!',successSub:'SEPA Instant transfers arrive within seconds.',nextSteps:['Confirmation email sent immediately','SEPA Instant: arrives within seconds','Track at app.bankai.io/transfers'],instantApproved:{title:'✅ Transfer Sent!',sub:'Payment confirmed and transmitted via SEPA Instant.',tags:['Sent','SEPA Instant','Arrives in seconds']},instantPending:{title:'Transfer Processing',sub:'',tags:[]}},
+
+  lost_card:{icon:'🚫',name:'Block Your Card Immediately',sub:'Instant block — replacement in 2–3 business days.',clarifyQ:"To block the right card immediately:\n\n**Card type?** (Visa debit, Mastercard credit, etc.)\n**When did you last use it?** (roughly)\n\nThe faster we act, the better you're protected!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'emergency card block & replacement',consentData:[{icon:'🪪',name:'Identity verification',why:'Security — prevents fraudulent card blocking by third parties',req:'Mandatory'},{icon:'💳',name:'Last 4 digits of card number',why:'Confirm which card to block',req:'Mandatory'},{icon:'📍',name:'Replacement delivery address',why:'To dispatch your replacement card',req:'Mandatory'}],prefs:`<div style="background:#FFF5F5;border-radius:10px;padding:12px;margin-bottom:13px;border-left:3px solid #DC2626"><strong style="color:#DC2626">⚠️ Act fast — report immediately to limit liability</strong></div><div class="fg"><label class="fl">Card type</label><select class="fi"><option>Visa Debit</option><option>Visa Credit</option><option>Mastercard Debit</option><option>Mastercard Credit</option></select></div><div class="fg"><label class="fl">Last 4 digits</label><input class="fi" maxlength="4" placeholder="e.g. 4821"></div><div class="fg"><label class="fl">Replacement delivery address</label><input class="fi" placeholder="Confirm or enter new address"></div>`,instantThreshold:999999,upsellPrefs:[{icon:'🔔',name:'Instant transaction alerts',sub:'Every purchase notified in real-time'},{icon:'🛡️',name:'Card protection insurance',sub:'Up to €10,000 fraudulent transaction cover'}],upsellSuccess:[{icon:'📱',name:'Enable Apple/Google Pay',sub:'Pay without physical card — instantly'},{icon:'🔐',name:'Activate 3D Secure+',sub:'Extra layer for online purchases'}],successTitle:'Card blocked & replacement ordered!',successSub:'Your old card is permanently blocked.',nextSteps:['Card permanently blocked immediately','Replacement dispatched within 4 hours','Use Google/Apple Pay in the meantime','Review transactions at app.bankai.io/security'],instantApproved:{title:'✅ Card Blocked Instantly!',sub:'Your card has been permanently blocked. Replacement dispatched within 4 hours.',tags:['Blocked immediately','Replacement: 2–3 days','Pay via app meanwhile']},instantPending:{title:'Processing Block',sub:'',tags:[]}},
+
+  become_client:{icon:'👤',name:'Join Bank AI Today',sub:'Account open in 5 minutes — fully digital.',clarifyQ:"Welcome! To find you the best account:\n\n**Personal, professional/freelance, or both?**\n**Any specific features you need?** (savings, investments, premium card, travel benefits)\n\nAnswer both!",steps:['Welcome','Identity','Account','Consent','Processing','Result'],purpose:'new customer onboarding & account opening',consentData:[{icon:'🪪',name:'Full identity (ID/Passport)',why:'Legal KYC requirement under AMLD6',req:'Mandatory'},{icon:'📍',name:'Residential address & proof',why:'AML screening requirement',req:'Mandatory'},{icon:'☎️',name:'Mobile & email',why:'Account notifications and SCA',req:'Mandatory'},{icon:'💼',name:'Source of income',why:'AMLD6 customer due diligence',req:'Mandatory'}],prefs:`<div class="frow"><div class="fg"><label class="fl">First name</label><input class="fi" placeholder="Your first name"></div><div class="fg"><label class="fl">Last name</label><input class="fi" placeholder="Your last name"></div></div><div class="frow"><div class="fg"><label class="fl">Date of birth</label><input class="fi" type="date"></div><div class="fg"><label class="fl">Nationality</label><input class="fi" placeholder="e.g. Belgian"></div></div><div class="fg"><label class="fl">Employment status</label><select class="fi"><option>Employed</option><option>Self-employed</option><option>Student</option><option>Retired</option><option>Other</option></select></div>`,instantThreshold:999999,upsellPrefs:[{icon:'💳',name:'Start with Visa Platinum',sub:'Premium benefits — first year free'},{icon:'🏦',name:'Open a savings account too',sub:'3.4% AER alongside your current account'}],upsellSuccess:[{icon:'📈',name:'Start investing',sub:'From €25/mo'},{icon:'🚗',name:'Car insurance',sub:'Exclusive rate for new clients'}],successTitle:'Welcome to Bank AI!',successSub:'Account application being processed.',nextSteps:['Account details emailed in 2 hours','Debit card dispatched in 2–3 business days','Download the Bank AI app'],instantApproved:{title:'✅ Welcome! Account Opening in Progress',sub:'Your identity is verified. Account details will arrive within 2 hours.',tags:['Identity verified','Account: 2h','Card: 2–3 days']},instantPending:{title:'Application Under Review',sub:'',tags:[]}},
+
+  renovate:{icon:'🔨',name:'Transform Your Home',sub:'Home renovation loans — instant decision for amounts under €50k.',clarifyQ:"Let me find you the best renovation loan!\n\n**How much do you need?** (e.g. €15,000 for kitchen, bathroom, etc.)\n**Do you have a contractor quote yet?**\n\nAnswer both!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'home renovation loan',consentData:[{icon:'🪪',name:'Identity verification',why:'KYC requirement',req:'Mandatory'},{icon:'💼',name:'Income proof',why:'Loan repayment capacity',req:'Mandatory'},{icon:'🏡',name:'Property ownership proof',why:'Confirms you own the property',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Loan amount</label><input class="fi" type="number" placeholder="e.g. 15000"></div><div class="fg"><label class="fl">Work type</label><select class="fi"><option>Kitchen renovation</option><option>Bathroom renovation</option><option>Extension / loft conversion</option><option>Roof / windows</option><option>Full interior renovation</option><option>Energy efficiency works</option></select></div><div class="fg"><label class="fl">Duration</label><select class="fi"><option>12 months</option><option selected>36 months</option><option>60 months</option><option>84 months</option></select></div>`,instantThreshold:50000,upsellPrefs:[{icon:'🛡️',name:'Building works insurance',sub:'Cover your project from day one'}],upsellSuccess:[{icon:'🏡',name:'Home insurance update',sub:'Inform your insurer of home improvements'},{icon:'💡',name:'Energy efficiency grant',sub:'Government grants up to €5,000 for green works'}],successTitle:'Renovation loan submitted!',successSub:'Quick decision expected.',nextSteps:['Decision within 4 hours','Funds available within 1 business day if approved'],instantApproved:{title:'🎉 Loan Pre-Approved!',sub:'Your renovation loan is pre-approved. Final confirmation within 2 hours.',tags:['Pre-approved','Rate locked','Funds: 1 business day']},instantPending:{title:'⏳ Under Review',sub:'Larger renovation projects require additional assessment. Decision within 24 hours.',tags:['Review in progress','24h decision']}},
+
+  pro_activity:{icon:'🏢',name:'Launch Your Business',sub:'Business accounts, credit lines, and professional services.',clarifyQ:"Great — let me find the best business banking setup for you!\n\n**What type of business?** (freelance, limited company, startup, established SME)\n**What do you need most?** (current account, business credit, invoicing, cash management)\n\nAnswer both!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'business account opening & professional services',consentData:[{icon:'🪪',name:'Business owner identity',why:'AMLD6 beneficial ownership requirements',req:'Mandatory'},{icon:'🏢',name:'Company registration details',why:'Business account opening requirement',req:'Mandatory'},{icon:'💼',name:'Business activity & source of funds',why:'AMLD6 business customer due diligence',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Business type</label><select class="fi"><option>Freelance / sole trader</option><option>Limited company (BVBA/SRL)</option><option>Startup</option><option>SME (established)</option></select></div><div class="fg"><label class="fl">Business name</label><input class="fi" placeholder="Your company or trading name"></div><div class="fg"><label class="fl">Monthly turnover (approx.)</label><select class="fi"><option>Under €5k</option><option selected>€5k–€25k</option><option>€25k–€100k</option><option>Over €100k</option></select></div>`,instantThreshold:0,upsellPrefs:[{icon:'💳',name:'Business credit card',sub:'Separate business expenses from day one'},{icon:'📊',name:'Business accounting integration',sub:'Connect to Exact, Billit, or Bob'}],upsellSuccess:[{icon:'💡',name:'Business loan',sub:'Working capital when you need it'},{icon:'🛡️',name:'Business interruption insurance',sub:'Protect your revenue'}],successTitle:'Business account application submitted!',successSub:'A business banking specialist will contact you within 24 hours.',nextSteps:['Specialist contacts you within 24 hours','Prepare: VAT certificate, last year accounts','Account open within 2 business days'],instantApproved:{title:'Application Received',sub:'Business specialist assigned.',tags:['Specialist: 24h']},instantPending:{title:'Application Under Review',sub:'',tags:[]}},
+
+  home_insurance:{icon:'🏡',name:'Protect Your Home',sub:'From €15/month — buildings & contents cover.',clarifyQ:"Let me find your best home insurance!\n\n**Type of property?** (house, apartment, rented, owned)\n**What do you want to cover?** (buildings only, contents only, or both)\n\nAnswer both!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:'home insurance application',consentData:[{icon:'🪪',name:'Identity & address',why:'Policy underwriting',req:'Mandatory'},{icon:'🏡',name:'Property details',why:'Coverage and premium calculation',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Property type</label><select class="fi"><option>Owner-occupied house</option><option>Owner-occupied apartment</option><option>Rented property</option></select></div><div class="fg"><label class="fl">Cover type</label><select class="fi"><option>Buildings only</option><option>Contents only</option><option selected>Buildings & contents</option></select></div><div class="fg"><label class="fl">Estimated property value</label><input class="fi" type="number" placeholder="e.g. 280000"></div>`,instantThreshold:999999,upsellPrefs:[{icon:'🚗',name:'Bundle with car insurance',sub:'Save 15% on both combined'}],upsellSuccess:[{icon:'👨‍👩‍👧',name:'Family liability cover',sub:'Add personal liability for your whole family'}],successTitle:'Home insurance quote ready!',successSub:'Cover can start today.',nextSteps:['Quote valid 30 days','Cover from chosen date','Documents emailed in 10 min'],instantApproved:{title:'✅ Instant Quote!',sub:'Your cover is ready to activate.',tags:['Quote confirmed','Activate to cover now','Documents: 10 min']},instantPending:{title:'Quote Processing',sub:'',tags:[]}},
+};
+
+// Fill minimal defaults for remaining cases
+['mortgage','family_insurance','travel_insurance','account_protection','card_limits','update_info','appointment','complaint','leave_bank','switch_bank'].forEach(k=>{
+  if(!UC[k])UC[k]={icon:'💼',name:k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),sub:'A banking specialist will guide you.',clarifyQ:"To help you best:\n\n**What specifically do you need?**\n**Any particular timing or urgency?**\n\nAnswer both!",steps:['Intent','Identity','Details','Consent','Processing','Result'],purpose:k.replace(/_/g,' '),consentData:[{icon:'🪪',name:'Identity',why:'Required for this service',req:'Mandatory'}],prefs:`<div class="fg"><label class="fl">Additional details</label><textarea class="fi" rows="3" placeholder="Any extra information…"></textarea></div>`,instantThreshold:0,upsellPrefs:[],upsellSuccess:[{icon:'📈',name:'Start investing',sub:'Make your money work harder'}],successTitle:'Request submitted!',successSub:'A specialist will be in touch shortly.',nextSteps:['Confirmation shortly','Specialist follows up within 24 hours'],instantApproved:{title:'Request Received',sub:'',tags:[]},instantPending:{title:'Under Review',sub:'',tags:[]}};
+});
+
+/* ════ STATE ════ */
+let S={uc:'personal_loan',bank:null,screen:0,authMethod:'bank',ttlSecs:1200,ttlTimer:null,pauseSecs:1200,pauseTimer:null,pausedScr:0,pausedUC:null,sessId:'',docsUploaded:{},docCheckDone:false,instantResult:null};
+
+/* ════ COOKIE ════ */
+function closeCookies(){document.getElementById('ck-ov').style.display='none';}
+
+/* ════ CHAT ════ */
+let clarifyPending=false;
+function sendMsg(txt){
+  const inp=document.getElementById('cin');
+  const msg=txt||inp.value.trim();if(!msg)return;
+  inp.value='';
+  addMsg(msg,'user');
+  document.getElementById('llm-sig').classList.remove('show');
+  const tid=addTyping();
+  setTimeout(()=>{
+    removeTyping(tid);
+    handleMsg(msg);
+  },700+Math.random()*400);
+}
+
+function handleMsg(msg){
+  if(clarifyPending){
+    clarifyPending=false;
+    const cfg=UC[S.uc];
+    addMsg(`Got it! Let me compare the best ${cfg.name.toLowerCase()} options from our partner banks…`,'ai');
+    setTimeout(()=>showCompare(S.uc,msg),600);
+    return;
+  }
+  const uc=detectUC(msg);
+  if(uc&&UC[uc]){
+    S.uc=uc;clarifyPending=true;
+    hlSB(uc);
+    const q=UC[uc].clarifyQ.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    addMsg(q,'ai',true);
+  } else {
+    addMsg("I can help with that! Could you give me a bit more detail? For example: loans, mortgages, insurance, transfers, investments, card services, or account management.",'ai');
+  }
+}
+
+function showCompare(uc,rawMsg){
+  const offers=genOffers(uc,{});
+  const cfg=UC[uc];
+  const wrapper=document.createElement('div');
+  wrapper.className='msg-row';
+  const inner=document.createElement('div');
+  inner.className='msg-inner';
+  const av=document.createElement('div');av.className='msg-av gpt';av.textContent='G';
+  const content=document.createElement('div');content.className='msg-content';
+
+  const intro=document.createElement('div');intro.className='ai-text';
+  intro.innerHTML=`Here are <strong>4 partner banks</strong> with their best offers for your <strong>${cfg.name.toLowerCase()}</strong> request. Select the one that works best for you:`;
+  content.appendChild(intro);
+
+  const grid=document.createElement('div');grid.className='bk-grid';
+  offers.forEach(o=>{
+    const bk=BANKS[o.bank];
+    const c=document.createElement('div');c.className='bk-card';c.style.borderColor=bk.bdr;
+    c.innerHTML=`
+      <div class="bk-hdr" style="background:${bk.hdr}">
+        <div class="bk-logo" style="background:${bk.logoBg}">${bk.logo}</div>
+        <div><div class="bk-name">${bk.name}</div><div class="bk-tag-sm">${uc==='savings_account'?'Savings':uc==='car_insurance'?'Insurance':uc==='invest_start'?'Investments':'Lending'}</div></div>
+      </div>
+      <div class="bk-body">
+        <div class="bk-row"><span class="bk-lbl">Rate</span><span class="bk-val${o.hi==='rate'?' best':''}">${o.rate}${o.hi==='rate'?' ⭐':''}</span></div>
+        <div class="bk-row"><span class="bk-lbl">Maximum</span><span class="bk-val${o.hi==='max'?' best':''}">${o.max}${o.hi==='max'?' ⭐':''}</span></div>
+        <div class="bk-row"><span class="bk-lbl">Min income</span><span class="bk-val">${o.minRev}</span></div>
+        <div class="bk-row"><span class="bk-lbl">Approval</span><span class="bk-val">${o.appr}</span></div>
+        <div class="bk-row"><span class="bk-lbl">Setup fee</span><span class="bk-val">${o.fee}</span></div>
+      </div>
+      <div class="bk-foot"><button class="bk-sel-btn" style="background:${bk.btn}" onclick="selBank('${o.bank}','${uc}','${(rawMsg||'').replace(/'/g,"\\'")}')">Choose ${bk.name} →</button></div>`;
+    grid.appendChild(c);
+  });
+  content.appendChild(grid);
+  inner.appendChild(av);inner.appendChild(content);wrapper.appendChild(inner);
+  document.getElementById('msgs').appendChild(wrapper);
+  document.getElementById('msgs').scrollTop=9999;
+}
+
+function selBank(bankId,uc,userMsg){
+  S.bank=BANKS[bankId];S.uc=uc;
+  addMsg(`I'd like to proceed with ${BANKS[bankId].name}`,'user');
+  setTimeout(()=>{
+    addMsg(`Perfect! Opening a secure MADON session with ${BANKS[bankId].name} now. 🔒`,'ai');
+    setTimeout(()=>openPopup(uc,userMsg,bankId),600);
+  },400);
+}
+
+function loadUC(uc,ev){
+  if(!UC[uc])return;
+  document.querySelectorAll('.uc-btn').forEach(b=>b.classList.remove('active'));
+  if(ev&&ev.currentTarget)ev.currentTarget.classList.add('active');
+  S.uc=uc;clarifyPending=true;
+  hlSB(uc);
+  const q=UC[uc].clarifyQ.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  addMsg(q,'ai',true);
+}
+
+function newChat(){
+  document.getElementById('msgs').innerHTML='';
+  clarifyPending=false;
+  addMsg('Hello! I\'m ChatGPT with MADON secure banking execution. Tell me what banking service you need — I\'ll compare offers from 4 partner banks and guide you through the secure application process.','ai');
+}
+
+let _n=0;
+function addMsg(html,role,isHtml=false){
+  const m=document.getElementById('msgs');
+  const row=document.createElement('div');row.className='msg-row';
+  const inner=document.createElement('div');inner.className=`msg-inner${role==='user'?' user':''}`;
+  const av=document.createElement('div');av.className=`msg-av ${role==='user'?'user':'gpt'}`;av.textContent=role==='user'?'JD':'G';
+  const cnt=document.createElement('div');cnt.className='msg-content'+(role==='user'?' user':'');
+  if(role==='user'){const b=document.createElement('div');b.className='user-bubble';if(isHtml)b.innerHTML=html;else b.textContent=html;cnt.appendChild(b);}
+  else{const t=document.createElement('div');t.className='ai-text';if(isHtml)t.innerHTML=html;else t.textContent=html;cnt.appendChild(t);}
+  inner.appendChild(av);inner.appendChild(cnt);row.appendChild(inner);m.appendChild(row);m.scrollTop=9999;
+}
+function addTyping(){const m=document.getElementById('msgs'),id='tp'+(++_n);const r=document.createElement('div');r.className='msg-row';r.id=id;r.innerHTML='<div class="msg-inner"><div class="msg-av gpt">G</div><div class="msg-content"><div class="ai-text"><div class="tdots"><span></span><span></span><span></span></div></div></div></div>';m.appendChild(r);m.scrollTop=9999;return id;}
+function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
+function hlSB(uc){document.querySelectorAll('.uc-btn').forEach(b=>{const oc=b.getAttribute('onclick')||'';b.classList.toggle('active',oc.includes(`'${uc}'`));});}
+
+function detectUC(msg){
+  const m=msg.toLowerCase();
+  if(/loan.*car|car.*loan|finance.*car|car.*credi/i.test(m))return'car_loan';
+  if(/loan|borrow|credit.*personal|personal.*credi/i.test(m))return'personal_loan';
+  if(/saving|savings account|high.*rate|interest.*account/i.test(m))return'savings_account';
+  if(/buy.*hous|purchase.*hous|mortgage|property.*buy/i.test(m))return'buy_house';
+  if(/renovat|refurbish|home.*improv/i.test(m))return'renovate';
+  if(/adapt.*mort|change.*mort|remortgage/i.test(m))return'mortgage';
+  if(/lost.*card|stolen.*card|card.*(lost|stolen|block)/i.test(m))return'lost_card';
+  if(/debit card/i.test(m))return'card_limits';
+  if(/credit card/i.test(m))return'card_limits';
+  if(/limit|spend more/i.test(m))return'card_limits';
+  if(/transfer|send money|wire/i.test(m))return'transfer';
+  if(/fraud|scam|stolen money|unauthorized/i.test(m))return'fraud';
+  if(/appointment|book.*meet|advisor/i.test(m))return'appointment';
+  if(/car insurance|auto insurance/i.test(m))return'car_insurance';
+  if(/home insurance|house insurance/i.test(m))return'home_insurance';
+  if(/family insurance|family protect/i.test(m))return'home_insurance';
+  if(/invest|stock|fund|etf|portfolio/i.test(m))return'invest_start';
+  if(/pension|retirement/i.test(m))return'pension';
+  if(/buy.*car|car.*buy/i.test(m))return'car_loan';
+  if(/business.*account|professional.*account|freelanc/i.test(m))return'pro_activity';
+  if(/new account|open account|become.*client|join/i.test(m))return'become_client';
+  if(/switch.*bank|transfer.*bank/i.test(m))return'become_client';
+  return null;
+}
+
+/* ════ POPUP ════ */
+function openPopup(uc,userMsg,bankId){
+  const cfg=UC[uc]||UC.personal_loan;
+  const bk=BANKS[bankId]||BANKS.bankAI;
+  S.uc=uc;S.bank=bk;S.screen=0;S.docsUploaded={};S.docCheckDone=false;S.instantResult=null;
+  S.sessId='MDON-'+Math.random().toString(36).slice(2,6).toUpperCase()+'-'+Date.now().toString(36).toUpperCase().slice(-5);
+  document.getElementById('sid').textContent=S.sessId;
+
+  // Style header
+  document.getElementById('ph').style.background=bk.hdr;
+  document.getElementById('ph-logo').textContent=bk.logo;
+  document.getElementById('ph-logo').style.background=bk.logoBg;
+  document.getElementById('ph-name').textContent=bk.name+' × MADON';
+  document.getElementById('auth-bank-lbl').textContent='Log in with '+bk.name;
+
+  // S0
+  document.getElementById('s0t').textContent=cfg.name;
+  document.getElementById('s0s').textContent=cfg.sub;
+  document.getElementById('s0i').textContent=`"${userMsg||cfg.name}"`;
+  const sb=document.getElementById('sbk');
+  sb.style.cssText=`display:flex;align-items:center;gap:11px;border-radius:12px;padding:12px;margin-bottom:12px;border:2px solid ${bk.bdr};background:${bk.bg}`;
+  document.getElementById('sbl').style.cssText=`width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;background:${bk.logoBg}`;
+  document.getElementById('sbl').textContent=bk.logo;
+  document.getElementById('sbn').textContent=bk.name;document.getElementById('sbn').style.color=bk.tag;
+  document.getElementById('sbs').textContent=cfg.purpose+' · PSD2/DORA/GDPR compliant';
+
+  // S2 preferences
+  document.getElementById('s2t').textContent=cfg.steps[2]||'Your details';
+  document.getElementById('s2c').innerHTML=cfg.prefs||'';
+  buildDocSection(uc);
+
+  // Upsell
+  const up=document.getElementById('ups-prefs');
+  if(cfg.upsellPrefs&&cfg.upsellPrefs.length){
+    up.style.display='block';
+    document.getElementById('ups-prefs-items').innerHTML=cfg.upsellPrefs.map(u=>`<div class="ups-item" onclick="upsClick('${u.name}')"><div class="ui-ico">${u.icon}</div><div><div class="ui-nm">${u.name}</div><div class="ui-sb">${u.sub}</div></div><div class="ui-cta">Add +</div></div>`).join('');
+  } else {up.style.display='none';}
+
+  // S3
+  document.getElementById('cb-bank').textContent=bk.name;
+  document.getElementById('cb-pur').textContent=cfg.purpose;
+  document.getElementById('c-list').innerHTML=(cfg.consentData||[]).map(d=>`<div class="c-row"><span class="c-ico">${d.icon}</span><div><div class="c-name">${d.name}</div><div class="c-why">${d.why}</div><div class="c-req">${d.req}</div></div></div>`).join('');
+  // MiFID II check visibility
+  document.getElementById('mifid-check').style.display=(uc==='invest_start'||uc==='pension')?'flex':'none';
+  document.getElementById('ccb').checked=false;
+  document.getElementById('cbtn').disabled=true;
+
+  // S5 upsell
+  document.getElementById('ups-success-items').innerHTML=(cfg.upsellSuccess||[]).map(u=>`<div class="ups-item" onclick="upsClick('${u.name}')"><div class="ui-ico">${u.icon}</div><div><div class="ui-nm">${u.name}</div><div class="ui-sb">${u.sub}</div></div><div class="ui-cta">Explore →</div></div>`).join('');
+
+  resetAuth();
+  document.getElementById('llm-sig').classList.remove('show');
+  renderSteps(0,cfg.steps);
+  startTtl();
+  showS('s0');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function upsClick(name){addMsg(`Great choice! I'll set up: ${name} — I'll get back to you on this after completing your current request.`,'ai');}
+
+/* ── Document section builder ── */
+function buildDocSection(uc){
+  const docs=DOCS[uc]||[];
+  const sec=document.getElementById('doc-section');
+  if(!docs.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('doc-upload-sub').textContent=`Please upload the following documents. They will be scanned by MADON's ML system for authenticity and fraud patterns — documents are deleted immediately after analysis.`;
+  document.getElementById('doc-req-count').textContent=`(${docs.filter(d=>d.req==='Mandatory').length} required)`;
+  document.getElementById('doc-items').innerHTML=docs.map(d=>`
+    <div class="doc-item" id="di-${d.id}">
+      <span class="doc-ico">${d.icon}</span>
+      <div style="flex:1">
+        <div class="doc-name">${d.name}</div>
+        <div class="doc-req">${d.req}</div>
+        <div class="doc-why">${d.why}</div>
+      </div>
+      <button class="doc-upload-btn" id="ubtn-${d.id}" onclick="uploadDoc('${d.id}','${uc}')">📎 Upload</button>
+      <span class="doc-status" id="dst-${d.id}"></span>
+    </div>`).join('');
+  document.getElementById('doc-analysis').classList.remove('show');
+  document.getElementById('da-badge').classList.remove('show');
+  document.getElementById('instant-val').classList.remove('show');
+}
+
+/* ── Simulated doc upload & ML analysis ── */
+function uploadDoc(docId,uc){
+  const btn=document.getElementById('ubtn-'+docId);
+  const item=document.getElementById('di-'+docId);
+  const stat=document.getElementById('dst-'+docId);
+  btn.disabled=true;btn.textContent='⏳ Uploading…';btn.classList.add('uploading');
+
+  // Simulate upload 1.2s then analysis
+  setTimeout(()=>{
+    btn.textContent='🔍 Analysing…';
+    S.docsUploaded[docId]=true;
+    showDocAnalysis(docId,uc,(result)=>{
+      if(result==='ok'){
+        item.classList.add('uploaded');item.classList.remove('frauded');
+        stat.textContent='✅';stat.className='doc-status ok';
+        btn.textContent='✅ Uploaded';
+      } else {
+        item.classList.add('frauded');item.classList.remove('uploaded');
+        stat.textContent='⚠️';stat.className='doc-status bad';
+        btn.textContent='⚠️ Issue found';
+      }
+      btn.classList.remove('uploading');
+      // Check if all mandatory docs uploaded
+      checkAllDocsUploaded(uc);
+    });
+  },1200);
+}
+
+function showDocAnalysis(docId,uc,cb){
+  const da=document.getElementById('doc-analysis');
+  da.classList.add('show');
+  const cfg=UC[uc]||{};
+  const isInstant=cfg.instantThreshold&&cfg.instantThreshold>1000;
+
+  const checks=[
+    {id:'da1',label:'OCR extraction & document structure validation…',ok:'Document structure valid — OCR extraction complete',icon:'🔍'},
+    {id:'da2',label:'Metadata & digital signature verification…',ok:'Document metadata authentic — no digital tampering detected',icon:'🔐'},
+    {id:'da3',label:'ML fraud pattern detection (MADON v2.1)…',ok:'No fraud patterns detected — document passes ML screening',icon:'🤖'},
+    {id:'da4',label:'Cross-referencing with AMLD6 risk indicators…',ok:'No AML risk flags — document clears regulatory screening',icon:'📋'},
+  ];
+  const daItems=document.getElementById('da-items');
+  daItems.innerHTML=checks.map(c=>`<div class="da-item chk" id="${c.id}"><span class="da-icon">⏳</span><span>${c.label}</span></div>`).join('');
+  let i=0;const badge=document.getElementById('da-badge');badge.classList.remove('show');
+  function next(){
+    if(i>=checks.length){
+      badge.className='da-badge show pass';badge.textContent='✅ Document verified — all ML and regulatory checks passed';
+      // Show instant validation if applicable
+      if(!S.docCheckDone&&isInstant){
+        S.docCheckDone=true;
+        setTimeout(()=>showInstantValidation(uc),600);
+      }
+      cb('ok');return;
+    }
+    const c=checks[i];i++;
+    const el=document.getElementById(c.id);
+    setTimeout(()=>{
+      el.className='da-item ok';el.querySelector('.da-icon').textContent='✅';el.querySelector('span:last-child').textContent=c.ok;
+      next();
+    },700);
+  }
+  setTimeout(next,300);
+}
+
+function showInstantValidation(uc){
+  const cfg=UC[uc];
+  const iv=document.getElementById('instant-val');
+  const sliderEl=document.getElementById('lslider');
+  const amount=sliderEl?parseInt(sliderEl.value):10000;
+  const isInstantEligible=amount<=(cfg.instantThreshold||0);
+
+  iv.classList.add('show');
+  if(isInstantEligible){
+    iv.className='instant-val show approved';
+    document.getElementById('iv-ico').textContent='🎉';
+    document.getElementById('iv-title').textContent=cfg.instantApproved?.title||'✅ Pre-Approved!';
+    document.getElementById('iv-sub').textContent=cfg.instantApproved?.sub||'Your application qualifies for instant processing.';
+    document.getElementById('iv-meta').innerHTML=(cfg.instantApproved?.tags||[]).map(t=>`<span class="iv-tag" style="background:#D1FAE5;color:#065F46">${t}</span>`).join('');
+    S.instantResult='approved';
+  } else {
+    iv.className='instant-val show pending';
+    document.getElementById('iv-ico').textContent='⏳';
+    document.getElementById('iv-title').textContent=cfg.instantPending?.title||'Manual Review Required';
+    document.getElementById('iv-sub').textContent=cfg.instantPending?.sub||'Your application will be reviewed by a specialist.';
+    document.getElementById('iv-meta').innerHTML=(cfg.instantPending?.tags||[]).map(t=>`<span class="iv-tag" style="background:#FEF3C7;color:#92400E">${t}</span>`).join('');
+    S.instantResult='pending';
+  }
+}
+
+function checkAllDocsUploaded(uc){
+  const docs=DOCS[uc]||[];
+  const mandatoryDocs=docs.filter(d=>d.req==='Mandatory');
+  const allDone=mandatoryDocs.every(d=>S.docsUploaded[d.id]);
+  // Show instant validation hint if all instant docs done
+  if(allDone&&!S.docCheckDone){
+    const instantDocs=mandatoryDocs.filter(d=>d.instant);
+    const instantDone=instantDocs.length>0&&instantDocs.every(d=>S.docsUploaded[d.id]);
+    if(instantDone){S.docCheckDone=true;showInstantValidation(uc);}
+  }
+}
+
+/* ── Auth ── */
+function selAuth(m){S.authMethod=m;['bank','itsme','kyc'].forEach(a=>document.getElementById('opt-'+a).classList.toggle('sel',a===m));}
+function procAuth(){document.getElementById('s1c').style.display='none';['bank','itsme','kyc'].forEach(a=>document.getElementById('s1-'+a).style.display=a===S.authMethod?'block':'none');}
+function backToChoice(){document.getElementById('s1c').style.display='block';['bank','itsme','kyc'].forEach(a=>document.getElementById('s1-'+a).style.display='none');resetMadon();}
+function resetAuth(){document.getElementById('s1c').style.display='block';['bank','itsme','kyc'].forEach(a=>document.getElementById('s1-'+a).style.display='none');for(let i=0;i<6;i++){const o=document.getElementById('o'+i);if(o){o.value='';o.classList.remove('filled');}}document.getElementById('bvbtn').disabled=true;document.getElementById('kycbtn').disabled=true;resetMadon();}
+function resetMadon(){document.getElementById('mc').style.display='none';document.getElementById('mc-done').classList.remove('show');document.getElementById('mc-itsme').style.display='none';document.getElementById('mi-done').classList.remove('show');['mc1','mc2','mc3','mc4'].forEach(id=>{const e=document.getElementById(id);if(e){e.className='mc-item';e.querySelector('.mci').textContent='○';}});['mi1','mi2'].forEach(id=>{const e=document.getElementById(id);if(e){e.className='mc-item';e.querySelector('.mci').textContent='○';}});}
+
+function oIn(el,idx){el.classList.toggle('filled',el.value.length>0);if(el.value.length===1&&idx<5)document.getElementById('o'+(idx+1)).focus();let all=true;for(let i=0;i<6;i++){if(!document.getElementById('o'+i).value){all=false;break;}}document.getElementById('bvbtn').disabled=!all;}
+
+function startMadonCheck(){
+  document.getElementById('mc').style.display='block';
+  document.getElementById('bvbtn').disabled=true;
+  const seq=[['mc1','ok','✅','Behaviour: normal — no social engineering detected'],['mc2','ok','✅','Device verified — IP reputation clean'],['mc3','ok','✅','Session token valid — binding confirmed'],['mc4','ok','✅','Fraud DB: no patterns — access granted']];
+  let i=0;
+  function next(){
+    if(i>=seq.length){document.getElementById('mc-done').classList.add('show');setTimeout(()=>goTo(2),900);return;}
+    const[id,cls,ico,done]=seq[i];i++;
+    const e=document.getElementById(id);e.className='mc-item chk';e.querySelector('.mci').textContent='⏳';
+    setTimeout(()=>{e.className=`mc-item ${cls}`;e.querySelector('.mci').textContent=ico;e.querySelector('.mcl').textContent=done;setTimeout(next,500);},800);
+  }
+  setTimeout(next,300);
+}
+
+function itsmeDemo(){
+  document.getElementById('mc-itsme').style.display='block';
+  setTimeout(()=>{
+    const e1=document.getElementById('mi1');e1.className='mc-item ok';e1.querySelector('.mci').textContent='✅';e1.querySelector('.mcl').textContent='eIDAS High LoA confirmed';
+    document.getElementById('mi2').className='mc-item chk';document.getElementById('mi2').querySelector('.mci').textContent='⏳';
+    setTimeout(()=>{const e2=document.getElementById('mi2');e2.className='mc-item ok';e2.querySelector('.mci').textContent='✅';e2.querySelector('.mcl').textContent='Session replay protection active';document.getElementById('mi-done').classList.add('show');setTimeout(()=>goTo(2),800);},900);
+  },500);
+}
+
+function kycDemo(){
+  const steps=['kd','ks2','kr'];let i=0;
+  function next(){if(i>=steps.length){document.getElementById('kycbtn').disabled=false;return;}const el=document.getElementById(steps[i]);i++;el.classList.add('done');el.querySelector('.kn').textContent='✓';setTimeout(next,900);}
+  setTimeout(next,300);
+}
+
+/* ── Consent ── */
+function toggleCb(){document.getElementById('cbtn').disabled=!document.getElementById('ccb').checked;}
+
+/* ── Loan calc ── */
+function updLoan(){const s=document.getElementById('lslider'),d=document.getElementById('ldur');if(!s)return;const amt=parseInt(s.value),mo=parseInt(d?d.value:24);document.getElementById('la').textContent='€'+amt.toLocaleString('de-DE');const r=0.049/12,m=amt*r/(1-Math.pow(1+r,-mo));document.getElementById('mpay').textContent='~€'+Math.round(m)+'/mo';}
+
+/* ── Screen nav ── */
+function showS(id){['s0','s0b','s1','s2','s3','s4','s5','s6'].forEach(s=>{const e=document.getElementById(s);if(e)e.classList.remove('active');});const e=document.getElementById(id);if(e)e.classList.add('active');const map={s0:0,s0b:0,s1:1,s2:2,s3:3,s4:4,s5:5,s6:5};S.screen=map[id]||0;const cfg=UC[S.uc];if(cfg)renderSteps(S.screen,cfg.steps);}
+function goTo(n){if(n===4){showS('s4');runProc();return;}const ids=['s0','s1','s2','s3','s4','s5','s6'];showS(ids[n]||'s0');}
+
+function renderSteps(active,steps){if(!steps)return;const w=document.getElementById('sw');let track='',names='';steps.forEach((s,i)=>{const st=i<active?'done':i===active?'active':'pending';track+=`<div class="sn ${st}">${st==='done'?'✓':i+1}</div>`;if(i<steps.length-1)track+=`<div class="ss${i<active?' done':''}"></div>`;names+=`<div class="snm ${st}">${s}</div>`;});w.innerHTML=`<div class="steps-track">${track}</div><div class="snms">${names}</div>`;}
+
+/* ── Reformulate ── */
+function doReform(){const txt=document.getElementById('rtxt').value.trim();if(!txt)return;const uc=detectUC(txt);if(uc&&UC[uc]){S.uc=uc;closePopup();setTimeout(()=>{addMsg(txt,'user');addMsg(UC[uc].clarifyQ.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'),'ai',true);clarifyPending=true;},200);}else{showS('s0');}}
+
+/* ── Processing ── */
+let procT=null;
+function runProc(){
+  const cfg=UC[S.uc]||{};
+  document.getElementById('proc-t').textContent=(cfg.name||'Processing')+'…';
+  ['pp1','pp2','pp3','pp4'].forEach(id=>{const e=document.getElementById(id);if(e){e.className='proc-step';e.querySelector('.psi').textContent='○';}});
+  document.getElementById('pp0').className='proc-step done';document.getElementById('pp1').className='proc-step active';
+  const seq=[['pp1','pp2'],['pp2','pp3'],['pp3','pp4'],['pp4',null]];let i=0;
+  function step(){if(i>=seq.length){document.getElementById('pspin').style.display='none';setTimeout(showSuccess,500);return;}const[id,next]=seq[i];i++;document.getElementById(id).className='proc-step done';document.getElementById(id).querySelector('.psi').textContent='✅';if(next)document.getElementById(next).className='proc-step active';procT=setTimeout(step,900+Math.random()*300);}
+  procT=setTimeout(step,1100);
+}
+
+function showSuccess(){
+  const cfg=UC[S.uc]||{};
+  const ref=S.sessId||'BANKAJ-'+Date.now().toString(36).toUpperCase().slice(-8);
+  document.getElementById('s5t').textContent=cfg.successTitle||'Request submitted!';
+  document.getElementById('s5s').textContent=cfg.successSub||'';
+  document.getElementById('refcode').textContent=ref;
+  document.getElementById('next-steps').innerHTML=(cfg.nextSteps||[]).map(s=>`<div class="ns-item"><div class="ns-dot"></div>${s}</div>`).join('');
+  // Instant result on success screen
+  const iv=document.getElementById('s5-instant');
+  if(S.instantResult==='approved'&&cfg.instantApproved){
+    iv.className='instant-val show approved';
+    document.getElementById('s5-iv-ico').textContent='🎉';
+    document.getElementById('s5-iv-title').textContent=cfg.instantApproved.title;
+    document.getElementById('s5-iv-sub').textContent=cfg.instantApproved.sub;
+    document.getElementById('s5-iv-meta').innerHTML=(cfg.instantApproved.tags||[]).map(t=>`<span class="iv-tag" style="background:#D1FAE5;color:#065F46">${t}</span>`).join('');
+  } else if(S.instantResult==='pending'&&cfg.instantPending){
+    iv.className='instant-val show pending';
+    document.getElementById('s5-iv-ico').textContent='⏳';
+    document.getElementById('s5-iv-title').textContent=cfg.instantPending.title;
+    document.getElementById('s5-iv-sub').textContent=cfg.instantPending.sub;
+    document.getElementById('s5-iv-meta').innerHTML=(cfg.instantPending.tags||[]).map(t=>`<span class="iv-tag" style="background:#FEF3C7;color:#92400E">${t}</span>`).join('');
+  } else {iv.classList.remove('show');}
+  showS('s5');
+}
+
+function closeAndSignal(status){
+  closePopup();
+  const payload={status,session_id:S.sessId,intent_type:S.uc,bank:S.bank?.name||'Bank AI',instant_result:S.instantResult||null,psd2_compliant:true,gdpr_consent:true,dora_logged:true,mifid_suitability:(S.uc==='invest_start'||S.uc==='pension')?'verified':null,schrems_ii:'EEA_only',timestamp:new Date().toISOString()};
+  document.getElementById('llm-code').textContent=JSON.stringify(payload,null,2);
+  document.getElementById('llm-sig').classList.add('show');
+  const cfg=UC[S.uc]||{};
+  if(status==='success')addMsg(`✅ ${cfg.successSub||'Your request was processed successfully.'} Reference: ${S.sessId}`,'ai');
+}
+
+/* ── Pause/Resume ── */
+function pauseSession(){S.pausedScr=S.screen;S.pausedUC=S.uc;closePopup();stopTtl();S.pauseSecs=1200;clearInterval(S.pauseTimer);document.getElementById('pb').classList.add('show');document.getElementById('pb-sub').innerHTML=`<strong>${UC[S.pausedUC]?.name||S.pausedUC}</strong> session paused. Expires in <span id="pause-ttl">${fmt(S.pauseSecs)}</span>.`;S.pauseTimer=setInterval(()=>{S.pauseSecs--;const el=document.getElementById('pause-ttl');if(el)el.textContent=fmt(S.pauseSecs);if(S.pauseSecs<=0){clearInterval(S.pauseTimer);document.getElementById('pb').classList.remove('show');addMsg('⏰ Your paused session expired. Start again whenever you\'re ready.','ai');}},1000);addMsg('⏸️ Session paused. Feel free to ask me other questions — your progress is saved for 20 minutes.','ai');}
+function resumeSession(){if(!S.pausedUC)return;clearInterval(S.pauseTimer);document.getElementById('pb').classList.remove('show');openPopup(S.pausedUC,UC[S.pausedUC]?.name||S.pausedUC,S.bank?.id||'bankAI');setTimeout(()=>goTo(S.pausedScr),150);addMsg('▶️ Welcome back! Resuming right where you left off.','ai');}
+function closePopup(){document.getElementById('overlay').classList.remove('open');stopTtl();}
+function bgClick(e){if(e.target===document.getElementById('overlay'))closePopup();}
+
+/* ── TTL ── */
+function startTtl(){S.ttlSecs=1200;stopTtl();updTtl();S.ttlTimer=setInterval(()=>{S.ttlSecs--;updTtl();if(S.ttlSecs<=0){stopTtl();closePopup();addMsg('⏰ Your secure session expired for safety. Please start again.','ai');}},1000);}
+function stopTtl(){clearInterval(S.ttlTimer);S.ttlTimer=null;}
+function updTtl(){const e=document.getElementById('ttl');if(!e)return;e.textContent=fmt(S.ttlSecs);e.className='ttl-n'+(S.ttlSecs<120?' warn':'');}
+function fmt(s){const m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
+
+/* ── Privacy modal ── */
+function openPrivacy(){document.getElementById('pm').classList.add('open');}
+function closePM(){document.getElementById('pm').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePopup();closePM();}});
+</script>
+</body>
+</html>
