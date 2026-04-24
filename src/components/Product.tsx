@@ -19,7 +19,7 @@ const Product = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border border-muted3 rounded-2xl overflow-hidden mt-12">
             {[
-              { val: "30s", sub: "Average user completion" },
+              { val: "5 mins", sub: "Average user completion" },
               { val: "0", sub: "Personal data reaching LLM" },
               { val: "30+", sub: "EU & UK regulations mapped" },
             ].map((m, i) => (

@@ -10,7 +10,7 @@ const roles: { id: Role; name: string; sub: string }[] = [
   { id: "bank", name: "Banks & Lenders", sub: "Sell via any AI channel" },
   { id: "dev", name: "Developers & Platforms", sub: "One API call" },
   { id: "fintech", name: "Fintechs & Embedded Finance", sub: "Stay non-regulated" },
-  { id: "user", name: "End Users", sub: "30s application flow" },
+  { id: "user", name: "End Users", sub: "5 mins application flow" },
 ];
 
 const RoleSelector = () => {

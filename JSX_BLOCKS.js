@@ -22,7 +22,7 @@
     <p className="h-desc">CADON is the secure execution layer that lets banks sell financial products through LLMs — compliantly. One integration. Every channel. Full regulatory coverage from day one.</p>
     <div className="h-right">
       <div className="h-stats">
-        <div className="hst"><div className="hst-n">30s</div><div className="hst-l">Avg. completion</div></div>
+        <div className="hst"><div className="hst-n">5 mins</div><div className="hst-l">Avg. completion</div></div>
         <div className="hst"><div className="hst-n">0</div><div className="hst-l">Data to LLM</div></div>
         <div className="hst"><div className="hst-n">30+</div><div className="hst-l">Regs mapped</div></div>
       </div>
@@ -130,7 +130,7 @@
           <div className="rtab active" data-role="bank" onClick={() => { /* setRole('bank',this) */ }}><span className="rtdot"></span><span className="rtnm">Banks &amp; Lenders</span><span className="rtsub">Sell via any AI channel</span></div>
           <div className="rtab" data-role="dev" onClick={() => { /* setRole('dev',this) */ }}><span className="rtdot"></span><span className="rtnm">Developers &amp; Platforms</span><span className="rtsub">One API call</span></div>
           <div className="rtab" data-role="fintech" onClick={() => { /* setRole('fintech',this) */ }}><span className="rtdot"></span><span className="rtnm">Fintechs &amp; Embedded Finance</span><span className="rtsub">Stay non-regulated</span></div>
-          <div className="rtab" data-role="user" onClick={() => { /* setRole('user',this) */ }}><span className="rtdot"></span><span className="rtnm">End Users</span><span className="rtsub">30s application</span></div>
+          <div className="rtab" data-role="user" onClick={() => { /* setRole('user',this) */ }}><span className="rtdot"></span><span className="rtnm">End Users</span><span className="rtsub">5 mins application</span></div>
         </div>
       </div>
       <div className="a1vis">

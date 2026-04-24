@@ -18,7 +18,6 @@ const Navbar = () => {
     { name: "Product", href: "#product" },
     { name: "Use cases", href: "#anim3" },
     { name: "Why CADON", href: "#why" },
-    { name: "Demo", href: "/demo" },
   ];
 
   return (
@@ -43,10 +42,11 @@ const Navbar = () => {
           ))}
         </div>
         <div className="nav-r">
-          <Link href="#" className="btn btn-ghost" style={{ fontSize: "13px" }}>
-            Docs
+          
+          <Link href="/demo" className="btn btn-gold">
+            Demo
           </Link>
-          <a href="#cta" className="btn btn-gold">
+          <a href="#cta" className="btn btn-ghost" style={{ fontSize: "13px" }}>
             Request access
           </a>
         </div>
@@ -98,11 +98,11 @@ const Navbar = () => {
               transitionDelay: isOpen ? `${50 + navLinks.length * 38 + 38}ms` : "0ms",
             }}
           >
-            <a href="#cta" onClick={() => setIsOpen(false)} className="btn btn-gold w-full justify-center py-4 text-[15px]">
+            <a href="#cta" onClick={() => setIsOpen(false)} className="btn btn-ghost w-full justify-center py-4 text-[15px]">
               Request access
             </a>
-            <Link href="#" onClick={() => setIsOpen(false)} className="btn btn-ghost w-full justify-center py-4 text-[15px]">
-              Documentation
+            <Link href="/demo" onClick={() => setIsOpen(false)} className="btn btn-gold w-full justify-center py-4 text-[15px]">
+              Demo
             </Link>
           </div>
         </div>
