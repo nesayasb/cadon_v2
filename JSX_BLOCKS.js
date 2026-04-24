@@ -225,7 +225,7 @@
         <p className="sbody">When a user expresses financial intent in any AI conversation, CADON triggers a secure, bank-branded pop-up. Identity verification, consent capture, and application submission happen in a fully isolated environment. The LLM receives only a status signal.</p>
         <p className="sbody" style={{ 'marginTop': '11px' }}>Think of it as Stripe Checkout for bank products in AI conversations. The bank controls everything inside it. CADON is the container. The bank is the controller.</p>
         <div className="mrow" style={{ 'marginTop': '24px' }}>
-          <div className="met"><div className="metn">30<span style={{ 'fontSize': '16px', 'verticalAlign': 'super' }}>s</span></div><div className="metl">Average user<br />completion</div></div>
+          <div className="met"><div className="metn">5<span style={{ 'fontSize': '16px', 'verticalAlign': 'super' }}>mins</span></div><div className="metl">Average user<br />completion</div></div>
           <div className="met"><div className="metn">0</div><div className="metl">Personal data fields<br />reaching the LLM</div></div>
           <div className="met"><div className="metn">30+</div><div className="metl">EU &amp; UK regulations<br />mapped</div></div>
         </div>

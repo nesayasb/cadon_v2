@@ -499,7 +499,7 @@ export default function LandingV4Body() {
         <p className="sbody" style={{ marginTop: 11 }}>Think of it as Stripe Checkout for bank products in AI conversations. The bank controls everything inside it. CADON is the container. The bank is the controller.</p>
         <div className="mrow" style={{ marginTop: 24 }}>
           <div className="met">
-            <div className="metn">30<span style={{ fontSize: 16, verticalAlign: 'super' }}>s</span></div>
+            <div className="metn">5 <span style={{ fontSize: 16, verticalAlign: 'super' }}>mins</span></div>
             <div className="metl">Average user<br />completion</div>
           </div>
           <div className="met">
