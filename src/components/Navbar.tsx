@@ -43,7 +43,7 @@ const Navbar = () => {
         </div>
         <div className="nav-r">
           
-          <Link href="/demo" className="btn btn-gold">
+          <Link href="/demo" target="_blank" rel="noopener noreferrer" className="btn btn-gold">
             Demo
           </Link>
           <a href="#cta" className="btn btn-ghost" style={{ fontSize: "13px" }}>
@@ -101,7 +101,7 @@ const Navbar = () => {
             <a href="#cta" onClick={() => setIsOpen(false)} className="btn btn-ghost w-full justify-center py-4 text-[15px]">
               Request access
             </a>
-            <Link href="/demo" onClick={() => setIsOpen(false)} className="btn btn-gold w-full justify-center py-4 text-[15px]">
+            <Link href="/demo" target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)} className="btn btn-gold w-full justify-center py-4 text-[15px]">
               Demo
             </Link>
           </div>

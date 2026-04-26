@@ -190,7 +190,7 @@ export default function LandingV4Body() {
         <div className="hst"><div className="hst-n">30+</div><div className="hst-l">Regs mapped</div></div>
       </div>
       <div className="h-btns">
-        <Link href="/demo" className="btn btn-gold btn-lg">Demo</Link>
+        <Link href="/demo" target="_blank" rel="noopener noreferrer" className="btn btn-gold btn-lg">Demo</Link>
         <a href="#cta" className="btn btn-ghost btn-lg">Request access</a>
       </div>
     </div>
