@@ -11,7 +11,7 @@ export async function POST(req:Request){
  if(destination.protocol!=="https:")throw new Error("HTTPS required");
  const formSubmit=destination.hostname==="formsubmit.co";
  const payload={email:email.trim(),company:company.trim(),role:role.trim(),useCase:useCase.trim(),audience,source:"cadon.io",submittedAt:new Date().toISOString(),...(formSubmit?{_subject:"CADON access request",_template:"table",_captcha:"false",_url:"https://www.cadon.io/#request-access"}:{})};
- const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json",...(process.env.CADON_ACCESS_WEBHOOK_TOKEN?{Authorization:`Bearer ${process.env.CADON_ACCESS_WEBHOOK_TOKEN}`}:{})},body:JSON.stringify(payload),signal:AbortSignal.timeout(8000),redirect:"error"});
+ const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json",...(formSubmit?{Referer:"https://www.cadon.io/",Origin:"https://www.cadon.io"}:{}),...(process.env.CADON_ACCESS_WEBHOOK_TOKEN?{Authorization:`Bearer ${process.env.CADON_ACCESS_WEBHOOK_TOKEN}`}:{})},body:JSON.stringify(payload),signal:AbortSignal.timeout(20000),redirect:"error"});
  if(!response.ok)throw new Error("Delivery failed");
  if(formSubmit){const result=await response.json();if(result.success!==true&&result.success!=="true")return NextResponse.json({error:"We couldn’t deliver your request yet. Please email nathnael.eb@outlook.com directly."},{status:502});}
  return NextResponse.json({ok:true});
