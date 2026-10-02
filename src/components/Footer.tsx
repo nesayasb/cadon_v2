@@ -1,27 +1,2 @@
-import React from "react";
 import Link from "next/link";
-
-const Footer = () => {
-  return (
-    <footer>
-      <div className="ftw">
-        <span className="ftlogo">
-          <span className="ftdot" />
-          CADON
-        </span>
-        <div className="ftlinks">
-          <Link href="#product">Product</Link>
-          <Link href="#">Docs</Link>
-          <Link href="#security">Security</Link>
-          <Link href="#privacy">Privacy</Link>
-          <Link href="#contact">Contact</Link>
-        </div>
-        <span className="ftcopy">
-          © {new Date().getFullYear()} CADON. All rights reserved.
-        </span>
-      </div>
-    </footer>
-  );
-};
-
-export default Footer;
+export default function Footer(){return <footer className="container footer"><Link className="wordmark" href="/">cadon.</Link><span>Financial infrastructure for AI.</span><div><Link href="/#developers">Developers</Link><Link href="/#security">Security</Link><Link href="/privacy">Privacy</Link><Link href="/#request-access">Contact</Link></div><small>© {new Date().getFullYear()} CADON</small></footer>}

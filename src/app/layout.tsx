@@ -1,41 +1,8 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
-import "./v4.css";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
-
 export const metadata: Metadata = {
-  title: "CADON — Sell financial products through any AI channel",
-  description: "Compliance infrastructure for banking products made compliant for LLM channels.",
+ metadataBase: new URL("https://www.cadon.io"), title: "CADON — The Financial Execution Layer for AI",
+ description: "CADON is building controlled execution infrastructure between AI assistants and financial institutions, with sensitive workflows outside the model.",
+ alternates:{canonical:"/"},openGraph:{title:"CADON — Make financial services executable by AI",description:"AI understands the intent. CADON connects it to a controlled financial action.",url:"/",siteName:"CADON",type:"website"},twitter:{card:"summary_large_image",title:"CADON — The Financial Execution Layer for AI"}
 };
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${dmSans.variable} ${playfair.variable} ${dmMono.variable} font-sans antialiased bg-white text-[#0D0E09]`}
-      >
-        {children}
-      </body>
-    </html>
-  );
-}
+export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="en"><body>{children}</body></html>}

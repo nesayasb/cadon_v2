@@ -1,0 +1,4 @@
+import {ImageResponse} from "next/og";
+export const alt="CADON — Make financial services executable by AI";
+export const size={width:1200,height:630};export const contentType="image/png";
+export default function Image(){return new ImageResponse(<div style={{background:"#f6f8fc",width:"100%",height:"100%",display:"flex",flexDirection:"column",padding:"75px",fontFamily:"sans-serif",color:"#151c2d"}}><div style={{fontSize:40,fontWeight:700,display:"flex"}}>cadon.</div><div style={{fontSize:19,letterSpacing:2,color:"#64708a",marginTop:50,display:"flex"}}>THE EXECUTION LAYER FOR AI × FINANCE</div><div style={{fontSize:75,letterSpacing:-4,lineHeight:1.05,marginTop:22,display:"flex",flexDirection:"column"}}><span>Make financial services</span><span style={{color:"#315beb"}}>executable by AI.</span></div><div style={{fontSize:22,color:"#64708a",marginTop:40,display:"flex"}}>AI intent. Controlled execution. Institution control.</div></div>,size)}
