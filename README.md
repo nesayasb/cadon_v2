@@ -20,11 +20,11 @@ Deploy through the existing Vercel / Next.js workflow. Production checks: `npm r
 | `CADON_DEMO_SESSION_SECRET` | Random secret of at least 32 characters for website access and launch-reference cookies. |
 | `CADON_MCP_URL` | Defaults to verified `https://cadon-demo.fly.dev/mcp`. |
 | `CADON_MCP_TOKEN` | Optional server-to-server bearer token if your MCP deployment requires one. Current demo endpoint was reachable without one. |
-| `CADON_ACCESS_WEBHOOK_URL` | HTTPS receiver for access enquiries; return 2xx only after accepting the request. |
+| `CADON_ACCESS_WEBHOOK_URL` | Optional HTTPS receiver overriding FormSubmit delivery to nathnael.eb@outlook.com; return 2xx only after accepting the request. |
 | `CADON_ACCESS_WEBHOOK_TOKEN` | Optional bearer token for the enquiry receiver. |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Recommended shared rate limits on serverless deployments. |
 
-Never expose any secret through `NEXT_PUBLIC_`. Website access fails closed without the code and signing secret. The enquiry form reports unavailable until its receiver is configured. Complete the legal entity/contact/provider/retention disclosures before activating the enquiry form.
+Never expose any secret through `NEXT_PUBLIC_`. Website access fails closed without the code and signing secret. Access enquiries default to FormSubmit delivery to nathnael.eb@outlook.com. The inbox owner must confirm the FormSubmit activation email before requests can be delivered; resubmit the initial request after activation. An explicit webhook overrides that destination. The privacy page discloses FormSubmit processing and its stated 30-day retention. Demo login and form delivery are independent: after updating Production credentials in Vercel, redeploy and use www.cadon.io/demo. A missing access code, missing signing secret, or signing secret shorter than 32 characters produces a specific configuration error; no credential values are returned.
 
 ## What the new demo does
 
