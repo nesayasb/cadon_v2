@@ -1,0 +1,8 @@
+import "server-only";
+import {createCipheriv,createDecipheriv,createHash,randomBytes} from "node:crypto";
+export type ChatState={version:1;expires:number;owner:string;responseId?:string;turns:number;pending:Array<{id:string;name:string;arguments:string}>;launches:string[]};
+function owner(session:string){return createHash("sha256").update(session).digest("hex");}
+function key(){const secret=process.env.CADON_DEMO_SESSION_SECRET;if(!secret||secret.length<32)throw new Error("Demo signing secret is unavailable");return createHash("sha256").update("cadon-chat-v1:"+secret).digest();}
+export function newChatState(session:string):ChatState{return {version:1,expires:Date.now()+2*60*60*1000,owner:owner(session),turns:0,pending:[],launches:[]};}
+export function sealChatState(state:ChatState){const iv=randomBytes(12);const cipher=createCipheriv("aes-256-gcm",key(),iv);const encrypted=Buffer.concat([cipher.update(JSON.stringify(state)),cipher.final()]);return Buffer.concat([iv,cipher.getAuthTag(),encrypted]).toString("base64url");}
+export function openChatState(token:unknown,session:string):ChatState{if(typeof token!=="string"||token.length>24000)throw new Error("Invalid conversation");const bytes=Buffer.from(token,"base64url");const cipher=createDecipheriv("aes-256-gcm",key(),bytes.subarray(0,12));cipher.setAuthTag(bytes.subarray(12,28));const data=JSON.parse(Buffer.concat([cipher.update(bytes.subarray(28)),cipher.final()]).toString());if(data.version!==1||data.owner!==owner(session)||data.expires<=Date.now()||!Number.isInteger(data.turns)||!Array.isArray(data.pending)||!Array.isArray(data.launches))throw new Error("Conversation expired");return data;}

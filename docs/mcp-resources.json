@@ -1,0 +1,638 @@
+{
+  "resources": [
+    {
+      "name": "cadon-offer-cards",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.46.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients.",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.27",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.27.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.28",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.28.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.29",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.29.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.30",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.30.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.31",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.31.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.32",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.32.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.33",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.33.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.34",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.34.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.35",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.35.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.36",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.36.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.37",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.37.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.38",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.38.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.39",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.39.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.40",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.40.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.41",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.41.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.42",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.42.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.43",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.43.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.44",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.44.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-offer-cards-v0.45",
+      "title": "CADON fictional offer cards",
+      "uri": "ui://cadon/offer-cards-v0.45.html",
+      "description": "Renders fictional CADON demo offer cards in MCP Apps clients. (legacy alias of the current widget)",
+      "mimeType": "text/html;profile=mcp-app",
+      "_meta": {
+        "ui": {
+          "prefersBorder": false,
+          "csp": {
+            "connectDomains": [
+              "https://cadon-demo.fly.dev"
+            ],
+            "resourceDomains": [],
+            "frameDomains": []
+          }
+        },
+        "openai/widgetDescription": "Fictional CADON partner-bank demo offer cards. The widget is the complete, self-updating response: it shows the ranked offers, all user guidance, the secure journey, and the final result card. The assistant response after this widget must be empty. Do not add text under it such as 'displayed above', 'choose a provider', summaries, captions, or fallback guidance; the widget itself contains the guidance and updates in place.",
+        "openai/widgetPrefersBorder": false,
+        "openai/widgetCSP": {
+          "connect_domains": [
+            "https://cadon-demo.fly.dev"
+          ],
+          "resource_domains": [],
+          "frame_domains": [],
+          "redirect_domains": [
+            "https://cadon-demo.fly.dev"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadon-conversation-playbook",
+      "title": "CADON conversation playbook",
+      "uri": "cadon://playbook/conversation",
+      "description": "Distilled real-life conversation guidance per customer journey: tone, safety-first ordering, safe questions, prohibitions, and non-partner handling. Load as context to make CADON conversations accurate and human.",
+      "mimeType": "text/plain"
+    },
+    {
+      "name": "cadon-blueprint-registry",
+      "title": "CADON canonical Blueprint registry",
+      "uri": "cadon://blueprint/registry",
+      "description": "Compact projection of Blueprint V6 (retail): canonical journey keys, routing patterns, completion events, readiness, canonical states S00-S12, MOD-* modules, and the intent-alias map (cj_0XX / core keys -> canonical parent). The derived registry, never the full Blueprint document; use it to map CADON journeys to canonical bank identifiers.",
+      "mimeType": "application/json"
+    }
+  ]
+}

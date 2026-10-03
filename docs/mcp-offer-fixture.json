@@ -1,0 +1,290 @@
+{
+  "_fixture_notice": "Sanitized fictional MCP provider response captured 2026-10-03 for offline tests; never used by production routes. Session links and tokens removed.",
+  "output": {
+    "scenario": "car_loan",
+    "product_name": "Car Loan",
+    "market": "BE",
+    "offers": [
+      {
+        "bank_id": "river",
+        "bank_name": "RiverBank",
+        "rate": "4.1% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "4.1%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac406/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac70k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "Instant",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "meridian",
+        "bank_name": "Meridian",
+        "rate": "4.0% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "4.0%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac405/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac65k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "2 hours",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "verano",
+        "bank_name": "Verano",
+        "rate": "4.2% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "4.2%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac407/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac50k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "2 hours",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "solis",
+        "bank_name": "Solis Bank",
+        "rate": "5.2% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "5.2%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac417/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac75k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "15 min",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "atlas",
+        "bank_name": "Atlas Finance",
+        "rate": "3.9% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "3.9%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac404/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac55k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "90 min",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "nova",
+        "bank_name": "Nova",
+        "rate": "4.5% APR",
+        "highlight": "max",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "4.5%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac410/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac80k",
+            "highlight": true
+          },
+          {
+            "label": "Decision",
+            "value": "Same day",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "oak",
+        "bank_name": "Oak Credit",
+        "rate": "4.8% APR",
+        "highlight": "max",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "4.8%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac413/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac95k",
+            "highlight": true
+          },
+          {
+            "label": "Decision",
+            "value": "Same day",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "pulse",
+        "bank_name": "Pulse Bank",
+        "rate": "5.9% APR",
+        "highlight": "",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "5.9%",
+            "highlight": false
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac424/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac60k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "Same day",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "aureus",
+        "bank_name": "Aureus",
+        "rate": "3.7% APR",
+        "highlight": "rate",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "3.7%",
+            "highlight": true
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac402/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac45k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "24 hours",
+            "highlight": false
+          }
+        ]
+      },
+      {
+        "bank_id": "lynx",
+        "bank_name": "Lynx Bank",
+        "rate": "3.6% APR",
+        "highlight": "rate",
+        "metrics": [
+          {
+            "label": "APR",
+            "value": "3.6%",
+            "highlight": true
+          },
+          {
+            "label": "Monthly (60 mo)",
+            "value": "~\u20ac401/mo",
+            "highlight": false
+          },
+          {
+            "label": "Max finance",
+            "value": "\u20ac40k",
+            "highlight": false
+          },
+          {
+            "label": "Decision",
+            "value": "2 days",
+            "highlight": false
+          }
+        ]
+      }
+    ]
+  }
+}

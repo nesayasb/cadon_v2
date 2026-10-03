@@ -1,0 +1,3 @@
+import "server-only";
+import type {DemoEvent} from "@/lib/demo-events";
+export async function countEvent(event:DemoEvent,capability?:string){const url=process.env.UPSTASH_REDIS_REST_URL,token=process.env.UPSTASH_REDIS_REST_TOKEN;if(!url||!token)return;const key=`cadon:metrics:${new Date().toISOString().slice(0,10)}:${event}${capability?":"+capability:""}`;try{await fetch(url,{method:"POST",headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},body:JSON.stringify(["EVAL","local n=redis.call('INCR',KEYS[1]); redis.call('EXPIRE',KEYS[1],2592000); return n",1,key]),cache:"no-store",signal:AbortSignal.timeout(3000)});}catch{/* Analytics must not interrupt execution. */}}

@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-03",
+  "server": {
+    "name": "cadon",
+    "version": "1.28.1"
+  },
+  "tools": 14,
+  "ui_resource_read": true,
+  "scenarios": [
+    {
+      "test": "car_25000",
+      "scenario": "car_loan",
+      "ready_for_cards": false,
+      "question": "Before I show CADON providers: is the vehicle new or used?",
+      "next_tool": "show_car_loan_bank_options",
+      "safe_context": {
+        "market": "BE",
+        "budget_eur": "25000"
+      }
+    },
+    {
+      "test": "renovation",
+      "scenario": "cj_008",
+      "ready_for_cards": true,
+      "question": "Ready to show CADON Renovate my house providers with the safe context collected.",
+      "next_tool": "show_cadon_demo_offers",
+      "safe_context": {
+        "market": "BE",
+        "budget_eur": "20000",
+        "home_goal": "renovation",
+        "provider_preference": "nova",
+        "preferred_provider": "nova",
+        "preferred_provider_name": "Nova",
+        "provider_status": "matched"
+      }
+    },
+    {
+      "test": "savings",
+      "scenario": "cj_001",
+      "ready_for_cards": false,
+      "question": "Before I show CADON providers, I need this safe context only: personal, business, youth, expat, or other onboarding route. Please do not send personal data, income, account numbers, documents, or KYC details in chat.",
+      "next_tool": "show_cadon_demo_offers",
+      "safe_context": {
+        "market": "BE"
+      }
+    },
+    {
+      "test": "car_30000",
+      "scenario": "personal_loan",
+      "ready_for_cards": false,
+      "question": "Before I show CADON providers, I need this safe context only: what the personal loan is for. Please do not send personal data, income, account numbers, documents, or KYC details in chat.",
+      "next_tool": "show_personal_loan_options",
+      "safe_context": {
+        "market": "BE",
+        "budget_eur": "30000"
+      }
+    },
+    {
+      "test": "car_update",
+      "scenario": "personal_loan",
+      "ready_for_cards": false,
+      "question": "Before I show CADON providers, I need this safe context only: what the personal loan is for. Please do not send personal data, income, account numbers, documents, or KYC details in chat.",
+      "next_tool": "show_personal_loan_options",
+      "safe_context": {
+        "market": "BE",
+        "budget_eur": "30000"
+      }
+    },
+    {
+      "test": "unsupported",
+      "scenario": "personal_loan",
+      "ready_for_cards": false,
+      "question": "Before I show CADON providers, I need this safe context only: what the personal loan is for; approximate loan amount. Please do not send personal data, income, account numbers, documents, or KYC details in chat.",
+      "next_tool": "show_personal_loan_options",
+      "safe_context": {
+        "market": "BE"
+      }
+    }
+  ],
+  "full_car_context": {
+    "scenario": "personal_loan",
+    "ready_for_cards": false
+  },
+  "launch_created": true,
+  "unopened_launch_result": {
+    "status": "pending",
+    "state": "not_opened",
+    "reason": null
+  },
+  "invalid_launch_result": {
+    "status": "pending",
+    "state": "not_opened",
+    "reason": null
+  },
+  "explicit_context_checks": {
+    "car_25000": {
+      "scenario": "car_loan",
+      "ready_for_cards": true,
+      "offer_count": 10
+    },
+    "car_22000_current_recap": {
+      "scenario": "car_loan",
+      "ready_for_cards": true,
+      "offer_count": 10
+    },
+    "savings_explicit_scenario": {
+      "scenario": "savings_account",
+      "ready_for_cards": false,
+      "next_tool": "show_savings_account_options",
+      "question": "Preferred bank or show all offers"
+    }
+  }
+}

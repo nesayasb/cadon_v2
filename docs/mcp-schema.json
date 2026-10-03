@@ -1,0 +1,2836 @@
+{
+  "tools": [
+    {
+      "name": "list_cadon_demo_scenarios",
+      "description": "List the fictional CADON product-demo scenarios available for simulation. Read-only.",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_cadon_demo_scenariosArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_cadon_demo_scenariosOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "List CADON demo scenarios",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "prepare_cadon_context",
+      "description": "Check whether CADON has enough safe pre-context before rendering provider cards.\n\n    Call this before any CADON offer-card tool. CADON returns the missing safe context\n    the assistant should ask in natural language. It does not request personal data,\n    income, address, email, phone, account numbers, KYC, documents, or regulated form\n    data. If ready_for_cards is false, ask the returned question and do not show cards.\n    If ready_for_cards is true, call next_tool with next_tool_args.\n\n    Only pass safe context the user stated in the CURRENT conversation. Do not fill\n    query, vehicle_type, budget_eur, or safe_context from assistant memory or previous\n    chats; if remembered preferences exist, ask the user to confirm them in chat first.\n\n    Enforcement: required context that does not appear in the query text itself (i.e.\n    was supplied only via vehicle_type/budget_eur/model_hint/safe_context) returns\n    ready_for_cards=false with confirmation_required=true and a recap question. Ask\n    that question in chat; only after the user explicitly confirms, call this tool\n    again with the same arguments plus user_confirmed=true. Never set user_confirmed\n    to true unless the user just confirmed the recap in this conversation.\n\n    Args:\n        query: The user's request plus their exact answers from this conversation.\n        market: Two-letter market/country where the user wants providers ranked.\n        scenario: Optional known CADON scenario/taxonomy key. Leave blank to detect.\n        vehicle_type: Optional explicit car-loan context: \"new\" or \"used\".\n        budget_eur: Optional explicit approximate amount/budget in EUR.\n        model_hint: Optional non-sensitive car model/dealer/photo context.\n        safe_context: Optional extra safe context as text or a small JSON object string.\n        preferred_provider: Optional current/preferred bank or financial provider name.\n        user_confirmed: Set true ONLY after the user confirmed the recap question.\n    ",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "scenario": {
+            "default": "",
+            "title": "Scenario",
+            "type": "string"
+          },
+          "vehicle_type": {
+            "default": "",
+            "title": "Vehicle Type",
+            "type": "string"
+          },
+          "budget_eur": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Budget Eur"
+          },
+          "model_hint": {
+            "default": "",
+            "title": "Model Hint",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          },
+          "preferred_provider": {
+            "default": "",
+            "title": "Preferred Provider",
+            "type": "string"
+          },
+          "user_confirmed": {
+            "default": false,
+            "title": "User Confirmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "prepare_cadon_contextArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "ready_for_cards": {
+            "title": "Ready For Cards",
+            "type": "boolean"
+          },
+          "missing_context": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Context",
+            "type": "array"
+          },
+          "confirmation_required": {
+            "default": false,
+            "title": "Confirmation Required",
+            "type": "boolean"
+          },
+          "unconfirmed_context": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unconfirmed Context",
+            "type": "array"
+          },
+          "safe_context": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Safe Context",
+            "type": "object"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "provider_preference_status": {
+            "default": "",
+            "title": "Provider Preference Status",
+            "type": "string"
+          },
+          "provider_message": {
+            "default": "",
+            "title": "Provider Message",
+            "type": "string"
+          },
+          "conversation_guidance": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Conversation Guidance",
+            "type": "array"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          },
+          "next_tool": {
+            "title": "Next Tool",
+            "type": "string"
+          },
+          "next_tool_args": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Next Tool Args",
+            "type": "object"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "ready_for_cards",
+          "question",
+          "next_tool",
+          "instructions"
+        ],
+        "title": "CadonPreflightResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Prepare CADON safe context",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_cadon_conversation_guide",
+      "description": "Return CADON's real-life conversation guidance for a journey. Read-only.\n\n    The guidance covers tone, safety-first ordering (e.g. block a lost card before\n    any product talk), the safe questions to ask, hard prohibitions, and non-partner\n    handling. prepare_cadon_context already returns the same guidance as\n    conversation_guidance; call this tool when you want the fuller block with\n    examples, or pass an empty scenario to read the entire playbook.\n\n    Args:\n        scenario: A CADON scenario key, taxonomy key (cj_*), a cross-cutting topic\n            (\"resume\", \"pii_in_chat\", \"impatient_user\", \"privacy_question\",\n            \"scam_safe_account\", \"declined_outcome\", \"debt_stress\",\n            \"acting_for_someone_else\", \"minor_user\", \"financial_literacy\"), or the\n            user's own words (e.g. \"I lost my card\"). Empty returns the full playbook.\n    ",
+      "inputSchema": {
+        "properties": {
+          "scenario": {
+            "default": "",
+            "title": "Scenario",
+            "type": "string"
+          }
+        },
+        "title": "get_cadon_conversation_guideArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_cadon_conversation_guideOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get CADON conversation guide",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "show_car_loan_bank_options",
+      "description": "Show graphical clickable bank cards for the fictional CADON car-loan demo.\n\n    Use this only after prepare_cadon_context returns ready_for_cards=true for car_loan,\n    passing the returned preflight_token.\n    The required safe context is new/used car, approximate budget, and optional\n    model/dealer-offer/photo hint. A preferred loan duration/term in months is optional.\n    It returns ranked provider cards\n    with clickable demo links, filters, and pagination. Do not ask the user for income,\n    employment, debts, address, phone, email, documents, KYC, or affordability details\n    in chat. If the user types a bank name or number instead of clicking, call this same\n    tool again with choice set to that reply.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "vehicle_type": {
+            "default": "",
+            "title": "Vehicle Type",
+            "type": "string"
+          },
+          "budget_eur": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Budget Eur"
+          },
+          "model_hint": {
+            "default": "",
+            "title": "Model Hint",
+            "type": "string"
+          },
+          "term_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Term Months"
+          }
+        },
+        "title": "show_car_loan_bank_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show car loan bank options",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated car-loan bank APIs\u2026",
+        "openai/toolInvocation/invoked": "Car-loan bank API responses ready"
+      }
+    },
+    {
+      "name": "show_cadon_demo_offers",
+      "description": "Render fictional partner-bank offer cards for a CADON demo scenario.\n\n    Use this only after prepare_cadon_context returns ready_for_cards=true, passing the\n    returned preflight_token, except when the user is selecting a bank from cards already shown.\n    This can be called with any supported scenario key or a natural-language customer\n    journey from the retail/private-banking taxonomy. It is presentation-only mock data\n    and does not start or submit a real application. Do not ask the user for personal,\n    KYC, contact, income, account, document, or other regulated form fields in chat.\n    Use safe_context only for non-sensitive preference context. If the user types a\n    bank/provider name or number instead of clicking, call this same tool again with\n    choice set to that reply.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "market": {
+            "default": "EU",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario"
+        ],
+        "title": "show_cadon_demo_offersArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show fictional CADON offer cards",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated bank APIs\u2026",
+        "openai/toolInvocation/invoked": "Simulated bank API responses ready"
+      }
+    },
+    {
+      "name": "show_personal_loan_options",
+      "description": "Show clickable CADON personal-loan demo cards.\n\n    Use only after prepare_cadon_context returns ready_for_cards=true for a personal loan,\n    passing the returned preflight_token.\n    Use when the user asks for a personal loan, consumer loan, general borrowing, or\n    flexible financing. If the user types a bank name or option number after seeing\n    cards, call this same tool again with choice set to that reply. Do not run a loan\n    application or affordability flow in chat.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "title": "show_personal_loan_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show CADON personal-loan options",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated personal-loan APIs\u2026",
+        "openai/toolInvocation/invoked": "Personal-loan options ready"
+      }
+    },
+    {
+      "name": "show_mortgage_options",
+      "description": "Show clickable CADON mortgage / buy-a-house demo cards.\n\n    Use only after prepare_cadon_context returns ready_for_cards=true for home/mortgage,\n    passing the returned preflight_token.\n    Use when the user asks to buy a house, purchase property, compare mortgages, or get\n    a home-loan demo. If the user types a bank name or option number after seeing cards,\n    call this same tool again with choice set to that reply. Do not collect property,\n    income, deposit, debt, or KYC details in chat.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "title": "show_mortgage_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show CADON mortgage / house-buying options",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated mortgage APIs\u2026",
+        "openai/toolInvocation/invoked": "Mortgage options ready"
+      }
+    },
+    {
+      "name": "show_savings_account_options",
+      "description": "Show clickable CADON savings-account demo cards.\n\n    Use only after prepare_cadon_context returns ready_for_cards=true for savings,\n    passing the returned preflight_token.\n    Use when the user asks for savings, high-yield savings, deposit account, or account\n    opening. If the user types a bank name or option number after seeing cards, call\n    this same tool again with choice set to that reply. Do not collect deposit amount,\n    address, identity, or KYC details in chat.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "title": "show_savings_account_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show CADON savings-account options",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated savings-account APIs\u2026",
+        "openai/toolInvocation/invoked": "Savings-account options ready"
+      }
+    },
+    {
+      "name": "show_start_investing_options",
+      "description": "Show clickable CADON investing / portfolio demo cards.\n\n    Use only after prepare_cadon_context returns ready_for_cards=true for investing,\n    passing the returned preflight_token.\n    Use when the user says \"I want start investing\", wants to invest, open an investment\n    account, build a portfolio, compare ETF/fund options, or start brokerage onboarding.\n    This is the launchable CADON Start Investing scenario. If the user types a bank name\n    or option number after seeing cards, call this same tool again with choice set to\n    that reply. Do not provide investment advice or collect risk profile, amount, income,\n    identity, or MiFID details in chat; the CADON demo handles the simulated flow.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "title": "show_start_investing_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show CADON start-investing options",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated investment APIs\u2026",
+        "openai/toolInvocation/invoked": "Start-investing options ready"
+      }
+    },
+    {
+      "name": "show_send_money_options",
+      "description": "Show clickable CADON send-money / transfer demo cards.\n\n    Use only after prepare_cadon_context returns ready_for_cards=true for transfer/send-money,\n    passing the returned preflight_token.\n    Use when the user asks to send money, transfer funds, make a payment, or compare\n    transfer routes. If the user types a bank name or option number after seeing cards,\n    call this same tool again with choice set to that reply. Do not collect recipient,\n    IBAN, payment reference, amount, or identity details in chat.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Choice"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "safe_context": {
+            "default": "",
+            "title": "Safe Context",
+            "type": "string"
+          }
+        },
+        "title": "show_send_money_optionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "$defs": {
+          "OfferCard": {
+            "properties": {
+              "rank": {
+                "default": 0,
+                "title": "Rank",
+                "type": "integer"
+              },
+              "bank_id": {
+                "title": "Bank Id",
+                "type": "string"
+              },
+              "bank_name": {
+                "title": "Bank Name",
+                "type": "string"
+              },
+              "logo": {
+                "title": "Logo",
+                "type": "string"
+              },
+              "rate": {
+                "title": "Rate",
+                "type": "string"
+              },
+              "maximum": {
+                "title": "Maximum",
+                "type": "string"
+              },
+              "approval": {
+                "title": "Approval",
+                "type": "string"
+              },
+              "fee": {
+                "title": "Fee",
+                "type": "string"
+              },
+              "highlight": {
+                "title": "Highlight",
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "$ref": "#/$defs/OfferMetric"
+                },
+                "title": "Metrics",
+                "type": "array"
+              },
+              "api_status": {
+                "default": "",
+                "title": "Api Status",
+                "type": "string"
+              },
+              "api_source": {
+                "default": "",
+                "title": "Api Source",
+                "type": "string"
+              },
+              "response_ms": {
+                "default": 0,
+                "title": "Response Ms",
+                "type": "integer"
+              },
+              "quote_id": {
+                "default": "",
+                "title": "Quote Id",
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "title": "Note",
+                "type": "string"
+              },
+              "cadon_score": {
+                "default": 0,
+                "title": "Cadon Score",
+                "type": "integer"
+              },
+              "score_reasons": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Score Reasons",
+                "type": "array"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Tags",
+                "type": "array"
+              },
+              "launch_id": {
+                "default": "",
+                "title": "Launch Id",
+                "type": "string"
+              },
+              "demo_url": {
+                "default": "",
+                "title": "Demo Url",
+                "type": "string"
+              },
+              "theme": {
+                "$ref": "#/$defs/OfferCardTheme"
+              }
+            },
+            "required": [
+              "bank_id",
+              "bank_name",
+              "logo",
+              "rate",
+              "maximum",
+              "approval",
+              "fee",
+              "highlight",
+              "theme"
+            ],
+            "title": "OfferCard",
+            "type": "object"
+          },
+          "OfferCardTheme": {
+            "properties": {
+              "h1": {
+                "title": "H1",
+                "type": "string"
+              },
+              "h2": {
+                "title": "H2",
+                "type": "string"
+              },
+              "btn": {
+                "title": "Btn",
+                "type": "string"
+              }
+            },
+            "required": [
+              "h1",
+              "h2",
+              "btn"
+            ],
+            "title": "OfferCardTheme",
+            "type": "object"
+          },
+          "OfferMetric": {
+            "properties": {
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "value": {
+                "title": "Value",
+                "type": "string"
+              },
+              "highlight": {
+                "default": false,
+                "title": "Highlight",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "title": "OfferMetric",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/$defs/OfferCard"
+            },
+            "title": "Offers",
+            "type": "array"
+          },
+          "context_required": {
+            "default": false,
+            "title": "Context Required",
+            "type": "boolean"
+          },
+          "question": {
+            "default": "",
+            "title": "Question",
+            "type": "string"
+          },
+          "preflight_token": {
+            "default": "",
+            "title": "Preflight Token",
+            "type": "string"
+          },
+          "total_count": {
+            "default": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 4,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "best_match",
+            "title": "Sort",
+            "type": "string"
+          },
+          "filter_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Filter Options",
+            "type": "array"
+          },
+          "context_hints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Context Hints",
+            "type": "object"
+          },
+          "prequalification_questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prequalification Questions",
+            "type": "array"
+          },
+          "preferred_provider_id": {
+            "default": "",
+            "title": "Preferred Provider Id",
+            "type": "string"
+          },
+          "preferred_provider_name": {
+            "default": "",
+            "title": "Preferred Provider Name",
+            "type": "string"
+          },
+          "preferred_provider_mode": {
+            "default": "",
+            "title": "Preferred Provider Mode",
+            "type": "string"
+          },
+          "provider_notice": {
+            "default": "",
+            "title": "Provider Notice",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "auto_open": {
+            "default": false,
+            "title": "Auto Open",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scenario",
+          "product_name",
+          "market",
+          "offers",
+          "instructions"
+        ],
+        "title": "OfferCardsResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Show CADON send-money options",
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Querying simulated transfer APIs\u2026",
+        "openai/toolInvocation/invoked": "Send-money options ready"
+      }
+    },
+    {
+      "name": "resume_cadon_session",
+      "description": "Render a resume button for a previously saved CADON session.\n\n    Use this when the user says they want to resume, list, show, find, or continue\n    a previous CADON session. If the user describes the saved session by context\n    (\"the stolen card one\", \"the investment one\", \"with Meridian\", a reference\n    number, etc.), pass that wording in query. Do not start a fresh provider-card\n    search from a resume request.\n\n    It returns only a zero-PII session reference to the chat UI; the secure token\n    is fetched by the widget from CADON when the user clicks Resume session.\n     After this tool returns and the widget renders, end your turn with a completely empty response: zero characters, no caption, no 'displayed above', no invitation to pick.\n    ",
+      "inputSchema": {
+        "properties": {
+          "session_id": {
+            "default": "",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "query": {
+            "default": "",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "title": "resume_cadon_sessionArguments",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Resume saved CADON session",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://cadon/offer-cards-v0.46.html"
+        },
+        "openai/outputTemplate": "ui://cadon/offer-cards-v0.46.html",
+        "openai/toolInvocation/invoking": "Looking for a saved CADON session\u2026",
+        "openai/toolInvocation/invoked": "Saved CADON session ready"
+      }
+    },
+    {
+      "name": "get_car_loan_demo_link",
+      "description": "Get a read-only browser launch URL for the fictional CADON car-loan demo.\n\n    Use this only when the user explicitly asks to skip bank comparison or directly open\n    a bank. For the normal car-loan request, use show_car_loan_bank_options first. Do\n    not ask for vehicle price, down payment, loan duration, income, employment, debts,\n    KYC, or affordability details in chat. The browser demo handles the simulated flow\n    after the user clicks the returned URL.\n\n    Args:\n        preferred_bank: Optional fictional bank id. Defaults to \"aureus\".\n        market: Two-letter demo market/country. Defaults to \"BE\".\n    ",
+      "inputSchema": {
+        "properties": {
+          "preferred_bank": {
+            "default": "aureus",
+            "title": "Preferred Bank",
+            "type": "string"
+          },
+          "market": {
+            "default": "BE",
+            "title": "Market",
+            "type": "string"
+          }
+        },
+        "title": "get_car_loan_demo_linkArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "launch_id": {
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "demo_url": {
+            "title": "Demo Url",
+            "type": "string"
+          },
+          "product": {
+            "title": "Product",
+            "type": "string"
+          },
+          "intent_type": {
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "preferred_bank": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Bank"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          }
+        },
+        "required": [
+          "launch_id",
+          "demo_url",
+          "product",
+          "intent_type",
+          "preferred_bank",
+          "instructions"
+        ],
+        "title": "DemoLaunchLinkResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get car loan demo launch link",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_cadon_demo_link",
+      "description": "Build a read-only launch URL for a browser-based CADON demo using fictional data.\n\n    This tool does not create a session or call a bank. The mock session is created only\n    after the user clicks the returned URL in their browser. It cannot start or submit a\n    real application, open an account, move money, or make a credit decision. Do not ask\n    the user for vehicle price, down payment, income, employment, debt, or other form\n    fields in chat; the demo flow belongs behind the returned URL.\n\n    Args:\n        scenario: A fictional demo scenario key returned by list_cadon_demo_scenarios.\n        preferred_bank: Optional fictional bank id chosen from show_cadon_demo_offers.\n        market: Two-letter market/country (e.g. \"FR\", \"BE\"). Default \"EU\".\n    ",
+      "inputSchema": {
+        "properties": {
+          "scenario": {
+            "title": "Scenario",
+            "type": "string"
+          },
+          "preferred_bank": {
+            "default": "",
+            "title": "Preferred Bank",
+            "type": "string"
+          },
+          "market": {
+            "default": "EU",
+            "title": "Market",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario"
+        ],
+        "title": "get_cadon_demo_linkArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "launch_id": {
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "demo_url": {
+            "title": "Demo Url",
+            "type": "string"
+          },
+          "product": {
+            "title": "Product",
+            "type": "string"
+          },
+          "intent_type": {
+            "title": "Intent Type",
+            "type": "string"
+          },
+          "preferred_bank": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Bank"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          }
+        },
+        "required": [
+          "launch_id",
+          "demo_url",
+          "product",
+          "intent_type",
+          "preferred_bank",
+          "instructions"
+        ],
+        "title": "DemoLaunchLinkResult",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get CADON demo launch link",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_demo_result",
+      "description": "Read the fictional outcome produced by the CADON simulation. Read-only.\n\n    This result is generated by a deterministic mock and is not an eligibility, lending,\n    suitability, or account decision. It contains no personal or financial data. Prefer\n    launch_id when the session was opened through get_cadon_demo_link.\n    ",
+      "inputSchema": {
+        "properties": {
+          "session_id": {
+            "default": "",
+            "title": "Session Id",
+            "type": "string"
+          },
+          "launch_id": {
+            "default": "",
+            "title": "Launch Id",
+            "type": "string"
+          },
+          "wait_seconds": {
+            "default": 25,
+            "title": "Wait Seconds",
+            "type": "integer"
+          }
+        },
+        "title": "get_demo_resultArguments",
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get simulated demo result",
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}
