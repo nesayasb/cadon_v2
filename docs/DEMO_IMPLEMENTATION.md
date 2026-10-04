@@ -112,3 +112,9 @@ Checked 3 October 2026:
 - https://developers.openai.com/api/docs/models/gpt-5.6-terra
 - https://developers.openai.com/plugins/deploy/connect-chatgpt
 - https://developers.openai.com/api/docs/guides/your-data
+
+## Follow-up — 4 October 2026
+
+The user screenshot confirms the live Production OPENAI_API_KEY is missing; login succeeds. The newly supplied Python MCP source has been repaired locally: specific journey priority, whole-word provider matching, latest explicit amount corrections, conflicting-argument confirmation, unsupported-intent refusal, issued/unknown/expired launch distinction and HTTP 422/410 launch errors. Nine new tests, the existing full MCP integration suite and QA smoke (130 passed / zero bugs or blocked checks) pass. This backend patch is NOT deployed: its GitHub remote is unidentified, no Fly credential is available, and the supplied remote link points to this website. All three accessible GitHub repositories are Next.js sites.
+
+The website now preserves typed text after failed requests, presents clear missing/expired-session errors, and counts the actual MCP success status for completion metrics. Lint, TypeScript, build, offline adapter/security tests and built HTTP checks pass. These changes do not supply the missing API key. The connected Vercel account returns 403 for scope nesayasb; configure the sensitive Production key and redeploy through an authorized account.

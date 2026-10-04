@@ -36,7 +36,7 @@ export default function DemoSession(){
  if(event.type==="done"){setState(event.state);gotState=true;if(approval)setMessages(previous=>previous.map(m=>({...m,activities:m.activities.map(a=>a.id===approval.id&&!event.pending.includes(a.id)?{...a,status:approval.approve?"ready":"denied"}:a)})));}
  }
  if(!gotState)throw new Error("The response was interrupted. Start a new chat to avoid repeating a CADON action.");
- }catch(err){setError(abort.signal.aborted?"Response stopped. Start a new chat before making another request.":err instanceof Error?err.message:"The assistant is temporarily unavailable.");if(!gotState){setMessages(before);}}
+ }catch(err){setError(abort.signal.aborted?"Response stopped. Start a new chat before making another request.":err instanceof Error?err.message:"The assistant is temporarily unavailable.");if(!gotState){setMessages(before);if(message)setText(message);}}
  finally{abortRef.current=null;setBusy(false);}
  }
  function reset(){abortRef.current?.abort();setMessages([]);setState("");setText("");setError("");setConnected(false);sessionStorage.removeItem(storageKey);}
