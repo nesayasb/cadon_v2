@@ -8,6 +8,7 @@ import {TOOL_TITLES,type ChatEvent} from "@/lib/chat-types";
 import {presentTool,toolSummary} from "@/lib/chat-output";
 import {CHAT_INSTRUCTIONS} from "@/lib/chat-prompt";
 import {jsonEvents} from "@/lib/sse";
+import {assistantError} from "@/lib/assistant-error";
 export const runtime="nodejs";
 export const maxDuration=120;
 const sensitive=(s:string)=>/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b|\b[A-Z]{2}\d{2}(?:[ ]?[A-Z0-9]){11,30}\b|\b(?:\d[ -]?){13,19}\b/i.test(s);
@@ -34,7 +35,7 @@ export async function POST(req:Request){
  const abort=new AbortController();const timeout=setTimeout(()=>abort.abort(),110000);const disconnect=()=>abort.abort();req.signal.addEventListener("abort",disconnect,{once:true});state.turns++;
  const stream=new ReadableStream<Uint8Array>({async start(controller){const encoder=new TextEncoder();const send=(event:ChatEvent)=>controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));let completed=false;let created=false;let size=0;
  try{const upstream=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:process.env.OPENAI_MODEL||"gpt-5.6-terra",instructions:CHAT_INSTRUCTIONS,input,...(state.responseId?{previous_response_id:state.responseId}:{}),store:true,stream:true,max_output_tokens:2500,max_tool_calls:6,parallel_tool_calls:false,reasoning:{effort:"low"},tools:[{type:"mcp",server_label:"cadon",server_description:"CADON fictional financial-service demo. Sensitive details stay in the separate execution flow.",server_url:endpoint,allowed_tools:Object.keys(TOOL_TITLES),require_approval:"always",...(process.env.CADON_MCP_TOKEN?{authorization:process.env.CADON_MCP_TOKEN}:{})}]}),cache:"no-store",signal:abort.signal});
- if(!upstream.ok||!upstream.body){if(upstream.status===401||upstream.status===403)throw new Error("The assistant’s API credentials need attention. Please contact the CADON team.");if(upstream.status===429)throw new Error("The assistant is at capacity. Please try again shortly.");throw new Error("The assistant is temporarily unavailable. Please try again.");}
+ if(!upstream.ok||!upstream.body){let diagnostic;try{diagnostic=(await upstream.json()).error;}catch{/* No structured diagnostic. */}throw new Error(assistantError(diagnostic,upstream.status));}
  for await(const event of jsonEvents(upstream.body)){size+=JSON.stringify(event).length;if(size>2000000)throw new Error("The response exceeded the demo limit.");
  if(event.type==="response.created"){state.responseId=event.response.id;created=true;}
  if(event.type==="response.output_text.delta"||event.type==="response.refusal.delta")send({type:"text",delta:event.delta});
@@ -45,7 +46,7 @@ export async function POST(req:Request){
  if(item.type==="mcp_call"){const activity=presentTool(item,endpoint);await Promise.all([countEvent("mcp_invoked"),countEvent("capability_used",Object.hasOwn(TOOL_TITLES,item.name)?item.name:"unknown")]);if(activity.status==="error")await countEvent("execution_failed");if(["completed","success"].includes(activity.signal||""))await countEvent("secure_execution_completed");for(const launch of [activity,...(activity.offers||[])])if(launch.url&&launch.launchId&&/^[A-Za-z0-9_-]{1,120}$/.test(launch.launchId)&&!state.launches.includes(launch.launchId))state.launches.push(launch.launchId);state.launches=state.launches.slice(-24);send({type:"activity",activity});}
  }
  if(event.type==="response.completed"){state.responseId=event.response.id;completed=true;}
- if(event.type==="response.failed"||event.type==="error")throw new Error("The assistant could not finish this response. Please try again.");
+ if(event.type==="response.failed"||event.type==="error")throw new Error(assistantError(event.type==="response.failed"?event.response?.error:event.error||event));
  if(event.type==="response.incomplete")throw new Error("The response reached its limit. Continue in a new message.");
  }
  if(!completed)throw new Error("The response was interrupted. Please try again.");
