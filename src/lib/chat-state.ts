@@ -1,6 +1,6 @@
 import "server-only";
 import {createCipheriv,createDecipheriv,createHash,randomBytes} from "node:crypto";
-export type ChatState={version:1;expires:number;owner:string;responseId?:string;turns:number;pending:Array<{id:string;name:string;arguments:string}>;launches:string[]};
+export type ChatState={version:1;expires:number;owner:string;responseId?:string;turns:number;pending:Array<{id:string;name:string;arguments:string}>;launches:string[];toolOutputs?:Array<{type:"function_call_output";call_id:string;output:string}>};
 function owner(session:string){return createHash("sha256").update(session).digest("hex");}
 function key(){const secret=process.env.CADON_DEMO_SESSION_SECRET;if(!secret||secret.length<32)throw new Error("Demo signing secret is unavailable");return createHash("sha256").update("cadon-chat-v1:"+secret).digest();}
 export function newChatState(session:string):ChatState{return {version:1,expires:Date.now()+2*60*60*1000,owner:owner(session),turns:0,pending:[],launches:[]};}
