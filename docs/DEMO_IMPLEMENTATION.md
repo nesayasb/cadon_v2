@@ -143,3 +143,8 @@ The streamed function loop is capped at six executed calls, 2,500 cumulative mod
 Resend support takes priority when RESEND_API_KEY is set; CADON_ACCESS_FROM must be a verified sender (e.g. CADON <access@cadon.io>). POST /emails delivers plain text to nathnael.eb@outlook.com with the visitor email as reply_to. Only a successful provider response containing an email ID is acknowledged. Existing webhook/FormSubmit and explicit email-draft fallback remain otherwise. Production secrets and sender verification are not configured by this patch. Vercel connection still lacked project authorization on the preceding check.
 
 Validation: live CADON preflight and provider calls returned ten offers; offline server-transport test preserves structuredContent despite non-JSON widget text; streamed function-call fixtures render ten native offers without approvals, verify owned status, and preserve receipts on a failed continuation. Email fixtures cover Resend acceptance and provider/network failures. Build, lint, TypeScript, keyboard/fallback checks and built HTTP checks pass. Full live OpenAI conversation and actual email receipt still require production verification.
+
+
+## Resend failure diagnostics — 7 October 2026, 16:11 Brussels
+
+A screenshot after Production email variables were configured still shows failed delivery. The cause remains unverified. Resend HTTP failures now map to fixed, actionable errors for unverified sender domains, test-recipient restrictions, key/permission failures, quotas and invalid sender fields. Raw provider messages, API keys and submitted lead details are neither shown nor logged. Diagnostics are based on Resend’s current official error reference. No actual delivery success is claimed.

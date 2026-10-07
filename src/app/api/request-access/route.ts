@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {ACCESS_EMAIL,accessEmailDraft} from "@/lib/access-email";
+import {accessDeliveryError} from "@/lib/access-delivery-error";
 import {sameOrigin,readJson,rateAllowed} from "@/lib/request-security";
 export const runtime="nodejs";
 export async function POST(req:Request){
@@ -10,7 +11,7 @@ export async function POST(req:Request){
  if(process.env.RESEND_API_KEY){
   if(!process.env.CADON_ACCESS_FROM)return NextResponse.json({error:"Website email delivery needs a sender address. Please use Send request by email below."},{status:503});
   const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.CADON_ACCESS_FROM,to:[ACCESS_EMAIL],reply_to:email.trim(),subject:"CADON access request",text:accessEmailDraft(data).body}),signal:AbortSignal.timeout(20000),redirect:"error"});
-  const receipt=await sent.json();if(!sent.ok||typeof receipt.id!=="string"){console.error("cadon_access_delivery_failure",{provider:"resend",status:sent.status});throw new Error("Email provider rejected request");}
+  const receipt=await sent.json();if(!sent.ok||typeof receipt.id!=="string")return NextResponse.json({error:accessDeliveryError(receipt,sent.status)},{status:502});
   return NextResponse.json({ok:true});
  }
  const url=process.env.CADON_ACCESS_WEBHOOK_URL || "https://formsubmit.co/ajax/nathnael.eb@outlook.com";
