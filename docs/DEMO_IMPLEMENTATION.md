@@ -123,3 +123,12 @@ The website now preserves typed text after failed requests, presents clear missi
 ## Provider error diagnostics — 4 October 2026
 
 After the Production key was added, a new screenshot showed an OpenAI streaming failure previously hidden by a generic message. Its actual cause remains unverified because the connected Vercel account still returns 403 for the project. Both HTTP error bodies and response.failed/error events now map to fixed billing, credentials, model-access, rate-limit, MCP-connection or provider-failure messages. Raw provider messages are neither displayed nor logged; logs contain only category and HTTP status. Offline regression fixtures cover streamed failures and HTTP quota errors, including secret-text suppression. No model or billing setting has been changed without evidence.
+
+
+## Demo usability and access delivery — 7 October 2026
+
+Routine capability listing, conversation guidance and context preparation now use the Responses MCP require_approval.never tool-name filter. Provider/session creation and result retrieval still require confirmation; result ownership validation remains intact. Routine successful activity cards are visible only in Developer view. Context questions remain in the assistant response, and the prompt avoids preparation calls for general chat and repeated identical calls. Privacy text discloses automatic fictional-context processing. Enter submits the composer; Shift+Enter inserts a newline and IME composition does not submit.
+
+The access-request screenshot confirms a delivery failure, but provider cause is unverified: the Vercel connector still denies project access, and no authenticated local CLI is available. HTTP failures and provider activation/rejection produce safe diagnostic categories without lead data. Failed requests preserve all fields and expose an encoded email draft and clipboard fallback addressed to nathnael.eb@outlook.com. Draft creation is NOT a successful submission: the user must send the email. The existing FormSubmit integration or configured webhook still attempts automatic delivery; inbox activation and receipt remain unverified.
+
+Validation: production build, lint, TypeScript, existing adapter/security fixtures, access-delivery success/activation/network fixtures, built HTTP checks and offline React keyboard/fallback handler checks pass. A browser binary is unavailable locally; no new live OpenAI conversation or inbox receipt is claimed.

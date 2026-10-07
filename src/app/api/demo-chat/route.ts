@@ -4,7 +4,7 @@ import {cookies} from "next/headers";
 import {COOKIE_NAME,hasDemoAccess} from "@/lib/demo-auth";
 import {sameOrigin,readJson,rateAllowed} from "@/lib/request-security";
 import {newChatState,openChatState,sealChatState} from "@/lib/chat-state";
-import {TOOL_TITLES,type ChatEvent} from "@/lib/chat-types";
+import {CONTEXT_TOOLS,TOOL_TITLES,type ChatEvent} from "@/lib/chat-types";
 import {presentTool,toolSummary} from "@/lib/chat-output";
 import {CHAT_INSTRUCTIONS} from "@/lib/chat-prompt";
 import {jsonEvents} from "@/lib/sse";
@@ -34,7 +34,7 @@ export async function POST(req:Request){
  try{if(new URL(endpoint).protocol!=="https:")throw new Error();}catch{return NextResponse.json({error:"CADON’s execution connection is not configured correctly."},{status:503});}
  const abort=new AbortController();const timeout=setTimeout(()=>abort.abort(),110000);const disconnect=()=>abort.abort();req.signal.addEventListener("abort",disconnect,{once:true});state.turns++;
  const stream=new ReadableStream<Uint8Array>({async start(controller){const encoder=new TextEncoder();const send=(event:ChatEvent)=>controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));let completed=false;let created=false;let size=0;
- try{const upstream=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:process.env.OPENAI_MODEL||"gpt-5.6-terra",instructions:CHAT_INSTRUCTIONS,input,...(state.responseId?{previous_response_id:state.responseId}:{}),store:true,stream:true,max_output_tokens:2500,max_tool_calls:6,parallel_tool_calls:false,reasoning:{effort:"low"},tools:[{type:"mcp",server_label:"cadon",server_description:"CADON fictional financial-service demo. Sensitive details stay in the separate execution flow.",server_url:endpoint,allowed_tools:Object.keys(TOOL_TITLES),require_approval:"always",...(process.env.CADON_MCP_TOKEN?{authorization:process.env.CADON_MCP_TOKEN}:{})}]}),cache:"no-store",signal:abort.signal});
+ try{const upstream=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:process.env.OPENAI_MODEL||"gpt-5.6-terra",instructions:CHAT_INSTRUCTIONS,input,...(state.responseId?{previous_response_id:state.responseId}:{}),store:true,stream:true,max_output_tokens:2500,max_tool_calls:6,parallel_tool_calls:false,reasoning:{effort:"low"},tools:[{type:"mcp",server_label:"cadon",server_description:"CADON fictional financial-service demo. Sensitive details stay in the separate execution flow.",server_url:endpoint,allowed_tools:Object.keys(TOOL_TITLES),require_approval:{never:{tool_names:CONTEXT_TOOLS}},...(process.env.CADON_MCP_TOKEN?{authorization:process.env.CADON_MCP_TOKEN}:{})}]}),cache:"no-store",signal:abort.signal});
  if(!upstream.ok||!upstream.body){let diagnostic;try{diagnostic=(await upstream.json()).error;}catch{/* No structured diagnostic. */}throw new Error(assistantError(diagnostic,upstream.status));}
  for await(const event of jsonEvents(upstream.body)){size+=JSON.stringify(event).length;if(size>2000000)throw new Error("The response exceeded the demo limit.");
  if(event.type==="response.created"){state.responseId=event.response.id;created=true;}
