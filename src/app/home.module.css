@@ -10,8 +10,8 @@
 .heroCopy h1 span { color:#a4bcff; }
 .heroCopy>p { color:#c1cae0; font-size:18px; line-height:1.75; margin-top:29px; }
 .actions { display:flex; flex-wrap:wrap; gap:25px; align-items:center; margin-top:34px; }
-.home .heroCta { gap:15px; background:#4168f7; border-color:#4168f7; padding:14px 22px; }
-.home .heroCta:hover { background:#577cff; }
+.home .heroCta { gap:15px; padding:14px 22px; }
+
 .quietLink { display:inline-flex; gap:12px; align-items:center; font-size:13px; color:#e4eaff; padding:10px 0; }
 .quietLink:hover { color:white; text-decoration:underline; text-underline-offset:6px; }
 .heroCaption { position:absolute; right:36px; bottom:53px; display:flex; gap:25px; font-size:9px; letter-spacing:.16em; color:#9bafd9; }
