@@ -1,0 +1,6 @@
+.backdrop { position: absolute; inset: 0 0 0 28%; pointer-events: none; overflow: hidden; }
+.backdrop svg { position: absolute; height: 110%; width: 125%; max-width: none; left: -8%; top: -3%; object-fit: cover; }
+.nodes { animation: glow 8s ease-in-out infinite alternate; }
+@keyframes glow { from { opacity: .5; } to { opacity: 1; } }
+@media(max-width:760px){.backdrop{inset:0 -65% 0 5%;opacity:.45}.backdrop svg{height:100%;width:140%;left:0;top:0}}
+@media(prefers-reduced-motion:reduce){.nodes{animation:none}}

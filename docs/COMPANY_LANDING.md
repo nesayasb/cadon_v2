@@ -16,3 +16,10 @@ Validation: Next production build and TypeScript, ESLint, offline MCP/chat and f
 The company landing page now covers Data & Analytics, AI & Automation, Digital & IT Solutions, Strategy & Transformation, and Financial Services. Financial Services is listed within the same services section and links to the existing dedicated page. The previously separate finance promotion is replaced with an explanation of how data foundations, AI applications and IT systems fit together. The existing financial page and demo implementation are unchanged.
 
 Content takes inspiration from the advisory-plus-delivery breadth of https://www.multiplai.de/ and its data/AI and IT strategy pages; CADON copy is original and does not adopt their client references, team credentials or results. The project enquiry categories cover the wider offer; earlier category values remain accepted for already-open forms. Metadata, social preview and footer reflect the new positioning.
+
+
+## Visual layout — 14 November 2026
+
+The company page adopts a dark, full-width hero with an original SVG network illustration, a mission section, three working principles and an equal-weight grid for all five offerings. The overall composition takes inspiration from MultiplAI; no reference-site assets, customer logos or credentials are reused. CADON retains its blue brand colour. The layout scales from three service columns to two and then one.
+
+Decorative section, service, process and walkthrough-tab numbering is removed from the company and financial marketing pages. Ordered connection instructions and numeric values in technical examples retain their meaning. Demo execution, authentication and email delivery configuration are unchanged.
