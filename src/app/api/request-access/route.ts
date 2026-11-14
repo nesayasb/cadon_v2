@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {ACCESS_EMAIL,ACCESS_INTERESTS,PROJECT_INTERESTS,accessEmailDraft} from "@/lib/access-email";
+import {ACCESS_EMAIL,ACCESS_INTERESTS,PROJECT_REQUEST_INTERESTS,accessEmailDraft} from "@/lib/access-email";
 import {accessDeliveryError} from "@/lib/access-delivery-error";
 import {sameOrigin,readJson,rateAllowed} from "@/lib/request-security";
 export const runtime="nodejs";
@@ -7,7 +7,7 @@ export async function POST(req:Request){
  if(!sameOrigin(req))return NextResponse.json({error:"Invalid request origin."},{status:403});
  if(!await rateAllowed(req,"leads",5))return NextResponse.json({error:"Too many requests. Please try again in 15 minutes."},{status:429,headers:{"Retry-After":"900"}});
  try{const data=await readJson(req);if(data.website)return NextResponse.json({ok:true});const{email,company,role,useCase,audience}=data;
- if(typeof email!=="string"||email.length>254||!/^\S+@\S+\.\S+$/.test(email)||typeof company!=="string"||!company.trim()||company.length>120||typeof role!=="string"||!role.trim()||role.length>100||typeof useCase!=="string"||!useCase.trim()||useCase.length>1500||![...ACCESS_INTERESTS,...PROJECT_INTERESTS].includes(audience))return NextResponse.json({error:"Please check the required fields."},{status:400});
+ if(typeof email!=="string"||email.length>254||!/^\S+@\S+\.\S+$/.test(email)||typeof company!=="string"||!company.trim()||company.length>120||typeof role!=="string"||!role.trim()||role.length>100||typeof useCase!=="string"||!useCase.trim()||useCase.length>1500||![...ACCESS_INTERESTS,...PROJECT_REQUEST_INTERESTS].includes(audience))return NextResponse.json({error:"Please check the required fields."},{status:400});
  const draft=accessEmailDraft(data);
  if(process.env.RESEND_API_KEY){
   if(!process.env.CADON_ACCESS_FROM)return NextResponse.json({error:"Website email delivery needs a sender address. Please use Send request by email below."},{status:503});

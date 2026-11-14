@@ -59,23 +59,21 @@
 .exampleBody p { max-width: 540px; font-size: 14px; line-height: 1.8; }
 .exampleBody > span { display: block; margin-top: 16px; font-size: 11px; color: #536483; }
 .exampleDisclaimer { font-size: 11px; margin-top: 23px; }
-.financeSection { padding-top: 80px; }
-.financePanel { background: #131e34; color: white; border-radius: 10px; padding: 55px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 65px; align-items: center; }
-.financeCopy > :global(.eyebrow) { color: #a7b8d7; font-size: 10px; }
-.financeCopy h2 { font-size: clamp(33px, 3.2vw, 43px); }
-.financeCopy h2 span { color: #98b1ff; }
-.financeCopy > p { color: #bec9de; font-size: 14px; line-height: 1.8; margin-top: 23px; }
-.financeLink { display: inline-flex; align-items: center; gap: 15px; background: white; color: #15213a; border-radius: 5px; padding: 13px 17px; margin-top: 29px; font-size: 13px; font-weight: 500; }
-.financeLink:hover { background: #e8edff; }
-.financeDemo { display: flex; gap: 10px; align-items: center; font-size: 12px; margin-top: 21px; color: #becfff; }
-.financeDemo:hover { color: white; }
-.financeDiagram { text-align: center; }
-.financeDiagram > div { padding: 17px; border: 1px solid #48566e; border-radius: 6px; font-size: 15px; background: #1a2943; }
-.financeDiagram > div > span { display: block; font-size: 10px; margin-top: 6px; color: #c1cce2; }
-.financeDiagram .financeCore { background: var(--blue); border-color: #6988ee; font-size: 27px; letter-spacing: -.06em; font-weight: 600; padding: 14px; }
-.financeCore > span { font-weight: 400; letter-spacing: 0; }
-.financeConnector { display: block; height: 20px; width: 1px; background: #6882b2; margin: auto; }
-.financeDiagram > p { font-size: 9px; color: #a7b8d4; margin-top: 17px; line-height: 1.7; }
+.integrationSection { padding-top: 80px; }
+.integrationPanel { background: #131e34; color: white; border-radius: 10px; padding: 55px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 65px; align-items: center; }
+.integrationCopy > :global(.eyebrow) { color: #a7b8d7; font-size: 10px; }
+.integrationCopy h2 { font-size: clamp(33px, 3.2vw, 43px); }
+.integrationCopy h2 span { color: #98b1ff; }
+.integrationCopy > p { color: #bec9de; font-size: 14px; line-height: 1.8; margin-top: 23px; }
+.integrationLink { display: inline-flex; align-items: center; gap: 15px; background: white; color: #15213a; border-radius: 5px; padding: 13px 17px; margin-top: 29px; font-size: 13px; font-weight: 500; }
+.integrationLink:hover { background: #e8edff; }
+.integrationDiagram { text-align: center; }
+.integrationDiagram > div { padding: 17px; border: 1px solid #48566e; border-radius: 6px; font-size: 15px; background: #1a2943; }
+.integrationDiagram > div > span { display: block; font-size: 10px; margin-top: 6px; color: #c1cce2; }
+.integrationDiagram .integrationCore { background: var(--blue); border-color: #6988ee; font-size: 21px; letter-spacing: -.03em; font-weight: 500; padding: 18px; }
+.integrationCore > span { font-weight: 400; letter-spacing: 0; }
+.integrationConnector { display: block; height: 20px; width: 1px; background: #6882b2; margin: auto; }
+.integrationDiagram > p { font-size: 9px; color: #a7b8d4; margin-top: 17px; line-height: 1.7; }
 .approach { border-bottom: 1px solid var(--line); }
 .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 45px; }
 .steps > li { border-top: 1px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; align-items: flex-start; }
@@ -101,7 +99,7 @@
   .workflowInput p { font-size: 12px; }
   .reviewLabel { margin-left: 39px; }
   .sectionHeading { gap: 40px; }
-  .financePanel { padding: 38px; gap: 40px; }
+  .integrationPanel { padding: 38px; gap: 40px; }
   .contactGrid { gap: 40px; }
   .positioning > div { gap: 16px; font-size: 13px; }
 }
@@ -133,11 +131,11 @@
   .expand { grid-column: 2; grid-row: 1 / 3; }
   .exampleBody { padding: 0 27px 25px 0; }
   .exampleBody p { font-size: 13px; }
-  .financeSection { padding-top: 50px; }
-  .financePanel { grid-template-columns: 1fr; gap: 35px; padding: 30px 24px; }
-  .financeCopy h2 { font-size: 35px; }
-  .financeCopy > p { font-size: 13px; }
-  .financeDiagram { max-width: 380px; width: 100%; justify-self: center; }
+  .integrationSection { padding-top: 50px; }
+  .integrationPanel { grid-template-columns: 1fr; gap: 35px; padding: 30px 24px; }
+  .integrationCopy h2 { font-size: 35px; }
+  .integrationCopy > p { font-size: 13px; }
+  .integrationDiagram { max-width: 380px; width: 100%; justify-self: center; }
   .steps { grid-template-columns: 1fr; gap: 30px; }
   .stepNumber { margin-bottom: 17px; }
   .steps p { margin: 13px 0 16px; font-size: 13px; }
@@ -153,6 +151,9 @@
   .workflowOutput { gap: 10px; }
   .reviewLabel { margin-left: 37px; }
   .positioning > div { gap: 10px; font-size: 11px; }
-  .financePanel { padding: 27px 20px; }
-  .financeCopy h2 { font-size: 31px; }
+  .integrationPanel { padding: 27px 20px; }
+  .integrationCopy h2 { font-size: 31px; }
 }
+
+.serviceLink { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; color: var(--blue); border-bottom: 1px solid #b4c5ff; padding-bottom: 3px; margin-top: 18px; }
+.serviceLink:hover { color: #2448c9; border-color: currentColor; }

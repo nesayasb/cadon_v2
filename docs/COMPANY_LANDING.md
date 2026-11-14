@@ -9,3 +9,10 @@ The shared enquiry component now supports a project variant using the existing d
 Navigation and the sitemap include the financial route. Each landing page has its own canonical, social metadata and generated share image. The demo gate directs financial access enquiries to the financial page.
 
 Validation: Next production build and TypeScript, ESLint, offline MCP/chat and form checks, project enquiry delivery fixture, and built HTTP checks for both routes, internal links and fragments, metadata, assets, access gate and authenticated demo rendering. Tests mock email delivery and model calls; they do not send real emails or financial requests. The managed preview daemon passes Vite flags unsupported by this Next.js project, so local browser preview was unavailable; live visual inspection follows deployment.
+
+
+## Broader service positioning — 14 November 2026
+
+The company landing page now covers Data & Analytics, AI & Automation, Digital & IT Solutions, Strategy & Transformation, and Financial Services. Financial Services is listed within the same services section and links to the existing dedicated page. The previously separate finance promotion is replaced with an explanation of how data foundations, AI applications and IT systems fit together. The existing financial page and demo implementation are unchanged.
+
+Content takes inspiration from the advisory-plus-delivery breadth of https://www.multiplai.de/ and its data/AI and IT strategy pages; CADON copy is original and does not adopt their client references, team credentials or results. The project enquiry categories cover the wider offer; earlier category values remain accepted for already-open forms. Metadata, social preview and footer reflect the new positioning.
