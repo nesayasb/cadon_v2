@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Offline UI event verification. */
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
-const original=Module._load;let states=[],index=0;
-Module._load=function(name,parent,isMain){if(name==='react'){const real=original.call(this,name,parent,isMain);return {...real,useState:()=>{const slot=index++;return [states[slot],value=>{states[slot]=typeof value==='function'?value(states[slot]):value;}]},useEffect:()=>{},useRef:()=>({current:null})};}if(name==='next/navigation')return {useRouter:()=>({refresh(){}})};if(name.startsWith('@/'))name=path.resolve(__dirname,'../src',name.slice(2)+'.ts');return original.call(this,name,parent,isMain)};
+const original=Module._load;let states=[],index=0,refs=[],refIndex=0;
+Module._load=function(name,parent,isMain){if(name==='react'){const real=original.call(this,name,parent,isMain);return {...real,useState:()=>{const slot=index++;return [states[slot],value=>{states[slot]=typeof value==='function'?value(states[slot]):value;}]},useEffect:()=>{},useRef:()=>refs[refIndex++]??(refs[refIndex-1]={current:null})};}if(name==='next/navigation')return {useRouter:()=>({refresh(){}})};if(name.startsWith('@/'))name=path.resolve(__dirname,'../src',name.slice(2)+'.ts');return original.call(this,name,parent,isMain)};
 for(const ext of ['.ts','.tsx'])require.extensions[ext]=(mod,file)=>mod._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText,file);
 const Demo=require('../src/components/DemoSession.tsx').default,Access=require('../src/components/RequestAccess.tsx').default;
 function nodes(el){if(!el||typeof el!=='object')return [];return [el,...[el.props?.children].flat(Infinity).flatMap(nodes)];}
@@ -17,9 +17,17 @@ index=0;states=['idle','',null,false];const projectForm=nodes(Access({variant:'p
 console.log('PASS project form: consulting interests and project enquiry action appear alongside the existing financial access variant.');
 
 const Navbar=require('../src/components/Navbar.tsx').default;
-const menuNodes=()=>{index=0;return nodes(Navbar());};
+const menuNodes=()=>{index=0;refIndex=0;return nodes(Navbar());};
 states=[false,false];let menu=menuNodes();const navWrapper=()=>menu.find(e=>e.props?.className==='offerings-navigation');
 navWrapper().props.onPointerEnter({pointerType:'mouse'});menu=menuNodes();assert.equal(menu.find(e=>e.props?.className==='offerings-trigger').props['aria-expanded'],true);
+const realSetTimeout=global.setTimeout,realClearTimeout=global.clearTimeout;let pendingClose=null;
+global.setTimeout=(fn,delay)=>{assert.equal(delay,250);pendingClose=fn;return 1;};global.clearTimeout=()=>{pendingClose=null;};
+global.document={activeElement:null};
+navWrapper().props.onPointerLeave({currentTarget:{contains:()=>false}});menu=menuNodes();assert.ok(menu.some(e=>e.props?.id==='desktop-offerings'),'Crossing toward the dropdown must not close it immediately');
+navWrapper().props.onPointerEnter({pointerType:'mouse'});assert.equal(pendingClose,null,'Entering the dropdown cancels closing');
+navWrapper().props.onPointerLeave({currentTarget:{contains:()=>false}});pendingClose();menu=menuNodes();assert.ok(!menu.some(e=>e.props?.id==='desktop-offerings'),'Leaving the menu closes it after the grace period');
+navWrapper().props.onPointerEnter({pointerType:'mouse'});menu=menuNodes();
+global.setTimeout=realSetTimeout;global.clearTimeout=realClearTimeout;
 const panel=menu.find(e=>e.props?.id==='desktop-offerings');const destinations=nodes(panel).filter(e=>e.props?.href).map(e=>e.props.href);assert.deepEqual(destinations,['/services/data-analytics','/services/ai-automation','/services/digital-it','/services/strategy-transformation','/financial-services']);
 navWrapper().props.onKeyDown({key:'Escape',preventDefault(){},stopPropagation(){}});menu=menuNodes();assert.equal(menu.some(e=>e.props?.id==='desktop-offerings'),false);
 global.requestAnimationFrame=fn=>fn();menu.find(e=>e.props?.className==='offerings-trigger').props.onKeyDown({key:'ArrowDown',preventDefault(){}});menu=menuNodes();assert.ok(menu.some(e=>e.props?.id==='desktop-offerings'));
