@@ -23,3 +23,14 @@ Content takes inspiration from the advisory-plus-delivery breadth of https://www
 The company page adopts a dark, full-width hero with an original SVG network illustration, a mission section, three working principles and an equal-weight grid for all five offerings. The overall composition takes inspiration from MultiplAI; no reference-site assets, customer logos or credentials are reused. CADON retains its blue brand colour. The layout scales from three service columns to two and then one.
 
 Decorative section, service, process and walkthrough-tab numbering is removed from the company and financial marketing pages. Ordered connection instructions and numeric values in technical examples retain their meaning. Demo execution, authentication and email delivery configuration are unchanged.
+
+
+## Shared design and offering pages — 14 November 2026
+
+A shared dark theme now covers the company page, financial services page, all service pages, privacy, the demo guide, access screen and interactive demo. The homepage heading is `Data, AI & IT`; full stops are removed from displayed heading copy while the `cadon.` wordmark and normal prose are retained.
+
+The Core Offerings navigation is a grouped disclosure with mouse hover, click, ArrowDown, Escape and focus-exit handling. Mobile navigation expands the same five destinations. A shared catalogue owns homepage cards, navigation, footer links and sitemap entries. Four static offering pages are generated at `/services/data-analytics`, `/services/ai-automation`, `/services/digital-it` and `/services/strategy-transformation`. Financial Services retains `/financial-services` and the connected demo.
+
+Each new page includes service-specific focus areas, illustrative project scopes, deliverables, related services and an enquiry form preselected for the offering. Unsupported offering slugs return 404. No email destinations, access credentials, MCP permissions or model configuration are changed.
+
+Verification includes production build/TypeScript, lint, menu event tests for hover, keyboard and mobile disclosure, all five offering destinations, matching enquiry defaults, heading punctuation, internal links and fragment targets, canonicals, sitemap, 404 and existing demo access/chat tests. Provider calls remain mocked in automated tests. Live browser inspection follows deployment; the browser's DevTools policy prevents mobile emulation.
