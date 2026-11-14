@@ -16,7 +16,7 @@ export default function NetworkBackdrop() {
       <circle cx="655" cy="310" r="78" stroke="#7296ff" strokeOpacity=".18"/>
       <circle cx="655" cy="310" r="108" stroke="#7296ff" strokeOpacity=".08"/>
       <circle cx="655" cy="310" r="49" fill="#15244f" stroke="#7194ff" strokeOpacity=".35"/>
-      <path d="M 674 292 A 27 27 0 1 0 674 328" stroke="#a9c3ff" strokeWidth="9"/>
+      <image href="/brand/cadon-mark.svg" x="622" y="278" width="66" height="64" />
     </svg>
   </div>;
 }

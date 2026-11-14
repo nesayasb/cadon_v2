@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
@@ -24,7 +25,7 @@ export default function Navbar({financial=false}:{financial?:boolean;dark?:boole
 
   return <header className="site-header company-header">
     <div className="container nav-row">
-      <Link className="wordmark" href="/" aria-label="CADON home" onClick={close}><span className="brand-mark" aria-hidden="true">c</span>cadon<span className="brand-period">.</span></Link>
+      <Link className="wordmark" href="/" aria-label="CADON home" onClick={close}><Image src="/brand/cadon-horizontal.svg" alt="cadon." width={152} height={30} unoptimized /></Link>
       <nav className="desktop-nav" aria-label="Main navigation">
         <div className="offerings-navigation"
           onPointerEnter={e=>{cancelClose();if(e.pointerType!=="touch")setOfferingsOpen(true);}}
