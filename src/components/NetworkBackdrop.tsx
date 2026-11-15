@@ -3,6 +3,9 @@ import styles from "./NetworkBackdrop.module.css";
 const nodes = [[180,140],[310,90],[425,190],[570,110],[700,180],[850,100],[1030,180],[1130,320],[980,355],[1100,520],[930,610],[780,515],[660,650],[565,470],[420,595],[300,455],[165,530],[95,350],[260,285],[465,330],[655,310],[810,330],[725,430],[935,460]];
 const edges = [[0,1],[0,18],[0,17],[1,2],[1,3],[2,3],[2,18],[2,19],[3,4],[4,5],[4,20],[4,21],[5,6],[6,7],[6,8],[7,8],[7,9],[8,21],[8,23],[9,10],[9,23],[10,11],[10,23],[11,12],[11,22],[12,13],[13,14],[13,19],[13,22],[14,15],[15,16],[15,18],[15,19],[16,17],[17,18],[18,19],[19,20],[19,22],[20,21],[20,22],[21,22],[21,23],[22,23]];
 
+// Each signal follows existing connections into or out of the central mark.
+const routes = [[1,2,19,20],[20,21,8,6],[12,13,22,20]];
+
 export default function NetworkBackdrop() {
   return <div className={styles.backdrop} aria-hidden="true">
     <svg viewBox="0 0 1200 760" fill="none" focusable="false">
@@ -12,6 +15,9 @@ export default function NetworkBackdrop() {
       </defs>
       <ellipse cx="690" cy="360" rx="460" ry="350" fill="url(#cadon-network-halo)"/>
       <g stroke="url(#cadon-network-line)" strokeWidth="1">{edges.map(([a,b])=><path key={`${a}-${b}`} d={`M ${nodes[a][0]} ${nodes[a][1]} L ${nodes[b][0]} ${nodes[b][1]}`}/>)}</g>
+      <g className={styles.signals} stroke="#a4bcff" strokeWidth="2" strokeLinecap="round">
+        {routes.map((route,i)=><path key={i} pathLength="100" d={route.map((n,j)=>(j?"L":"M")+nodes[n].join(" ")).join(" ")} style={{animationDelay:`-${i*2.7}s`}}/>)}
+      </g>
       <g className={styles.nodes}>{nodes.map(([cx,cy],i)=><g key={`${cx}-${cy}`}><circle cx={cx} cy={cy} r={i%4===0?15:8} fill="#668cff" opacity=".07"/><circle cx={cx} cy={cy} r={i%4===0?4:2.5} fill={i%3===0?"#b7ceff":"#648cff"}/></g>)}</g>
       <circle cx="655" cy="310" r="78" stroke="#7296ff" strokeOpacity=".18"/>
       <circle cx="655" cy="310" r="108" stroke="#7296ff" strokeOpacity=".08"/>
