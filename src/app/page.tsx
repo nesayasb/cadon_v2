@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Database, BrainCircuit, PanelsTopLeft, Compass, Landmark, Layers, Users, Waypoints } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {OFFERINGS} from "@/lib/offerings";
+import BusinessNeeds from "@/components/BusinessNeeds";
 import NetworkBackdrop from "@/components/NetworkBackdrop";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -31,7 +32,7 @@ export default function Home() {
             <p>Your partner in digital transformation.<br />From strategy to hands-on implementation.</p>
             <div className={styles.actions}><a className={`button ${styles.heroCta}`} href="#request-access">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a><a className={styles.quietLink} href="#services">Explore our services <ArrowDown size={16} aria-hidden="true" /></a></div>
           </div>
-          <div className={styles.heroCaption}><span>DATA</span><span>INTELLIGENCE</span><span>CONNECTION</span></div>
+          <BusinessNeeds />
         </div>
       </section>
 
