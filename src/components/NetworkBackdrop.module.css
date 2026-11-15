@@ -3,3 +3,14 @@
 .highlight path,.nodeHalo{transition:opacity 180ms ease-out}
 @media(max-width:760px){.backdrop{inset:0 -65% 0 5%;opacity:.45}.backdrop svg{height:100%;width:140%;left:0;top:0}}
 @media(prefers-reduced-motion:reduce){.highlight,.nodeHalo{display:none}}
+
+.filaments { display:none; }
+@media(min-width:961px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .filaments{display:inline}
+  .filaments path{stroke-dasharray:5 105;animation:travel 7.2s linear infinite}
+}
+@keyframes travel{
+  0%{stroke-dashoffset:5;opacity:0}
+  10%,60%{opacity:.62}
+  72%,100%{stroke-dashoffset:-100;opacity:0}
+}

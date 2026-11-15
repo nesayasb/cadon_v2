@@ -93,6 +93,3 @@
 }
 @media(max-width:560px){.services{grid-template-columns:1fr;gap:23px}.serviceArt{height:165px}.serviceBody{padding:27px}.service h3{font-size:26px}.serviceInvitation{padding:32px 27px}.serviceInvitation h3{font-size:40px}.serviceBody>p:first-of-type{font-size:14px}.service .deliverable{font-size:11px}.serviceLink{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.service{transition:none}.service:hover{transform:none}}
-
-.heroInner { gap:32px; }
-@media(max-width:850px){.heroInner{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding-bottom:52px}.heroCopy{max-width:100%}}
