@@ -25,7 +25,7 @@ export default function Navbar({financial=false}:{financial?:boolean;dark?:boole
 
   return <header className="site-header company-header">
     <div className="container nav-row">
-      <Link className="wordmark" href="/" aria-label="CADON home" onClick={close}><Image src="/brand/cadon-horizontal.svg" alt="cadon." width={152} height={30} unoptimized /></Link>
+      <Link className="wordmark" href="/" aria-label="CADON home" onClick={close}><Image src="/brand/cadon-horizontal.svg" alt="cadon." width={152} height={37} unoptimized /></Link>
       <nav className="desktop-nav" aria-label="Main navigation">
         <div className="offerings-navigation"
           onPointerEnter={e=>{cancelClose();if(e.pointerType!=="touch")setOfferingsOpen(true);}}
