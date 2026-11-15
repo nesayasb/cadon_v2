@@ -1,5 +1,5 @@
 /* Shared CADON design tokens and component surfaces across every route. */
-:root{--ink:#f5f7ff;--muted:#b6c3dd;--blue:#a4bcff;--line:#34415f;--wash:#17203b;--canvas:#10152d;--primary:#315beb;--button-fill:#4056a6;--button-hover:#4c63b5}
+:root{--ink:#f5f7ff;--muted:#b6c3dd;--blue:#a4bcff;--line:#34415f;--wash:#17203b;--canvas:#10152d;--primary:#315beb;--button-fill:#3959c9;--button-hover:#4666d2}
 body{background:var(--canvas);color:var(--ink)}
 h1,h2,h3{font-weight:400}h2{line-height:1.15}
 .button,.company-header .button,.chat-send{background:var(--button-fill);border-color:var(--button-fill);color:var(--ink)}.button:hover,.company-header .button:hover,.chat-send:hover{background:var(--button-hover);border-color:var(--button-hover)}.button.secondary{background:#202d4d;border-color:#52658b;color:var(--ink)}.button.secondary:hover{background:#2a3a5d}
